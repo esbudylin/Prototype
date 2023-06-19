@@ -92,7 +92,7 @@ public partial class Game : Node2D {
 					if (startingSettler != null)
 						mapView.centerCameraOnTile(startingSettler.location);
 				}
-				corners = new TerrainTileMap(map);
+				corners = new TerrainTileMap(this, gameDataAccess.gameData);
 			}
 
 			AddChild(corners);
