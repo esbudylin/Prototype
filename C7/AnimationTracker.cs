@@ -38,8 +38,9 @@ public partial class AnimationTracker {
 		if (activeAnims.TryGetValue(id, out aa)) {
 			// If there's already an animation playing for this unit, end it first before replacing it
 			// TODO: Consider instead queueing up the new animation until after the first one is completed
-			if (aa.completionEvent != null)
+			if (aa.completionEvent is not null) {
 				aa.completionEvent.Set();
+			}
 		}
 		aa = new ActiveAnimation { startTimeMS = currentTimeMS, endTimeMS = currentTimeMS + animDurationMS, completionEvent = completionEvent,
 			ending = ending, anim = anim };
