@@ -251,14 +251,10 @@ libraries = {
 "": SubResource("AnimationLibrary_bowxq")
 }
 
-[node name="PlayerCamera" type="Camera2D" parent="CanvasLayer"]
-script = ExtResource("11_pkhac")
-
 [connection signal="NewAutoselectedUnit" from="." to="CanvasLayer/Control/GameStatus" method="OnNewUnitSelected"]
 [connection signal="NewAutoselectedUnit" from="." to="CanvasLayer/Control/UnitButtons" method="OnNewUnitSelected"]
 [connection signal="NoMoreAutoselectableUnits" from="." to="CanvasLayer/Control/GameStatus" method="OnNoMoreAutoselectableUnits"]
 [connection signal="NoMoreAutoselectableUnits" from="." to="CanvasLayer/Control/UnitButtons" method="OnNoMoreAutoselectableUnits"]
-
 [connection signal="ShowSpecificAdvisor" from="." to="CanvasLayer/Advisor" method="OnShowSpecificAdvisor"]
 [connection signal="TurnEnded" from="." to="CanvasLayer/Control/GameStatus" method="OnTurnEnded"]
 [connection signal="TurnStarted" from="." to="CanvasLayer/Control/GameStatus" method="OnTurnStarted"]
