@@ -465,7 +465,7 @@ public partial class Game : Node2D {
 		}
 
 		if (Input.IsActionJustPressed(C7Action.ToggleGrid)) {
-			mapView.showGrid = !mapView.showGrid;
+			mapView.toggleGrid();
 		}
 
 		if (Input.IsActionJustPressed(C7Action.Escape) && !this.inUnitGoToMode) {
