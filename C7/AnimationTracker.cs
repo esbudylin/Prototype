@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using C7GameData;
-using C7Engine;
-using Godot;
 
 public partial class AnimationTracker {
 	private AnimationManager civ3AnimData;
@@ -151,11 +149,7 @@ public partial class AnimationTracker {
 
 	public C7Animation getTileEffect(Tile tile)
 	{
-		GD.Print(tile.ToString());
 		ActiveAnimation aa;
-		if (activeAnims.TryGetValue(tile.id, out aa))
-			return aa.anim;
-		else
-			return null;
+		return activeAnims.TryGetValue(tile.id, out aa) ? aa.anim : null;
 	}
 }
