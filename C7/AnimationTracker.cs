@@ -1,11 +1,8 @@
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using C7GameData;
-using Godot;
-using C7Engine;
 
 public partial class AnimationTracker {
 	private AnimationManager civ3AnimData;
