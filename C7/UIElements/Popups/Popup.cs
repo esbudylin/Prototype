@@ -78,6 +78,7 @@ public partial class Popup : TextureRect
 		FontFile bigFont = ResourceLoader.Load<FontFile>("res://Fonts/NSansFont24Pt.tres");
 		Theme theme = new Theme();
 		theme.SetFont("font", "Label", bigFont);
+		theme.SetFontSize("font_size", "Label", 24);
 		advisorType.Theme = theme;
 		advisorType.Text = text;
 		header.AddChild(advisorType);
