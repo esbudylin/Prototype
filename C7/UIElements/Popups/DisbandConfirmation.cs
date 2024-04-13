@@ -41,7 +41,7 @@ public partial class DisbandConfirmation : Popup
 		// out the size of this TextureRect, and it won't be able to align it properly.
 		AddTexture(530, 320);
 
-		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupDOMESTIC.pcx", 1, 40, 149, 110);
+		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupDOMESTIC.pcx", 1, 40, 149, 110, false);
 		TextureRect AdvisorHead = new TextureRect();
 		AdvisorHead.Texture = AdvisorHappy;
 		//Appears at 400, 110 in game, but leftmost 25px are transparent with default graphics
