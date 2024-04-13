@@ -11,16 +11,17 @@ public partial class PCXToGodot : GodotObject
 		return getImageTextureFromImage(ImgTxtr);
 	}
 
-	public static ImageTexture getImageTextureFromPCX(Pcx pcx, int leftStart, int topStart, int croppedWidth, int croppedHeight) {
-		Image image = getImageFromPCX(pcx, leftStart, topStart, croppedWidth, croppedHeight);
+	public static ImageTexture getImageTextureFromPCX(Pcx pcx, int leftStart, int topStart, int croppedWidth, int croppedHeight, bool shadows = true) {
+		Image image = getImageFromPCX(pcx, leftStart, topStart, croppedWidth, croppedHeight, shadows);
 		return getImageTextureFromImage(image);
 	}
 
 	/**
 	 * This method is for cases where we want to use components of multiple PCXs in a texture, such as for the popup background.
 	 **/
-	public static Image getImageFromPCX(Pcx pcx, int leftStart, int topStart, int croppedWidth, int croppedHeight) {
-		int[] ColorData = loadPalette(pcx.Palette, true);
+	public static Image getImageFromPCX(Pcx pcx, int leftStart, int topStart, int croppedWidth, int croppedHeight, bool shadows = true) {
+
+		int[] ColorData = loadPalette(pcx.Palette, shadows);
 		int[] BufferData = new int[croppedWidth * croppedHeight];
 
 		int DataIndex = 0;
