@@ -38,7 +38,7 @@ public partial class Popup : TextureRect
 
 	const int HTILE_SIZE = 61;
 	const int VTILE_SIZE = 44;
-	private readonly static int BUTTON_LABEL_OFFSET = 4;
+	private readonly static int BUTTON_LABEL_OFFSET = 0;	//Necessary in Godot 3, appears unnecessary in 4
 
 	private static ImageTexture InactiveButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 1, 1, 20, 20);
 	private static ImageTexture HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20);
@@ -54,7 +54,10 @@ public partial class Popup : TextureRect
 		AddChild(newButton);
 		newButton.Connect("pressed",new Callable(this,actionName));
 
+		Theme theme = new Theme();
+		theme.SetFontSize("font_size", "Button", 14);
 		Button newButtonLabel = new Button();
+		newButtonLabel.Theme = theme;
 		newButtonLabel.Text = label;
 
 		newButtonLabel.SetPosition(new Vector2(HORIZONTAL_POSITION + 25, verticalPosition + BUTTON_LABEL_OFFSET));
