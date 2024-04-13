@@ -52,8 +52,8 @@ public partial class MainMenu : Node2D
 		try {
 			SetMainMenuBackground();
 
-			InactiveButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 1, 1, 20, 20);
-			HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20);
+			InactiveButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 1, 1, 20, 20, false);
+			HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20, false);
 
 			AddButton("New Game", 0, "StartGame");
 			AddButton("Quick Start", 35, "StartGame");
