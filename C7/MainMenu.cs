@@ -7,7 +7,7 @@ public partial class MainMenu : Node2D
 {
 	private ILogger log;
 
-	readonly int BUTTON_LABEL_OFFSET = 4;
+	readonly int BUTTON_LABEL_OFFSET = 0;
 
 	ImageTexture InactiveButton;
 	ImageTexture HoverButton;
@@ -26,6 +26,8 @@ public partial class MainMenu : Node2D
 	{
 		log = LogManager.ForContext<MainMenu>();
 		log.Debug("enter MainMenu._Ready");
+
+		DisplayServer.WindowSetTitle("C7 - Godot 4");
 
 		// To pass data between scenes, putting path string in a global singleton and reading it later in createGame
 		Global = GetNode<GlobalSingleton>("/root/GlobalSingleton");
@@ -90,7 +92,10 @@ public partial class MainMenu : Node2D
 		MainMenuBackground.AddChild(newButton);
 		newButton.Connect("pressed",new Callable(this, actionName));
 
+		Theme theme = new Theme();
+		theme.SetFontSize("font_size", "Button", 14);
 		Button newButtonLabel = new Button();
+		newButtonLabel.Theme = theme;
 		newButtonLabel.Text = label;
 
 		newButtonLabel.SetPosition(new Vector2(MENU_OFFSET_FROM_LEFT + 25, MENU_OFFSET_FROM_TOP + verticalPosition + BUTTON_LABEL_OFFSET));
