@@ -44,10 +44,12 @@ namespace C7.Map {
 			smallFontTheme.SetFontSize("font_size", "Label", 11);
 			popSizeTheme.DefaultFont = midSizedFont;
 			popSizeTheme.SetColor("font_color", "Label", Color.Color8(255, 255, 255, 255));
+			popSizeTheme.SetFontSize("font_size", "Label", 18);
 			popThemeRed.DefaultFont = midSizedFont;
 			popThemeRed.SetColor("font_color", "Label", Color.Color8(255, 255, 255, 255));
+			popThemeRed.SetFontSize("font_size", "Label", 18);
 
-			//Mid-Size font uses the cache
+			//Mid-Size font skips the cache as it sets a custom size
 			midSizedFont = ResourceLoader.Load<FontFile>("res://Fonts/NotoSans-Regular.ttf");
 
 			//Small font doesn't, because otherwise it makes everything small
