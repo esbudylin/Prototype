@@ -20,7 +20,7 @@ namespace C7.Map {
 			Pcx pcx = Util.LoadPCX("Art/Cities/rMIDEAST.PCX");
 			int height = pcx.Height/4;
 			int width = pcx.Width/3;
-			cityTexture = Util.LoadTextureFromPCX("Art/Cities/rMIDEAST.PCX", 0, 0, width, height);
+			cityTexture = Util.LoadTextureFromPCX("Art/Cities/rMIDEAST.PCX", 0, 0, width, height, false);
 			citySpriteSize = new Vector2(width, height);
 
 			cityGraphics.OffsetLeft = tileCenter.X - (float)0.5 * citySpriteSize.X;

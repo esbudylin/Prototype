@@ -44,12 +44,18 @@ namespace C7.Map {
 			smallFontTheme.SetFontSize("font_size", "Label", 11);
 			popSizeTheme.DefaultFont = midSizedFont;
 			popSizeTheme.SetColor("font_color", "Label", Color.Color8(255, 255, 255, 255));
+			popSizeTheme.SetFontSize("font_size", "Label", 18);
 			popThemeRed.DefaultFont = midSizedFont;
 			popThemeRed.SetColor("font_color", "Label", Color.Color8(255, 255, 255, 255));
+			popThemeRed.SetFontSize("font_size", "Label", 18);
 
-			smallFont = ResourceLoader.Load<FontFile>("res://Fonts/NotoSans-Regular.ttf");
-
+			//Mid-Size font skips the cache as it sets a custom size
 			midSizedFont = ResourceLoader.Load<FontFile>("res://Fonts/NotoSans-Regular.ttf");
+
+			//Small font doesn't, because otherwise it makes everything small
+			smallFont = ResourceLoader.Load<FontFile>("res://Fonts/NotoSans-Regular.ttf", null, ResourceLoader.CacheMode.Ignore);
+			//Must set the FixedSize so Godot can calculate the width of the font for city labels
+			smallFont.FixedSize = 11;
 
 			nonEmbassyStar = PCXToGodot.getImageFromPCX(cityIcons, 20, 1, 18, 18);
 		}

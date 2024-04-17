@@ -210,13 +210,13 @@ public partial class Util {
 	private static Dictionary<string, ImageTexture> textureCache = new Dictionary<string, ImageTexture>();
 	//Send this function a path (e.g. Art/exitBox-backgroundStates.pcx), and the coordinates of the extracted image you need from that PCX
 	//file, and it'll load it up and return you what you need.
-	static public ImageTexture LoadTextureFromPCX(string relPath, int leftStart, int topStart, int width, int height) {
+	static public ImageTexture LoadTextureFromPCX(string relPath, int leftStart, int topStart, int width, int height, bool shadows = true) {
 		string key = relPath + "-" + leftStart + "-" + topStart + "-" + width + "-" + height;
 		if (textureCache.ContainsKey(key)) {
 			return textureCache[key];
 		}
 		Pcx NewPCX = LoadPCX(relPath);
-		ImageTexture texture = PCXToGodot.getImageTextureFromPCX(NewPCX, leftStart, topStart, width, height);
+		ImageTexture texture = PCXToGodot.getImageTextureFromPCX(NewPCX, leftStart, topStart, width, height, shadows);
 		textureCache[key] = texture;
 		return texture;
 	}
