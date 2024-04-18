@@ -15,9 +15,9 @@ public partial class RightClickMenu : VBoxContainer {
 		var theme = new Theme();
 		theme.SetConstant("separation", "VBoxContainer", 0);
 		theme.SetColor("font_color", "Button", black);
-		theme.SetColor("font_color_hover", "Button", black);
-		theme.SetColor("font_color_pressed", "Button", black);
-		theme.SetColor("font_color_focus", "Button", black);
+		theme.SetColor("font_hover_color", "Button", black);
+		theme.SetColor("font_pressed_color", "Button", black);
+		theme.SetColor("font_focus_color", "Button", black);
 		theme.SetStylebox("normal", "Button", GetItemStyleBox(Color.Color8(255, 247, 222, 255)));
 		theme.SetStylebox("hover", "Button", GetItemStyleBox(Color.Color8(255, 189, 107, 255)));
 		theme.SetStylebox("pressed", "Button", GetItemStyleBox(Color.Color8(140, 200, 200, 255)));

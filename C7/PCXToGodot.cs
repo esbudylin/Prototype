@@ -20,7 +20,6 @@ public partial class PCXToGodot : GodotObject
 	 * This method is for cases where we want to use components of multiple PCXs in a texture, such as for the popup background.
 	 **/
 	public static Image getImageFromPCX(Pcx pcx, int leftStart, int topStart, int croppedWidth, int croppedHeight, bool shadows = true) {
-
 		int[] ColorData = loadPalette(pcx.Palette, shadows);
 		int[] BufferData = new int[croppedWidth * croppedHeight];
 
@@ -104,7 +103,7 @@ public partial class PCXToGodot : GodotObject
 		int[] baseLayer = new int[width * height];
 		int[] tintLayer = new int[width * height];
 
-		var whitePcx = Util.LoadPCX("Art/Units/Palettes/ntp00.pcx");
+		Pcx whitePcx = Util.LoadPCX("Art/Units/Palettes/ntp00.pcx");
 		int[] whiteColorData = loadPalette(whitePcx.Palette, true);
 
 		for (int i = 0; i < width * height; i++) {
@@ -127,7 +126,7 @@ public partial class PCXToGodot : GodotObject
 	}
 
 	private static Image getImageFromBufferData(int width, int height, int[] bufferData) {
-		var Data = new byte[4 * width * height];
+		byte[] Data = new byte[4 * width * height];
 		Buffer.BlockCopy(bufferData, 0, Data, 0, 4 * width * height);
 		Image image = Image.CreateFromData(width, height, false, Image.Format.Rgba8, Data);
 		return image;

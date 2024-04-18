@@ -25,7 +25,7 @@ public partial class BuildCityDialog : Popup
 
 		AddTexture(530, 260);
 
-		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupCULTURE.pcx", 1, 40, 149, 110);
+		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupCULTURE.pcx", 1, 40, 149, 110, false);
 		TextureRect AdvisorHead = new TextureRect();
 		AdvisorHead.Texture = AdvisorHappy;
 		//Appears at 400, 110 in game, but leftmost 25px are transparent with default graphics
