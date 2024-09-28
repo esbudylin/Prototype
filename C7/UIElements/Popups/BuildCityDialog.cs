@@ -11,6 +11,8 @@ public partial class BuildCityDialog : Popup
 
 	public BuildCityDialog(string defaultName)
 	{
+		cityName.Theme = ThemeFactory.DefaultTheme;
+		cityName.CaretBlink = true;
 		this.defaultName = defaultName;
 		alignment = BoxContainer.AlignmentMode.End;
 		margins = new Margins(right: -10); // 10px margin from the right
