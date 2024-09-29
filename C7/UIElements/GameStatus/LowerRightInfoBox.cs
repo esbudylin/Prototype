@@ -19,7 +19,7 @@ public partial class LowerRightInfoBox : TextureRect
 	Label yearAndGold = new Label();
 
 	Timer blinkingTimer = new Timer();
-	Boolean timerStarted = false;	//This "isStopped" returns false if it's never been started.  So we need this to know if we've ever started it.
+	bool timerStarted = false;	//This "isStopped" returns false if it's never been started.  So we need this to know if we've ever started it.
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()

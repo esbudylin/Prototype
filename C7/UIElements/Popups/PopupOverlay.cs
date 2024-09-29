@@ -1,4 +1,3 @@
-using System.Net;
 using Godot;
 using Serilog;
 
@@ -26,10 +25,17 @@ public partial class PopupOverlay : HBoxContainer
 
 	public void OnHidePopup()
 	{
+		// 1. enable mouse interaction with non-UI nodes
+		MouseFilter = MouseFilterEnum.Pass;
 		RemoveChild(currentChild);
 		currentChild = null;
 		Hide();
+
 		Control control = getControlNode();
+		// 2. enable mouse interactions with other UI elements
+		setMouseFilter(control, MouseFilterEnum.Pass);
+
+		// 3. enable clicking other UI elements
 		control.ProcessMode = ProcessModeEnum.Inherit;
 	}
 
@@ -44,6 +50,15 @@ public partial class PopupOverlay : HBoxContainer
 
 	private Control getControlNode() {
 		return GetNode<Control>(ControlNodePath);
+	}
+
+	private void setMouseFilter(Node n, MouseFilterEnum filter) {
+		foreach (Node child in n?.GetChildren()) {
+			setMouseFilter(child, filter);
+		}
+		if (n is Control control) {
+			control.MouseFilter = filter;
+		}
 	}
 
 	public void ShowPopup(Popup child, PopupCategory category)
@@ -73,8 +88,17 @@ public partial class PopupOverlay : HBoxContainer
 			log.Error("Invalid popup category");
 		}
 		AudioStreamWav wav = Util.LoadWAVFromDisk(Util.Civ3MediaPath(soundFile));
+
+		// 1. prevent mouse interaction with non-UI elements (ie. the map)
+		MouseFilter = MouseFilterEnum.Stop;
+
 		Control control = getControlNode();
+
+		// 2. prevent clicking other UI elements
 		control.ProcessMode = ProcessModeEnum.Disabled;
+
+		// 3. ignore all mouse input on other UI elements (ie. button color changes on hover)
+		setMouseFilter(control, MouseFilterEnum.Ignore);
 
 		Show();
 		PlaySound(wav);
@@ -89,17 +113,11 @@ public partial class PopupOverlay : HBoxContainer
 	 **/
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (this.Visible) {
-			if (@event is InputEventKey eventKey)
-			{
-				//As I've added more shortcuts, I've realized checking all of them here could be irksome.
-				//For now, I'm thinking it would make more sense to process or allow through the ones that should go through,
-				//as most of the global ones should *not* go through here.
-				if (eventKey.Pressed)
-				{
-					GetViewport().SetInputAsHandled();
-				}
-			}
+		if (Visible && @event is InputEventKey eventKey && eventKey.Pressed) {
+			// As I've added more shortcuts, I've realized checking all of them here could be irksome.
+			// For now, I'm thinking it would make more sense to process or allow through the ones that should go through,
+			// as most of the global ones should *not* go through here.
+			GetViewport().SetInputAsHandled();
 		}
 	}
 }
