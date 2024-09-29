@@ -1,3 +1,4 @@
+using System.Net;
 using Godot;
 using Serilog;
 
@@ -15,6 +16,8 @@ public partial class PopupOverlay : HBoxContainer
 
 	public static readonly string NodePath = "/root/C7Game/CanvasLayer/PopupOverlay";
 
+	private static readonly string ControlNodePath = "/root/C7Game/CanvasLayer/Control";
+
 	public enum PopupCategory {
 		Advisor,
 		Console,
@@ -26,6 +29,8 @@ public partial class PopupOverlay : HBoxContainer
 		RemoveChild(currentChild);
 		currentChild = null;
 		Hide();
+		Control control = getControlNode();
+		control.ProcessMode = ProcessModeEnum.Inherit;
 	}
 
 	public bool ShowingPopup => currentChild is not null;
@@ -35,6 +40,10 @@ public partial class PopupOverlay : HBoxContainer
 		AudioStreamPlayer player = GetNode<AudioStreamPlayer>("PopupSound");
 		player.Stream = wav;
 		player.Play();
+	}
+
+	private Control getControlNode() {
+		return GetNode<Control>(ControlNodePath);
 	}
 
 	public void ShowPopup(Popup child, PopupCategory category)
@@ -64,6 +73,9 @@ public partial class PopupOverlay : HBoxContainer
 			log.Error("Invalid popup category");
 		}
 		AudioStreamWav wav = Util.LoadWAVFromDisk(Util.Civ3MediaPath(soundFile));
+		Control control = getControlNode();
+		control.ProcessMode = ProcessModeEnum.Disabled;
+
 		Show();
 		PlaySound(wav);
 	}
