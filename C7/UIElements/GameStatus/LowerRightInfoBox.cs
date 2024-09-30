@@ -54,21 +54,21 @@ public partial class LowerRightInfoBox : TextureRect
 		lblUnitSelected.HorizontalAlignment = HorizontalAlignment.Right;
 		lblUnitSelected.SetPosition(new Vector2(0, 20));
 		lblUnitSelected.AnchorRight = 1.0f;
-		lblUnitSelected.OffsetRight = -35;
+		lblUnitSelected.OffsetRight = -30;
 		boxRightRectangle.AddChild(lblUnitSelected);
 
 		attackDefenseMovement.Text = "0.0. 1/1";
 		attackDefenseMovement.HorizontalAlignment = HorizontalAlignment.Right;
 		attackDefenseMovement.SetPosition(new Vector2(0, 35));
 		attackDefenseMovement.AnchorRight = 1.0f;
-		attackDefenseMovement.OffsetRight = -35;
+		attackDefenseMovement.OffsetRight = -30;
 		boxRightRectangle.AddChild(attackDefenseMovement);
 
 		terrainType.Text = "Grassland";
 		terrainType.HorizontalAlignment = HorizontalAlignment.Right;
 		terrainType.SetPosition(new Vector2(0, 50));
 		terrainType.AnchorRight = 1.0f;
-		terrainType.OffsetRight = -35;
+		terrainType.OffsetRight = -30;
 		boxRightRectangle.AddChild(terrainType);
 
 		//For the centered labels, we anchor them center, with equal weight on each side.
