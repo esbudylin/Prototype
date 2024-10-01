@@ -6,11 +6,7 @@ namespace C7GameData
 	using System.Linq;
 	public class Tile
 	{
-		public ID id {get; private set;}
-		// ExtraInfo will eventually be type object and use a type descriminator in JSON to determine
-		//   how to deserialze. See https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism
-		//   and https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#support-polymorphic-deserialization
-		//   Needed for saving to and loading from a serializable format
+		public ID Id {get; internal set;}
 		public Civ3ExtraInfo ExtraInfo;
 		public int xCoordinate;
 		public int yCoordinate;
@@ -57,10 +53,12 @@ namespace C7GameData
 
 		public Tile(ID id)
 		{
-			this.id = id;
+			this.Id = id;
 			unitsOnTile = new List<MapUnit>();
 			Resource = Resource.NONE;
 		}
+
+		internal Tile() {}
 
 		// TODO: this should be either an extension in C7Engine, or otherwise
 		// calculated somewhere else, but it's not obvious to someone unfamiliar
