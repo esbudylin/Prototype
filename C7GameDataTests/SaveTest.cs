@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 
 using Xunit;
 
@@ -10,8 +11,7 @@ using C7GameData;
 using C7GameData.Save;
 using QueryCiv3;
 
-public class SaveTests
-{
+public class SaveTests {
 	private static readonly string C7GameDataTestsFolderName = "C7GameDataTests";
 
 	private static string getBasePath(string file) => Path.Combine(testDirectory, file);
@@ -32,9 +32,18 @@ public class SaveTests
 		}
 	}
 
+	private static string GetMd5FileHash(string path) {
+		if (!File.Exists(path)) {
+			return "";
+		}
+		using MD5 md5 = MD5.Create();
+		using FileStream fileStream = File.OpenRead(path);
+		byte[] hashBytes = md5.ComputeHash(fileStream);
+		return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+	}
+
 	[Fact]
-	public void SimpleSave()
-	{
+	public void SimpleSave() {
 		// simple load SaveGame and save to file:
 		string outputNeverGameDataPath = getDataPath("output/static-save-never-game-data.json");
 
@@ -60,11 +69,6 @@ public class SaveTests
 
 		// saved files should be the same as the original
 		Assert.Equal(original, savedNeverGameData);
-
-		// TODO: Currently the order of the properties in the json is different,
-		// so this fails. For testing, it would be convenient to sort SaveGame
-		// fields alphabetically before serializing to json.
-
 		Assert.Equal(original, savedWasGameData);
 	}
 
@@ -72,8 +76,10 @@ public class SaveTests
 	public async void LoadSampleSaves() {
 		string savesPath = getDataPath("saves");
 		Directory.CreateDirectory(savesPath);
-		using (var client = new HttpClient())
-		{
+
+		string sampleSavPath = Path.Combine(testDirectory, "data", "12345.SAV");
+		if (GetMd5FileHash(sampleSavPath) != "d34dd19a76eaebe26d29d73132c2fa60") {
+			using HttpClient client = new();
 			byte[] fileData = await client.GetByteArrayAsync("https://drive.usercontent.google.com/download?id=1QlIavkLtPZEIv1kHK9sO0fY2yp3o2si7&confirm=y");
 			File.WriteAllBytes(Path.Combine(testDirectory, "data", "12345.SAV"), fileData);
 		}
