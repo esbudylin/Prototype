@@ -138,6 +138,13 @@ public partial class RightClickTileMenu : RightClickMenu {
 		if (unfortifiedCount > 1) {
 			AddItem($"Fortify All ({unfortifiedCount} units)", () => ForAll(tile.xCoordinate, tile.yCoordinate, true));
 		}
+		if (tile.cityAtTile?.owner == game.controller) {
+			AddItem("Change Production (Shift+right click)", () => {
+				// Close the first menu before opening the second menu.
+				this.CloseAndDelete();
+				new RightClickChooseProductionMenu(game, tile.cityAtTile).Open(this.GetPosition());
+			});
+		}
 	}
 
 	public void SelectUnit(ID id) {
@@ -175,7 +182,25 @@ public partial class RightClickTileMenu : RightClickMenu {
 			CloseAndDelete();
 		}
 	}
+}
 
+// A right click menu for the player's city when there are no units.
+public partial class RightClickCityMenu : RightClickMenu {
+	public RightClickCityMenu(Game game, Tile tile) : base(game) {
+		ResetItems(tile);
+	}
+
+	public void ResetItems(Tile tile) {
+		RemoveAll();
+
+		if (tile.cityAtTile?.owner == game.controller) {
+			AddItem("Change Production (Shift+right click)", () => {
+				// Close the first menu before opening the second menu.
+				this.CloseAndDelete();
+				new RightClickChooseProductionMenu(game, tile.cityAtTile).Open(this.GetPosition());
+			});
+		}
+	}
 }
 
 public partial class RightClickChooseProductionMenu : RightClickMenu {
