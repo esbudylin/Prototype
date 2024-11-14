@@ -5,6 +5,7 @@ using C7Engine;
 
 public partial class RightClickMenu : VBoxContainer {
 	protected Game game;
+	protected Vector2 position;
 
 	protected RightClickMenu(Game game) : base() {
 		this.game = game;
@@ -43,6 +44,9 @@ public partial class RightClickMenu : VBoxContainer {
 			position.Y = Mathf.Max(0, position.Y - offScreen.Y);
 		}
 		this.SetPosition(position);
+
+		// Godot 4.2.1 does not have an accessor for the position, so store it ourselves.
+		this.position = position;
 	}
 
 	public void CloseAndDelete() {
@@ -138,6 +142,13 @@ public partial class RightClickTileMenu : RightClickMenu {
 		if (unfortifiedCount > 1) {
 			AddItem($"Fortify All ({unfortifiedCount} units)", () => ForAll(tile.xCoordinate, tile.yCoordinate, true));
 		}
+		if (tile.cityAtTile?.owner == game.controller) {
+			AddItem("Change Production (Shift+right click)", () => {
+				// Close the first menu before opening the second menu.
+				this.CloseAndDelete();
+				new RightClickChooseProductionMenu(game, tile.cityAtTile).Open(this.position);
+			});
+		}
 	}
 
 	public void SelectUnit(ID id) {
@@ -175,7 +186,25 @@ public partial class RightClickTileMenu : RightClickMenu {
 			CloseAndDelete();
 		}
 	}
+}
 
+// A right click menu for the player's city when there are no units.
+public partial class RightClickCityMenu : RightClickMenu {
+	public RightClickCityMenu(Game game, Tile tile) : base(game) {
+		ResetItems(tile);
+	}
+
+	public void ResetItems(Tile tile) {
+		RemoveAll();
+
+		if (tile.cityAtTile?.owner == game.controller) {
+			AddItem("Change Production (Shift+right click)", () => {
+				// Close the first menu before opening the second menu.
+				this.CloseAndDelete();
+				new RightClickChooseProductionMenu(game, tile.cityAtTile).Open(this.position);
+			});
+		}
+	}
 }
 
 public partial class RightClickChooseProductionMenu : RightClickMenu {

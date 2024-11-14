@@ -378,10 +378,16 @@ public partial class Game : Node2D {
 					var tile = mapView.tileOnScreenAt(gameDataAccess.gameData.map, eventMouseButton.Position);
 					if (tile != null) {
 						bool shiftDown = Input.IsKeyPressed(Godot.Key.Shift);
+
+						// Handle the shortcut of shift+right clicking a city to get the change production menu.
 						if (shiftDown && tile.cityAtTile?.owner == controller)
 							new RightClickChooseProductionMenu(this, tile.cityAtTile).Open(eventMouseButton.Position);
 						else if ((!shiftDown) && tile.unitsOnTile.Count > 0)
+						    // There are units on this title, so open that menu.
 							new RightClickTileMenu(this, tile).Open(eventMouseButton.Position);
+						else if ((!shiftDown) && tile.cityAtTile?.owner == controller)
+						    // There are no units, but this is the player's city.
+							new RightClickCityMenu(this, tile).Open(eventMouseButton.Position);
 
 						string yield = tile.YieldString(controller);
 						log.Debug($"({tile.xCoordinate}, {tile.yCoordinate}): {tile.overlayTerrainType.DisplayName} {yield}");
