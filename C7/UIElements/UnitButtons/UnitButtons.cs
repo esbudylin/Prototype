@@ -87,12 +87,11 @@ public partial class UnitButtons : VBoxContainer {
 			button.Visible = false;
 		}
 
-		// pcen (may 2023) - switched this to use the prototype's actions, not
-		// sure I understand the commented goal. Before, was commented:
-		//     TODO: This is technically right, since the unit's available actions have been attached,
-		//     but is unintuitive since they typically are on the prototype.
-		//     Goal: Send the actions as a list.
-		foreach (string action in unit.unitType.actions) {
+		// Mark all the buttons corresponding to the unit's available actions
+		// as visible. We do this rather than using the unit prototype's actions
+		// so that we don't display buttons that do nothing - we don't want to
+		// show the "road" button if we can't build a road, etc.
+		foreach (string action in unit.availableActions) {
 			if (buttonMap.ContainsKey(action)) {
 				buttonMap[action].Visible = true;
 			} else {
