@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace C7GameData
@@ -29,6 +30,26 @@ namespace C7GameData
 			return path != null ? path.Count : -1;
 		}
 
+		public int PathCost(Tile from, float unitMovementPoints) {
+			if (path == null) { return 0; }
+
+			int turns = 0;
+			float remainingMovementPoints = unitMovementPoints;
+			foreach (Tile tile in path) {
+				float cost = getMovementCost(from, from.directionTo(tile), tile);
+				Console.WriteLine("Cost from " + from.ToString() + " to " + tile.ToString() + " is " + cost);
+
+				remainingMovementPoints -= cost;
+				if (remainingMovementPoints <= 0) {
+					++turns;
+					remainingMovementPoints = unitMovementPoints;
+				}
+
+				from = tile;
+			}
+			return turns;
+		}
+
 		// Indicates no path was found to the requested destination.
 		public static TilePath NONE = new TilePath();
 
@@ -37,5 +58,11 @@ namespace C7GameData
 			return new TilePath(destination, new Queue<Tile>());
 		}
 
+		public static float getMovementCost(Tile from, TileDirection dir, Tile newLocation) {
+			if (from.HasRiverCrossing(dir)) return newLocation.MovementCost();
+			if (from.overlays.railroad && newLocation.overlays.railroad) return 0;
+			if ((from.overlays.railroad || from.overlays.road) && newLocation.overlays.road) return 1.0f / 3;
+			return newLocation.MovementCost();
+		}
 	}
 }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using C7Engine;
 using C7GameData;
 using Serilog;
+using C7Engine.Pathing;
 
 public partial class Game : Node2D {
 	[Signal] public delegate void TurnStartedEventHandler();
@@ -411,10 +412,25 @@ public partial class Game : Node2D {
 					}
 				}
 			}
-		} else if (@event is InputEventMouseMotion eventMouseMotion && IsMovingCamera) {
-			GetViewport().SetInputAsHandled();
-			mapView.cameraLocation += OldPosition - eventMouseMotion.Position;
-			OldPosition = eventMouseMotion.Position;
+		} else if (@event is InputEventMouseMotion eventMouseMotion) {
+			if (IsMovingCamera) {
+				GetViewport().SetInputAsHandled();
+				mapView.cameraLocation += OldPosition - eventMouseMotion.Position;
+				OldPosition = eventMouseMotion.Position;
+			} else if (inUnitGoToMode) {
+				using UIGameDataAccess gameDataAccess = new();
+				Tile tile = mapView.tileOnScreenAt(gameDataAccess.gameData.map, eventMouseMotion.Position);
+				if (tile != null) {
+					MapUnit unit = gameDataAccess.gameData.GetUnit(CurrentlySelectedUnit.id);
+
+					var path = PathingAlgorithmChooser.GetAlgorithm(unit.IsLandUnit()).PathFrom(unit.location, tile);
+					if (path == null) {
+						Console.WriteLine("No path possible");
+					} else {
+						Console.WriteLine("Path is: " + path.PathLength() + ", cost is: " + path.PathCost(tile, unit.movementPoints.remaining));
+					}
+				}
+			}
 		} else if (@event is InputEventKey eventKeyDown && eventKeyDown.Pressed) {
 			if (eventKeyDown.Keycode == Godot.Key.O && eventKeyDown.ShiftPressed && eventKeyDown.IsCommandOrControlPressed() && eventKeyDown.AltPressed) {
 				using (UIGameDataAccess gameDataAccess = new UIGameDataAccess()) {
