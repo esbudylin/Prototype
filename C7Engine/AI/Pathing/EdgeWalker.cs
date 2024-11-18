@@ -34,7 +34,7 @@ namespace C7Engine.Pathing {
 				// If the unit can't enter the city (for example an enemy city), we
 				// will path right next to it and then refuse to actually enter it.
 				if (neighbor.IsWater() || neighbor.HasCity) {
-					float movementCost = MapUnitExtensions.getMovementCost(neighbor, direction, neighbor);
+					float movementCost = MapUnitExtensions.getMovementCost(node, direction, neighbor);
 					result.Add(new Edge<Tile>(node, neighbor, movementCost));
 				}
 			}
