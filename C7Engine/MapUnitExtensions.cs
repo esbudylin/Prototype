@@ -386,7 +386,7 @@ namespace C7Engine {
 			// Special case: if we are a water unit, traveling from the water into
 			// a city, it doesn't matter if the city is on hills or on grassland,
 			// the cost should always be 1.
-			// if (from.IsWater() && newLocation.HasCity) return 1;
+			if (from.IsWater() && newLocation.HasCity) return 1;
 
 			return newLocation.MovementCost();
 		}
