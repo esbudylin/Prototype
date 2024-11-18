@@ -7,7 +7,6 @@ using Xunit;
 namespace EngineTests {
 	public class WalkerOnLandTest {
 		private WalkerOnLand walker = new();
-		private ID id = ID.None("test-tile");
 		private Tile mountain  = new(ID.None("")) {
 			baseTerrainType = new() {
 				Key = "mountains"
@@ -106,6 +105,71 @@ namespace EngineTests {
 			IEnumerable<Edge<Tile>> edges = walker.getEdges(start);
 			Assert.Single(edges);
 			Assert.Contains(edges, item => item.current == plains && item.distanceToCurrent == 1.0f / 3.0f);
+		}
+	}
+
+	public class WalkerOnWaterTest {
+		private WalkerOnWater walker = new();
+		private Tile hill  = new(ID.None("")) {
+			baseTerrainType = new() {
+				Key = "hills"
+			},
+			overlayTerrainType = new() {
+				Key = "hills",
+				movementCost = 2
+			}
+		};
+		private Tile coast  = new(ID.None("")) {
+			baseTerrainType = new() {
+				Key = "coast"
+			},
+			overlayTerrainType = new() {
+				Key = "coast",
+				movementCost = 1
+			}
+		};
+		private Tile sea  = new(ID.None("")) {
+			baseTerrainType = new() {
+				Key = "sea"
+			},
+			overlayTerrainType = new() {
+				Key = "sea",
+				movementCost = 1
+			}
+		};
+
+		[Fact]
+		void testIgnoresLand() {
+			Tile start = coast;
+
+			// Add 2 neighbors, one of which is land.
+			start.neighbors[TileDirection.NORTH] = hill;
+			start.neighbors[TileDirection.SOUTH] = sea;
+
+			// The land tile should be ignored, and the costs should be correct.
+			IEnumerable<Edge<Tile>> edges = walker.getEdges(start);
+			Assert.Single(edges);
+
+			Assert.Contains(edges, item => item.current == sea && item.distanceToCurrent == 1);
+		}
+
+		[Fact]
+		void testLandIncludedIfItHasCity() {
+			Tile start = coast;
+
+			// Set up a neighbor on land with a city.
+			Tile end = hill;
+			end.cityAtTile = new City(Tile.NONE, null, "", ID.None(""));
+			start.neighbors[TileDirection.NORTH] = end;
+
+			// The city tile should be included, to allow for canals, and so
+			// that ships can go back into harbors.
+			//
+			// The cost should be 1, despite the city being on a hill. Land
+			// movement costs don't make sense to apply to ships.
+			IEnumerable<Edge<Tile>> edges = walker.getEdges(start);
+			Assert.Single(edges);
+			Assert.Contains(edges, item => item.current == hill && item.distanceToCurrent == 1);
 		}
 	}
 }
