@@ -14,8 +14,14 @@ public partial class UnitButtons : VBoxContainer {
 	private ILogger log = LogManager.ForContext<UnitButtons>();
 
 	private Dictionary<string, UnitControlButton> buttonMap = new Dictionary<string, UnitControlButton>();
+
+	[Export]
 	HBoxContainer primaryControls;
+
+	[Export]
 	HBoxContainer specializedControls;
+
+	[Export]
 	HBoxContainer advancedControls;
 
 	// Called when the node enters the scene tree for the first time.
@@ -23,9 +29,6 @@ public partial class UnitButtons : VBoxContainer {
 		// You can hide buttons like this.  This will come in handy later!
 		// Remember to re-calc the margin after hiding/unhiding buttons, as that may affect the width.
 		// this.GetNode<FortifyButton>("PrimaryUnitControls/FortifyButton").Hide();
-
-		primaryControls = GetNode<HBoxContainer>("PrimaryUnitControls");
-		specializedControls = GetNode<HBoxContainer>("SpecializedUnitControls");
 
 		AddNewButton(primaryControls, new UnitControlButton(C7Action.UnitHold, 0, 0, onButtonPressed));
 		AddNewButton(primaryControls, new UnitControlButton(C7Action.UnitWait, 1, 0, onButtonPressed));

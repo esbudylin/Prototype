@@ -108,7 +108,7 @@ grow_horizontal = 0
 grow_vertical = 0
 script = ExtResource("7")
 
-[node name="UnitButtons" type="VBoxContainer" parent="CanvasLayer/Control"]
+[node name="UnitButtons" type="VBoxContainer" parent="CanvasLayer/Control" node_paths=PackedStringArray("primaryControls", "specializedControls", "advancedControls")]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -119,6 +119,9 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 0
 script = ExtResource("12")
+primaryControls = NodePath("PrimaryUnitControls")
+specializedControls = NodePath("SpecializedUnitControls")
+advancedControls = NodePath("AdvancedUnitControls")
 
 [node name="AdvancedUnitControls" type="HBoxContainer" parent="CanvasLayer/Control/UnitButtons"]
 layout_mode = 2
