@@ -199,7 +199,7 @@ public partial class UnitLayer : LooseLayer {
 		}
 		nextBlankAnimInst = 0;
 
-		// Hide cursors if they've been initialized
+		// Hide cursor if it's been initialized
 		cursorSprite?.Hide();
 
 		looseView.mapView.game.updateAnimations(gameData);
