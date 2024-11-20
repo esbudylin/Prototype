@@ -29,6 +29,9 @@ namespace C7GameData {
 			return path != null ? path.Count : -1;
 		}
 
+		// TODO: This should accept the unit's starting movement points and their
+		// per-turn unit points. Write a test showing this can go wrong right now
+		// and then fix it.
 		public int PathCost(Tile from, float unitMovementPoints) {
 			if (path == null) { return 0; }
 
