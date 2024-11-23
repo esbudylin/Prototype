@@ -76,10 +76,6 @@ public partial class GotoLayer : LooseLayer {
 	}
 
 	public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter) {
-		if (tile == null) {
-			return;
-		}
-
 		// We set the move cost to -1 in Game.cs if the move is invalid for some reason.
 		if (looseView.mapView.game.gotoInfo?.destinationTile == tile && looseView.mapView.game.gotoInfo.moveCost >= 0) {
 			drawGotoCursor(looseView, tileCenter, looseView.mapView.game.gotoInfo.moveCost);
