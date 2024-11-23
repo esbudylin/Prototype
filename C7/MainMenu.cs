@@ -36,7 +36,7 @@ public partial class MainMenu : Node2D
 		LoadDialog.RelPath = @"Conquests/Saves";
 		LoadDialog.Connect("file_selected",new Callable(this,nameof(_on_FileDialog_file_selected)));
 		LoadScenarioDialog = new Util.Civ3FileDialog();
-		LoadScenarioDialog.RelPath = @"Conquests/Scenarios";
+		LoadScenarioDialog.RelPath = @"Conquests/Conquests";
 		LoadScenarioDialog.Connect("file_selected",new Callable(this,nameof(_on_FileDialog_file_selected)));
 		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadDialog);
 		SetCiv3Home = GetNode<Button>("CanvasLayer/SetCiv3Home");
