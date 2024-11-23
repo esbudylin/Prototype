@@ -436,7 +436,7 @@ public partial class Game : Node2D {
 				if (tile != null) {
 					MapUnit unit = gameDataAccess.gameData.GetUnit(CurrentlySelectedUnit.id);
 					TilePath path = unit == null ? null : PathingAlgorithmChooser.GetAlgorithm(unit.IsLandUnit()).PathFrom(unit.location, tile);
-					gotoInfo.moveCost = path == null ? -1 : path.PathCost(unit.location, unit.movementPoints.remaining);
+					gotoInfo.moveCost = path == null ? -1 : path.PathCost(unit.location, unit.unitType.movement, unit.movementPoints.remaining);
 				}
 			}
 		} else if (@event is InputEventKey eventKeyDown && eventKeyDown.Pressed) {

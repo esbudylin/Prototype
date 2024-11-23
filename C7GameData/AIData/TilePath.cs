@@ -29,21 +29,25 @@ namespace C7GameData {
 			return path != null ? path.Count : -1;
 		}
 
-		// TODO: This should accept the unit's starting movement points and their
-		// per-turn unit points. Write a test showing this can go wrong right now
-		// and then fix it.
-		public int PathCost(Tile from, float unitMovementPoints) {
+		public int PathCost(Tile from, float perTurnMovePoints, float remainingMovementPoints) {
 			if (path == null) { return 0; }
 
 			int turns = 0;
-			float remainingMovementPoints = unitMovementPoints;
-			foreach (Tile tile in path) {
-				float cost = getMovementCost(from, from.directionTo(tile), tile);
 
-				remainingMovementPoints -= cost;
-				if (remainingMovementPoints <= 0) {
+			// Start out with however many movement points the unit has left.
+			MovementPoints movementPoints = new();
+			movementPoints.reset(remainingMovementPoints);
+
+			foreach (Tile tile in path) {
+				// Subtract the cost of the next move.
+				float cost = getMovementCost(from, from.directionTo(tile), tile);
+				movementPoints.onUnitMove(cost);
+
+				// If we can't do any more moves, bump up the turn cost and reset
+				// our MP to the base value.
+				if (!movementPoints.canMove) {
 					++turns;
-					remainingMovementPoints = unitMovementPoints;
+					movementPoints.reset(perTurnMovePoints);
 				}
 
 				from = tile;
