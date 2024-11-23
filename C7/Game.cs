@@ -6,6 +6,7 @@ using C7Engine;
 using C7GameData;
 using Serilog;
 using C7Engine.Pathing;
+using System.Collections.Generic;
 
 public partial class Game : Node2D {
 	[Signal] public delegate void TurnStartedEventHandler();
@@ -41,6 +42,7 @@ public partial class Game : Node2D {
 	public class GotoInfo {
 		public Tile destinationTile = null;
 		public int moveCost = 0;
+		public HashSet<System.Numerics.Vector2> pathCoords;
 	};
 	public GotoInfo gotoInfo = null;
 
@@ -437,6 +439,7 @@ public partial class Game : Node2D {
 					MapUnit unit = gameDataAccess.gameData.GetUnit(CurrentlySelectedUnit.id);
 					TilePath path = unit == null ? null : PathingAlgorithmChooser.GetAlgorithm(unit.IsLandUnit()).PathFrom(unit.location, tile);
 					gotoInfo.moveCost = path == null ? -1 : path.PathCost(unit.location, unit.unitType.movement, unit.movementPoints.remaining);
+					gotoInfo.pathCoords = path == null ? null: path.GetPathCoords();
 				}
 			}
 		} else if (@event is InputEventKey eventKeyDown && eventKeyDown.Pressed) {

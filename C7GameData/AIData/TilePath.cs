@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace C7GameData {
 	public class TilePath {
@@ -53,6 +54,16 @@ namespace C7GameData {
 				from = tile;
 			}
 			return turns;
+		}
+
+		public HashSet<Vector2> GetPathCoords() {
+			HashSet<Vector2> result = new();
+
+			foreach (Tile tile in path) {
+				result.Add(new Vector2(tile.xCoordinate, tile.yCoordinate));
+			}
+
+			return result;
 		}
 
 		// Indicates no path was found to the requested destination.
