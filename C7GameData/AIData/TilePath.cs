@@ -52,6 +52,16 @@ namespace C7GameData {
 
 				from = tile;
 			}
+
+			// Special case: if we consumed part of our movement points (such as by
+			// walking along a road, consuming 1/3 of a point), return a cost of 1.
+			// This doesn't apply when railroads are used, since that wouldn't change
+			// movementPoints.remaining. If it wasn't for railroads we could just
+			// return Max(turns, 1).
+			if (turns == 0 && movementPoints.remaining != remainingMovementPoints) {
+				return 1;
+			}
+
 			return turns;
 		}
 

@@ -40,7 +40,7 @@ public partial class Game : Node2D {
 	// Otherwise null.
 	public class GotoInfo {
 		public Tile destinationTile = null;
-		public int moveCost = 0;
+		public int moveCost = -1;
 	};
 	public GotoInfo gotoInfo = null;
 
@@ -428,15 +428,20 @@ public partial class Game : Node2D {
 			} else if (gotoInfo != null) {
 				// We're in "goto" mode and moved the mouse over a tile.
 				//
-				// Figure out which tile it was. If we can move to that tile, note the
-				// cost of getting there.
+				// Figure out which tile it was.
 				using UIGameDataAccess gameDataAccess = new();
 				Tile tile = mapView.tileOnScreenAt(gameDataAccess.gameData.map, eventMouseMotion.Position);
 				gotoInfo.destinationTile = tile;
-				if (tile != null) {
-					MapUnit unit = gameDataAccess.gameData.GetUnit(CurrentlySelectedUnit.id);
-					TilePath path = unit == null ? null : PathingAlgorithmChooser.GetAlgorithm(unit.IsLandUnit()).PathFrom(unit.location, tile);
-					gotoInfo.moveCost = path == null ? -1 : path.PathCost(unit.location, unit.unitType.movement, unit.movementPoints.remaining);
+
+				// Figure out what unit is in goto mode. If the tile we're hovering over is
+				// different than the tile the unit is on, calculate the path to move there.
+				MapUnit unit = tile == null ? null : gameDataAccess.gameData.GetUnit(CurrentlySelectedUnit.id);
+				if (unit != null && unit.location != tile) {
+					TilePath path = PathingAlgorithmChooser.GetAlgorithm(unit.IsLandUnit()).PathFrom(unit.location, tile);
+					gotoInfo.moveCost = path.PathCost(unit.location, unit.unitType.movement, unit.movementPoints.remaining);
+				} else {
+					// Hide the goto cursor, we don't have a valid move.
+					gotoInfo.moveCost = -1;
 				}
 			}
 		} else if (@event is InputEventKey eventKeyDown && eventKeyDown.Pressed) {
