@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace C7GameData {
 	public class TilePath {
@@ -30,7 +31,9 @@ namespace C7GameData {
 		}
 
 		public int PathCost(Tile from, float perTurnMovePoints, float remainingMovementPoints) {
-			if (path == null) { return 0; }
+			// If we have no path (such as if we are a land unit trying to move to the water)
+			// return -1 so we don't display a goto cursor.
+			if (path == null || path.Count == 0) { return -1; }
 
 			int turns = 0;
 
@@ -52,7 +55,26 @@ namespace C7GameData {
 
 				from = tile;
 			}
+
+			// Special case: if we consumed part of our movement points (such as by
+			// walking along a road, consuming 1/3 of a point), round up the cost.
+			// This prevents showing 0 turns when moving one tile along a road, or
+			// 1 turn when moving 4 tiles along a road.
+			if (movementPoints.remaining < (turns == 0 ? remainingMovementPoints : perTurnMovePoints)) {
+				++turns;
+			}
+
 			return turns;
+		}
+
+		public HashSet<Vector2> GetPathCoords() {
+			HashSet<Vector2> result = new();
+
+			foreach (Tile tile in path) {
+				result.Add(new Vector2(tile.xCoordinate, tile.yCoordinate));
+			}
+
+			return result;
 		}
 
 		// Indicates no path was found to the requested destination.
