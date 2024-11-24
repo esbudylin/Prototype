@@ -5,6 +5,7 @@ using System.Diagnostics;
 using C7Engine;
 using C7GameData;
 using Serilog;
+using C7Engine.Pathing;
 
 public partial class Game : Node2D {
 	[Signal] public delegate void TurnStartedEventHandler();
@@ -33,7 +34,15 @@ public partial class Game : Node2D {
 	public MapUnit CurrentlySelectedUnit = MapUnit.NONE; //The selected unit.  May be changed by clicking on a unit or the next unit being auto-selected after orders are given for the current one.
 	private bool HasCurrentlySelectedUnit() => CurrentlySelectedUnit != MapUnit.NONE;
 
-	private bool inUnitGoToMode = false;
+	// When the game is in "goto" mode, the current destination and the cost of getting
+	// there, in turns.
+	//
+	// Otherwise null.
+	public class GotoInfo {
+		public Tile destinationTile = null;
+		public int moveCost = 0;
+	};
+	public GotoInfo gotoInfo = null;
 
 	// Normally if the currently selected unit (CSU) becomes fortified, we advance to the next autoselected unit. If this flag is set, we won't do
 	// that. This is useful so that the unit autoselector can be prevented from interfering with the player selecting fortified units.
@@ -331,7 +340,7 @@ public partial class Game : Node2D {
 
 	public override void _Input(InputEvent @event) {
 		if (@event is InputEventKey e && e.Pressed && !e.IsAction(C7Action.UnitGoto)) {
-			this.setGoToMode(false);
+			this.setGotoMode(false);
 		}
 	}
 
@@ -341,8 +350,8 @@ public partial class Game : Node2D {
 			if (eventMouseButton.ButtonIndex == MouseButton.Left) {
 				GetViewport().SetInputAsHandled();
 				if (eventMouseButton.IsPressed()) {
-					if (inUnitGoToMode) {
-						setGoToMode(false);
+					if (gotoInfo != null) {
+						setGotoMode(false);
 						using (var gameDataAccess = new UIGameDataAccess()) {
 							var tile = mapView.tileOnScreenAt(gameDataAccess.gameData.map, eventMouseButton.Position);
 							if (tile != null) {
@@ -373,7 +382,7 @@ public partial class Game : Node2D {
 				GetViewport().SetInputAsHandled();
 				AdjustZoomSlider(-1, GetViewport().GetMousePosition());
 			} else if ((eventMouseButton.ButtonIndex == MouseButton.Right) && (!eventMouseButton.IsPressed())) {
-				setGoToMode(false);
+				setGotoMode(false);
 				using (var gameDataAccess = new UIGameDataAccess()) {
 					var tile = mapView.tileOnScreenAt(gameDataAccess.gameData.map, eventMouseButton.Position);
 					if (tile != null) {
@@ -383,10 +392,10 @@ public partial class Game : Node2D {
 						if (shiftDown && tile.cityAtTile?.owner == controller)
 							new RightClickChooseProductionMenu(this, tile.cityAtTile).Open(eventMouseButton.Position);
 						else if ((!shiftDown) && tile.unitsOnTile.Count > 0)
-						    // There are units on this title, so open that menu.
+							// There are units on this title, so open that menu.
 							new RightClickTileMenu(this, tile).Open(eventMouseButton.Position);
 						else if ((!shiftDown) && tile.cityAtTile?.owner == controller)
-						    // There are no units, but this is the player's city.
+							// There are no units, but this is the player's city.
 							new RightClickCityMenu(this, tile).Open(eventMouseButton.Position);
 
 						string yield = tile.YieldString(controller);
@@ -411,10 +420,25 @@ public partial class Game : Node2D {
 					}
 				}
 			}
-		} else if (@event is InputEventMouseMotion eventMouseMotion && IsMovingCamera) {
-			GetViewport().SetInputAsHandled();
-			mapView.cameraLocation += OldPosition - eventMouseMotion.Position;
-			OldPosition = eventMouseMotion.Position;
+		} else if (@event is InputEventMouseMotion eventMouseMotion) {
+			if (IsMovingCamera) {
+				GetViewport().SetInputAsHandled();
+				mapView.cameraLocation += OldPosition - eventMouseMotion.Position;
+				OldPosition = eventMouseMotion.Position;
+			} else if (gotoInfo != null) {
+				// We're in "goto" mode and moved the mouse over a tile.
+				//
+				// Figure out which tile it was. If we can move to that tile, note the
+				// cost of getting there.
+				using UIGameDataAccess gameDataAccess = new();
+				Tile tile = mapView.tileOnScreenAt(gameDataAccess.gameData.map, eventMouseMotion.Position);
+				gotoInfo.destinationTile = tile;
+				if (tile != null) {
+					MapUnit unit = gameDataAccess.gameData.GetUnit(CurrentlySelectedUnit.id);
+					TilePath path = unit == null ? null : PathingAlgorithmChooser.GetAlgorithm(unit.IsLandUnit()).PathFrom(unit.location, tile);
+					gotoInfo.moveCost = path == null ? -1 : path.PathCost(unit.location, unit.unitType.movement, unit.movementPoints.remaining);
+				}
+			}
 		} else if (@event is InputEventKey eventKeyDown && eventKeyDown.Pressed) {
 			if (eventKeyDown.Keycode == Godot.Key.O && eventKeyDown.ShiftPressed && eventKeyDown.IsCommandOrControlPressed() && eventKeyDown.AltPressed) {
 				using (UIGameDataAccess gameDataAccess = new UIGameDataAccess()) {
@@ -496,7 +520,7 @@ public partial class Game : Node2D {
 			this.mapView.gridLayer.visible = !this.mapView.gridLayer.visible;
 		}
 
-		if (Input.IsActionJustPressed(C7Action.Escape) && !this.inUnitGoToMode) {
+		if (Input.IsActionJustPressed(C7Action.Escape) && this.gotoInfo == null) {
 			log.Debug("Got request for escape/quit");
 			popupOverlay.ShowPopup(new EscapeQuitPopup(), PopupOverlay.PopupCategory.Info);
 		}
@@ -543,7 +567,7 @@ public partial class Game : Node2D {
 		// toggles the go to state, but must be detoggled in _*Input methods if
 		// it is not the input being pressed.
 		if (Input.IsActionJustPressed(C7Action.UnitGoto)) {
-			setGoToMode(true);
+			setGotoMode(true);
 		}
 
 		if (Input.IsActionJustPressed(C7Action.UnitExplore)) {
@@ -578,8 +602,12 @@ public partial class Game : Node2D {
 		this.setSelectedUnit(UnitInteractions.getNextSelectedUnit(gameData));
 	}
 
-	private void setGoToMode(bool isOn) {
-		inUnitGoToMode = isOn;
+	private void setGotoMode(bool isOn) {
+		if (isOn) {
+			gotoInfo = new();
+		} else {
+			gotoInfo = null;
+		}
 	}
 
 	private void _on_SlideToggle_toggled(bool buttonPressed) {
