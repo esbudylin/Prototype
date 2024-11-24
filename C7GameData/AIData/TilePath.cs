@@ -59,7 +59,7 @@ namespace C7GameData {
 			// Special case: if we consumed part of our movement points (such as by
 			// walking along a road, consuming 1/3 of a point), round up the cost.
 			// This prevents showing 0 turns when moving one tile along a road, or
-			// 1 turn, when moving 4 tiles along a road.
+			// 1 turn when moving 4 tiles along a road.
 			if (movementPoints.remaining < (turns == 0 ? remainingMovementPoints : perTurnMovePoints)) {
 				++turns;
 			}
