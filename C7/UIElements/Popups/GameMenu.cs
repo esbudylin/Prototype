@@ -31,6 +31,11 @@ public partial class GameMenu : Popup
 		GetParent().EmitSignal("Quit");
 	}
 
+	private void retire()
+	{
+		GetParent().EmitSignal("Retire");
+	}
+
 	private void map()
 	{
 		GetParent().EmitSignal("HidePopup");
