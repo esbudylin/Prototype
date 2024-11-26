@@ -8,6 +8,7 @@ public partial class PopupOverlay : HBoxContainer
 
 	[Signal] public delegate void UnitDisbandedEventHandler();
 	[Signal] public delegate void QuitEventHandler();
+	[Signal] public delegate void RetireEventHandler();
 	[Signal] public delegate void BuildCityEventHandler(string name);
 	[Signal] public delegate void HidePopupEventHandler();
 
