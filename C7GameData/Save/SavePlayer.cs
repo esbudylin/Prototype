@@ -4,7 +4,7 @@ namespace C7GameData.Save {
 
 	public class SavePlayer {
 		public ID id;
-		public uint color;
+		public int colorIndex;
 		public bool barbarian;
 		public bool human = false;
 		public bool hasPlayedCurrentTurn = false;
@@ -18,11 +18,11 @@ namespace C7GameData.Save {
 
 		public Player ToPlayer(GameMap map, List<Civilization> civilizations) {
 			Player player = new Player{
-				color = color,
 				id = id,
 				isBarbarians = barbarian,
 				isHuman = human,
 				hasPlayedThisTurn = hasPlayedCurrentTurn,
+				colorIndex = colorIndex,
 				civilization = civilization is not null ? civilizations.Find(civ => civ.name == civilization) : null,
 				cityNameIndex = cityNameIndex,
 				tileKnowledge = new TileKnowledge(),
@@ -37,7 +37,7 @@ namespace C7GameData.Save {
 
 		public SavePlayer(Player player) {
 			id = player.id;
-			color = player.color;
+			colorIndex = player.colorIndex;
 			barbarian = player.isBarbarians;
 			human = player.isHuman;
 			hasPlayedCurrentTurn = player.hasPlayedThisTurn;

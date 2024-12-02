@@ -61364,7 +61364,7 @@
   "players": [
     {
       "id": "player-1",
-      "color": 0,
+      "colorIndex": 0,
       "barbarian": true,
       "human": false,
       "hasPlayedCurrentTurn": false,
@@ -61374,7 +61374,7 @@
     },
     {
       "id": "player-2",
-      "color": 1,
+      "colorIndex": 1,
       "barbarian": false,
       "human": true,
       "hasPlayedCurrentTurn": false,
@@ -61438,7 +61438,7 @@
     },
     {
       "id": "player-3",
-      "color": 5,
+      "colorIndex": 5,
       "barbarian": false,
       "human": false,
       "hasPlayedCurrentTurn": false,
@@ -61502,7 +61502,7 @@
     },
     {
       "id": "player-4",
-      "color": 4,
+      "colorIndex": 4,
       "barbarian": false,
       "human": false,
       "hasPlayedCurrentTurn": false,
@@ -61562,7 +61562,7 @@
     },
     {
       "id": "player-5",
-      "color": 7,
+      "colorIndex": 7,
       "barbarian": false,
       "human": false,
       "hasPlayedCurrentTurn": false,
@@ -61626,7 +61626,7 @@
     },
     {
       "id": "player-6",
-      "color": 10,
+      "colorIndex": 10,
       "barbarian": false,
       "human": false,
       "hasPlayedCurrentTurn": false,
@@ -61694,7 +61694,7 @@
     },
     {
       "id": "player-7",
-      "color": 6,
+      "colorIndex": 6,
       "barbarian": false,
       "human": false,
       "hasPlayedCurrentTurn": false,
@@ -61758,7 +61758,7 @@
     },
     {
       "id": "player-8",
-      "color": 8,
+      "colorIndex": 8,
       "barbarian": false,
       "human": false,
       "hasPlayedCurrentTurn": false,
@@ -61858,7 +61858,7 @@
   "civilizations": [
     {
       "name": "A Barbarian Chiefdom",
-      "color": 0,
+      "colorIndex": 0,
       "leaderGender": "male",
       "cityNames": [
         "Chanca",
@@ -61942,7 +61942,7 @@
     {
       "name": "Rome",
       "leader": "Caesar",
-      "color": 1,
+      "colorIndex": 1,
       "leaderGender": "male",
       "cityNames": [
         "Rome",
@@ -61994,7 +61994,7 @@
     {
       "name": "Egypt",
       "leader": "Cleopatra",
-      "color": 3,
+      "colorIndex": 3,
       "leaderGender": "female",
       "cityNames": [
         "Thebes",
@@ -62031,7 +62031,7 @@
     {
       "name": "Greece",
       "leader": "Alexander",
-      "color": 10,
+      "colorIndex": 10,
       "leaderGender": "male",
       "cityNames": [
         "Athens",
@@ -62068,7 +62068,7 @@
     {
       "name": "Babylon",
       "leader": "Hammurabi",
-      "color": 1,
+      "colorIndex": 1,
       "leaderGender": "male",
       "cityNames": [
         "Babylon",
@@ -62103,7 +62103,7 @@
     {
       "name": "Germany",
       "leader": "Bismarck",
-      "color": 6,
+      "colorIndex": 6,
       "leaderGender": "male",
       "cityNames": [
         "Berlin",
@@ -62127,7 +62127,7 @@
     {
       "name": "Russia",
       "leader": "Catherine",
-      "color": 9,
+      "colorIndex": 9,
       "leaderGender": "female",
       "cityNames": [
         "Moscow",
@@ -62174,7 +62174,7 @@
     {
       "name": "China",
       "leader": "Mao",
-      "color": 5,
+      "colorIndex": 5,
       "leaderGender": "male",
       "cityNames": [
         "Beijing",
@@ -62200,7 +62200,7 @@
     {
       "name": "America",
       "leader": "Lincoln",
-      "color": 5,
+      "colorIndex": 5,
       "leaderGender": "male",
       "cityNames": [
         "Washington",
@@ -62248,7 +62248,7 @@
     {
       "name": "Japan",
       "leader": "Tokugawa",
-      "color": 4,
+      "colorIndex": 4,
       "leaderGender": "male",
       "cityNames": [
         "Kyoto",
@@ -62282,7 +62282,7 @@
     {
       "name": "France",
       "leader": "Joan d\u0027Arc",
-      "color": 7,
+      "colorIndex": 7,
       "leaderGender": "female",
       "cityNames": [
         "Paris",
@@ -62311,7 +62311,7 @@
     {
       "name": "India",
       "leader": "Gandhi",
-      "color": 8,
+      "colorIndex": 8,
       "leaderGender": "male",
       "cityNames": [
         "Delhi",
@@ -62336,7 +62336,7 @@
     {
       "name": "Persia",
       "leader": "Xerxes",
-      "color": 10,
+      "colorIndex": 10,
       "leaderGender": "male",
       "cityNames": [
         "Persepolis",
@@ -62373,7 +62373,7 @@
     {
       "name": "Aztecs",
       "leader": "Montezuma",
-      "color": 4,
+      "colorIndex": 4,
       "leaderGender": "male",
       "cityNames": [
         "Tenochtitlan",
@@ -62417,7 +62417,7 @@
     {
       "name": "Zululand",
       "leader": "Shaka",
-      "color": 3,
+      "colorIndex": 3,
       "leaderGender": "male",
       "cityNames": [
         "Zimbabwe",
@@ -62441,7 +62441,7 @@
     {
       "name": "Iroquois",
       "leader": "Hiawatha",
-      "color": 8,
+      "colorIndex": 8,
       "leaderGender": "male",
       "cityNames": [
         "Salamanca",
@@ -62478,7 +62478,7 @@
     {
       "name": "England",
       "leader": "Elizabeth",
-      "color": 2,
+      "colorIndex": 2,
       "leaderGender": "female",
       "cityNames": [
         "London",
@@ -62515,7 +62515,7 @@
     {
       "name": "Mongols",
       "leader": "Temujin",
-      "color": 3,
+      "colorIndex": 3,
       "leaderGender": "male",
       "cityNames": [
         "Karakorum",
@@ -62553,7 +62553,7 @@
     {
       "name": "Spain",
       "leader": "Isabella",
-      "color": 5,
+      "colorIndex": 5,
       "leaderGender": "female",
       "cityNames": [
         "Madrid",
@@ -62592,7 +62592,7 @@
     {
       "name": "Scandinavia",
       "leader": "Ragnar Lodbrok",
-      "color": 8,
+      "colorIndex": 8,
       "leaderGender": "male",
       "cityNames": [
         "Trondheim",
@@ -62633,7 +62633,7 @@
     {
       "name": "Ottomans",
       "leader": "Osman",
-      "color": 2,
+      "colorIndex": 2,
       "leaderGender": "male",
       "cityNames": [
         "Istanbul",
@@ -62670,7 +62670,7 @@
     {
       "name": "Celts",
       "leader": "Brennus",
-      "color": 4,
+      "colorIndex": 4,
       "leaderGender": "male",
       "cityNames": [
         "Entremont",
@@ -62708,7 +62708,7 @@
     {
       "name": "Arabia",
       "leader": "Abu Bakr",
-      "color": 7,
+      "colorIndex": 7,
       "leaderGender": "male",
       "cityNames": [
         "Mecca",
@@ -62744,7 +62744,7 @@
     {
       "name": "Carthage",
       "leader": "Hannibal",
-      "color": 9,
+      "colorIndex": 9,
       "leaderGender": "male",
       "cityNames": [
         "Carthage",
@@ -62782,7 +62782,7 @@
     {
       "name": "Korea",
       "leader": "Wang Kon",
-      "color": 6,
+      "colorIndex": 6,
       "leaderGender": "male",
       "cityNames": [
         "Seoul",
@@ -62820,7 +62820,7 @@
     {
       "name": "Sumeria",
       "leader": "Gilgamesh",
-      "color": 5,
+      "colorIndex": 5,
       "leaderGender": "male",
       "cityNames": [
         "Ur",
@@ -62853,7 +62853,7 @@
     {
       "name": "Hittites",
       "leader": "Mursilis",
-      "color": 14,
+      "colorIndex": 14,
       "leaderGender": "male",
       "cityNames": [
         "Hattusas",
@@ -62886,7 +62886,7 @@
     {
       "name": "Netherlands",
       "leader": "William",
-      "color": 2,
+      "colorIndex": 2,
       "leaderGender": "male",
       "cityNames": [
         "Amsterdam",
@@ -62919,7 +62919,7 @@
     {
       "name": "Portugal",
       "leader": "Henry",
-      "color": 8,
+      "colorIndex": 8,
       "leaderGender": "male",
       "cityNames": [
         "Lisbon",
@@ -62963,7 +62963,7 @@
     {
       "name": "Byzantines",
       "leader": "Theodora",
-      "color": 11,
+      "colorIndex": 11,
       "leaderGender": "female",
       "cityNames": [
         "Constantinople",
@@ -62996,7 +62996,7 @@
     {
       "name": "Inca",
       "leader": "Pachacuti",
-      "color": 7,
+      "colorIndex": 7,
       "leaderGender": "male",
       "cityNames": [
         "Cuzco",
@@ -63029,7 +63029,7 @@
     {
       "name": "Maya",
       "leader": "Smoke-Jaguar",
-      "color": 6,
+      "colorIndex": 6,
       "leaderGender": "male",
       "cityNames": [
         "Chich\u00E9n Itza",
