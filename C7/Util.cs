@@ -81,6 +81,14 @@ public partial class Util {
 	public static string FileExistsIgnoringCase(string exactCaseRoot, string ignoredCaseExtension) {
 		// First try the basic built-in File.Exists method since it's adequate in most cases.
 		string fullPath = System.IO.Path.Combine(exactCaseRoot, ignoredCaseExtension);
+
+		// In debug builds paths that are specified relative to the project directory
+		// will start with res://. We want to turn those into real paths, and then
+		// update our exactCaseRoot variable so that the search logic below works.
+		if (fullPath.Contains("res://")) {
+			fullPath = ProjectSettings.GlobalizePath(fullPath);
+			exactCaseRoot = fullPath.Substr(0, fullPath.RFind(ignoredCaseExtension));
+		}
 		if (System.IO.File.Exists(fullPath))
 			return fullPath;
 
@@ -145,7 +153,7 @@ public partial class Util {
 		}
 
 		//Next, before trying the base Civ paths, see if we have it packaged with C7
-		string c7Path = FileExistsIgnoringCase("", mediaPath);
+		string c7Path = FileExistsIgnoringCase(getProjectDirectoryPath(), mediaPath);
 		if (c7Path != null) {
 			return c7Path;
 		}
