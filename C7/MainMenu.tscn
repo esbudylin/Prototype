@@ -4,10 +4,12 @@
 [ext_resource type="Script" path="res://MainMenuMusicPlayer.cs" id="3"]
 [ext_resource type="Theme" uid="uid://b0jisy3avwkxf" path="res://MainMenuTheme.tres" id="4"]
 
-[node name="MainMenu" type="Node2D"]
+[node name="MainMenu" type="Node2D" node_paths=PackedStringArray("SetCiv3Home", "SetCiv3HomeDialog")]
 z_index = 1
 z_as_relative = false
 script = ExtResource("1")
+SetCiv3Home = NodePath("CanvasLayer/SetCiv3Home")
+SetCiv3HomeDialog = NodePath("CanvasLayer/SetCiv3HomeDialog")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -1
@@ -76,6 +78,9 @@ text = "Select Civ3 Home Folder"
 
 [node name="SetCiv3HomeDialog" type="FileDialog" parent="CanvasLayer"]
 mode = 3
+title = "Open a Directory"
+ok_button_text = "Select Current Folder"
+file_mode = 2
 access = 2
 
 [connection signal="pressed" from="CanvasLayer/SetCiv3Home" to="." method="_on_SetCiv3Home_pressed"]

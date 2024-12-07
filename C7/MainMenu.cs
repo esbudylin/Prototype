@@ -13,7 +13,9 @@ public partial class MainMenu : Node2D
 	ImageTexture HoverButton;
 	TextureRect MainMenuBackground;
 	Util.Civ3FileDialog LoadDialog;
+	[Export]
 	Button SetCiv3Home;
+	[Export]
 	FileDialog SetCiv3HomeDialog;
 	Util.Civ3FileDialog LoadScenarioDialog;
 	GlobalSingleton Global;
@@ -39,10 +41,6 @@ public partial class MainMenu : Node2D
 		LoadScenarioDialog.RelPath = @"Conquests/Scenarios";
 		LoadScenarioDialog.Connect("file_selected",new Callable(this,nameof(_on_FileDialog_file_selected)));
 		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadDialog);
-		SetCiv3Home = GetNode<Button>("CanvasLayer/SetCiv3Home");
-		SetCiv3HomeDialog = GetNode<FileDialog>("CanvasLayer/SetCiv3HomeDialog");
-		// For some reason this option isn't available in the scene UI
-		SetCiv3HomeDialog.FileMode = FileDialog.FileModeEnum.OpenDir;
 		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadScenarioDialog);
 		DisplayTitleScreen();
 	}
