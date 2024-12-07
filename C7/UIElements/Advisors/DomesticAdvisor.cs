@@ -51,6 +51,6 @@ public partial class DomesticAdvisor : TextureRect
 
 	private void ReturnToMenu()
 	{
-		GetParent().EmitSignal("hide");
+		GetParent<Advisors>().Hide();
 	}
 }
