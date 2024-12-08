@@ -21,7 +21,7 @@ namespace C7GameData
 		}
 		public string name;
 		public string leader;
-		public int color;
+		public int colorIndex;
 		public Gender leaderGender;
 		public List<string> cityNames = new List<string>();
 	}

@@ -277,7 +277,7 @@ namespace C7GameData {
 					name = race.Name,
 					leader = race.LeaderName,
 					leaderGender = race.LeaderGender == 0 ? Gender.Male : Gender.Female,
-					color = race.DefaultColor,
+					colorIndex = race.DefaultColor,
 				};
 				foreach (RACE_City city in theBiq.RaceCityName[i]) {
 					civ.cityNames.Add(city.Name);
@@ -294,9 +294,9 @@ namespace C7GameData {
 					continue; // can probably break here
 				}
 				Civilization civ = save.Civilizations[leader.RaceID];
-				save.Players.Add(new SavePlayer{
+				save.Players.Add(new SavePlayer {
 					id = ids.CreateID("player"),
-					color = (uint)civ.color,
+					colorIndex = civ.colorIndex,
 					barbarian = i == 0,
 					human = i == 1,
 					civilization = civ.name,

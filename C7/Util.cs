@@ -234,6 +234,25 @@ public partial class Util {
 		PcxCache[relPath] = thePcx;
 		return thePcx;
 	}
+	
+	private static Dictionary<int, Color> ColorCache = new();
+	private const string CivPalettePath = "Art/Units/Palettes/";
+
+	// Transforms color index loaded from a save file into Godot Color
+	public static Color LoadColor(int colorIndex) {
+		if (ColorCache.TryGetValue(colorIndex, out Color value)) {
+			return value;
+		}
+
+		string fileName = $"ntp{colorIndex:D2}.pcx";
+		string filePath = System.IO.Path.Combine(CivPalettePath, fileName);
+
+		Pcx pcx = LoadPCX(filePath);
+		Color color = PCXToGodot.GetColorFromPCX(pcx);
+
+		ColorCache[colorIndex] = color;
+		return color;
+	}
 
 	// Creates a texture from raw palette data. The data must be 256 pixels by 3 channels. Returns a 16x16 unfiltered RGB texture.
 	public static ImageTexture createPaletteTexture(byte[,] raw) {

@@ -4,13 +4,12 @@ using C7Engine.AI.StrategicAI;
 
 namespace C7GameData
 {
-using System;
 
 public class Player
 {
 	public ID id { get; internal set; }
-	public uint color { get; set; }
-	public bool isBarbarians = false;
+        public int colorIndex;
+        public bool isBarbarians = false;
 	//TODO: Refactor front-end so it sends player GUID with requests.
 	//We should allow multiple humans, this is a temporary measure.
 	public bool isHuman = false;
@@ -26,19 +25,6 @@ public class Player
 	//Ordered list of priority data.  First is most important.
 	public List<StrategicPriority> strategicPriorityData = new List<StrategicPriority>();
 	public int turnsUntilPriorityReevaluation = 0;
-
-	public Player(ID id, uint color)
-	{
-		this.id = id;
-		this.color = color & 0xFFFFFFFF;
-	}
-
-	public Player(ID id, Civilization civilization, uint color)
-	{
-		this.civilization = civilization;
-		this.id = id;
-		this.color = color & 0xFFFFFFFF;
-	}
 
 	public void AddUnit(MapUnit unit)
 	{
