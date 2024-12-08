@@ -1,13 +1,11 @@
 using Godot;
 using System;
-using System.Collections;
 using System.Diagnostics;
 using C7Engine;
 using C7GameData;
 using Serilog;
 using C7Engine.Pathing;
 using System.Collections.Generic;
-using C7.Map;
 
 public partial class Game : Node2D {
 	[Signal] public delegate void TurnStartedEventHandler();
@@ -199,7 +197,7 @@ public partial class Game : Node2D {
 	}
 
 	public override void _Process(double delta) {
-		processActions();
+		ProcessActions();
 
 		// TODO: Is it necessary to keep the game data mutex locked for this entire method?
 		using (var gameDataAccess = new UIGameDataAccess()) {
@@ -497,8 +495,18 @@ public partial class Game : Node2D {
 	}
 
 	// Handle Godot keybind actions
-	private void processActions() {
-		if (Input.IsActionJustPressed(C7Action.Escape) && popupOverlay.ShowingPopup) {
+	private void ProcessActions() {
+		Godot.Collections.Array<StringName> actions = InputMap.GetActions();
+
+		foreach (StringName action in actions) {
+			if (Input.IsActionJustPressed(action)) {
+				ProcessAction(action.ToString());
+			}
+		}
+	}
+
+	private void ProcessAction(string currentAction) {
+		if (currentAction == C7Action.Escape && popupOverlay.ShowingPopup) {
 			popupOverlay.OnHidePopup();
 			return;
 		}
@@ -508,7 +516,7 @@ public partial class Game : Node2D {
 			return;
 		}
 
-		if (Input.IsActionJustPressed(C7Action.EndTurn) && !this.HasCurrentlySelectedUnit()) {
+		if (currentAction == C7Action.EndTurn && !this.HasCurrentlySelectedUnit()) {
 			log.Verbose("end_turn key pressed");
 			this.OnPlayerEndTurn();
 		}
@@ -517,21 +525,21 @@ public partial class Game : Node2D {
 			// TODO: replace bool with an invalid TileDirection enum
 			TileDirection dir = TileDirection.NORTH;
 			bool moveUnit = true;
-			if (Input.IsActionJustPressed(C7Action.MoveUnitSouthwest)) {
+			if (currentAction == C7Action.MoveUnitSouthwest) {
 				dir = TileDirection.SOUTHWEST;
-			} else if (Input.IsActionJustPressed(C7Action.MoveUnitSouth)) {
+			} else if (currentAction == C7Action.MoveUnitSouth) {
 				dir = TileDirection.SOUTH;
-			} else if (Input.IsActionJustPressed(C7Action.MoveUnitSoutheast)) {
+			} else if (currentAction == C7Action.MoveUnitSoutheast) {
 				dir = TileDirection.SOUTHEAST;
-			} else if (Input.IsActionJustPressed(C7Action.MoveUnitWest)) {
+			} else if (currentAction == C7Action.MoveUnitWest) {
 				dir = TileDirection.WEST;
-			} else if (Input.IsActionJustPressed(C7Action.MoveUnitEast)) {
+			} else if (currentAction == C7Action.MoveUnitEast) {
 				dir = TileDirection.EAST;
-			} else if (Input.IsActionJustPressed(C7Action.MoveUnitNorthwest)) {
+			} else if (currentAction == C7Action.MoveUnitNorthwest) {
 				dir = TileDirection.NORTHWEST;
-			} else if (Input.IsActionJustPressed(C7Action.MoveUnitNorth)) {
+			} else if (currentAction == C7Action.MoveUnitNorth) {
 				dir = TileDirection.NORTH;
-			} else if (Input.IsActionJustPressed(C7Action.MoveUnitNortheast)) {
+			} else if (currentAction == C7Action.MoveUnitNortheast) {
 				dir = TileDirection.NORTHEAST;
 			} else {
 				moveUnit = false;
@@ -542,16 +550,16 @@ public partial class Game : Node2D {
 			}
 		}
 
-		if (Input.IsActionJustPressed(C7Action.ToggleGrid)) {
+		if (currentAction == C7Action.ToggleGrid) {
 			this.mapView.gridLayer.visible = !this.mapView.gridLayer.visible;
 		}
 
-		if (Input.IsActionJustPressed(C7Action.Escape) && this.gotoInfo == null) {
+		if (currentAction == C7Action.Escape && this.gotoInfo == null) {
 			log.Debug("Got request for escape/quit");
 			popupOverlay.ShowPopup(new EscapeQuitPopup(), PopupOverlay.PopupCategory.Info);
 		}
 
-		if (Input.IsActionJustPressed(C7Action.ToggleZoom)) {
+		if (currentAction == C7Action.ToggleZoom) {
 			if (mapView.cameraZoom != 1) {
 				mapView.setCameraZoomFromMiddle(1.0f);
 				slider.Value = 1.0f;
@@ -561,52 +569,52 @@ public partial class Game : Node2D {
 			}
 		}
 
-		if (Input.IsActionJustPressed(C7Action.ToggleAnimations)) {
+		if (currentAction == C7Action.ToggleAnimations) {
 			SetAnimationsEnabled(false);
 		} else if (Input.IsActionJustReleased(C7Action.ToggleAnimations)) {
 			SetAnimationsEnabled(true);
 		}
 
 		// actions with unit buttons
-		if (Input.IsActionJustPressed(C7Action.UnitHold)) {
+		if (currentAction == C7Action.UnitHold) {
 			new MsgSkipUnitTurn(CurrentlySelectedUnit.id).send();
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitWait)) {
+		if (currentAction == C7Action.UnitWait) {
 			using (var gameDataAccess = new UIGameDataAccess()) {
 				UnitInteractions.waitUnit(gameDataAccess.gameData, CurrentlySelectedUnit.id);
 				GetNextAutoselectedUnit(gameDataAccess.gameData);
 			}
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitFortify)) {
+		if (currentAction == C7Action.UnitFortify) {
 			new MsgSetFortification(CurrentlySelectedUnit.id, true).send();
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitDisband)) {
+		if (currentAction == C7Action.UnitDisband) {
 			popupOverlay.ShowPopup(new DisbandConfirmation(CurrentlySelectedUnit), PopupOverlay.PopupCategory.Advisor);
 		}
 
 		// unit_goto's behavior is more complicated than other actions - it
 		// toggles the go to state, but must be detoggled in _*Input methods if
 		// it is not the input being pressed.
-		if (Input.IsActionJustPressed(C7Action.UnitGoto)) {
+		if (currentAction == C7Action.UnitGoto) {
 			setGotoMode(true);
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitExplore)) {
+		if (currentAction == C7Action.UnitExplore) {
 			// unimplemented
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitSentry)) {
+		if (currentAction == C7Action.UnitSentry) {
 			// unimplemented
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitSentryEnemyOnly)) {
+		if (currentAction == C7Action.UnitSentryEnemyOnly) {
 			// unimplemented
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitBuildCity) && CurrentlySelectedUnit.canBuildCity()) {
+		if (currentAction == C7Action.UnitBuildCity && CurrentlySelectedUnit.canBuildCity()) {
 			using (var gameDataAccess = new UIGameDataAccess()) {
 				MapUnit currentUnit = gameDataAccess.gameData.GetUnit(CurrentlySelectedUnit.id);
 				log.Debug(currentUnit.Describe());
@@ -616,7 +624,7 @@ public partial class Game : Node2D {
 			}
 		}
 
-		if (Input.IsActionJustPressed(C7Action.UnitBuildRoad) && CurrentlySelectedUnit.canBuildRoad()) {
+		if (currentAction == C7Action.UnitBuildRoad && CurrentlySelectedUnit.canBuildRoad()) {
 			new MsgBuildRoad(CurrentlySelectedUnit.id).send();
 		}
 
