@@ -79,6 +79,12 @@ public partial class Util {
 	//   exactCaseRoot: The first part of the file path, not made case-insensitive. This is intended be the root Civ 3 path from GetCiv3Path().
 	//   ignoredCaseExtension: The second part of the file path that will be searched ignoring case.
 	public static string FileExistsIgnoringCase(string exactCaseRoot, string ignoredCaseExtension) {
+		// In debug builds paths that are specified relative to the project directory
+		// will start with res://. We want to turn those into real paths.
+		if (exactCaseRoot.Contains("res://")) {
+			exactCaseRoot = ProjectSettings.GlobalizePath(exactCaseRoot);
+		}
+
 		// First try the basic built-in File.Exists method since it's adequate in most cases.
 		string fullPath = System.IO.Path.Combine(exactCaseRoot, ignoredCaseExtension);
 		if (System.IO.File.Exists(fullPath))
@@ -145,7 +151,7 @@ public partial class Util {
 		}
 
 		//Next, before trying the base Civ paths, see if we have it packaged with C7
-		string c7Path = FileExistsIgnoringCase("", mediaPath);
+		string c7Path = FileExistsIgnoringCase(getProjectDirectoryPath(), mediaPath);
 		if (c7Path != null) {
 			return c7Path;
 		}
@@ -234,7 +240,7 @@ public partial class Util {
 		PcxCache[relPath] = thePcx;
 		return thePcx;
 	}
-	
+
 	private static Dictionary<int, Color> ColorCache = new();
 	private const string CivPalettePath = "Art/Units/Palettes/";
 
