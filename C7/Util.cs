@@ -87,7 +87,6 @@ public partial class Util {
 
 		// First try the basic built-in File.Exists method since it's adequate in most cases.
 		string fullPath = System.IO.Path.Combine(exactCaseRoot, ignoredCaseExtension);
-
 		if (System.IO.File.Exists(fullPath))
 			return fullPath;
 
@@ -241,7 +240,7 @@ public partial class Util {
 		PcxCache[relPath] = thePcx;
 		return thePcx;
 	}
-	
+
 	private static Dictionary<int, Color> ColorCache = new();
 	private const string CivPalettePath = "Art/Units/Palettes/";
 
