@@ -10,6 +10,7 @@ using Serilog;
 */
 
 public partial class UnitButtons : VBoxContainer {
+	[Signal] public delegate void ActionRequestedEventHandler(string action);
 
 	private ILogger log = LogManager.ForContext<UnitButtons>();
 
@@ -77,7 +78,7 @@ public partial class UnitButtons : VBoxContainer {
 	}
 
 	private void onButtonPressed(string action) {
-		Input.ActionPress(action);
+		EmitSignal(SignalName.ActionRequested, action);
 	}
 
 	private void OnNoMoreAutoselectableUnits() {
