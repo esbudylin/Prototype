@@ -79,16 +79,15 @@ public partial class Util {
 	//   exactCaseRoot: The first part of the file path, not made case-insensitive. This is intended be the root Civ 3 path from GetCiv3Path().
 	//   ignoredCaseExtension: The second part of the file path that will be searched ignoring case.
 	public static string FileExistsIgnoringCase(string exactCaseRoot, string ignoredCaseExtension) {
+		// In debug builds paths that are specified relative to the project directory
+		// will start with res://. We want to turn those into real paths.
+		if (exactCaseRoot.Contains("res://")) {
+			exactCaseRoot = ProjectSettings.GlobalizePath(exactCaseRoot);
+		}
+
 		// First try the basic built-in File.Exists method since it's adequate in most cases.
 		string fullPath = System.IO.Path.Combine(exactCaseRoot, ignoredCaseExtension);
 
-		// In debug builds paths that are specified relative to the project directory
-		// will start with res://. We want to turn those into real paths, and then
-		// update our exactCaseRoot variable so that the search logic below works.
-		if (fullPath.Contains("res://")) {
-			fullPath = ProjectSettings.GlobalizePath(fullPath);
-			exactCaseRoot = fullPath.Substr(0, fullPath.RFind(ignoredCaseExtension));
-		}
 		if (System.IO.File.Exists(fullPath))
 			return fullPath;
 
