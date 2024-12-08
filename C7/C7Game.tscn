@@ -58,12 +58,16 @@ _data = {
 "SlideOutAnimation": SubResource("1")
 }
 
-[node name="C7Game" type="Node2D"]
+[node name="C7Game" type="Node2D" node_paths=PackedStringArray("Toolbar", "popupOverlay", "slider", "animationPlayer")]
 script = ExtResource("1")
+Toolbar = NodePath("CanvasLayer/Control/ToolBar/MarginContainer/HBoxContainer")
+popupOverlay = NodePath("CanvasLayer/PopupOverlay")
+slider = NodePath("CanvasLayer/Control/SlideOutBar/VBoxContainer/Zoom")
+animationPlayer = NodePath("CanvasLayer/Control/SlideOutBar/AnimationPlayer")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="PopupOverlay" type="HBoxContainer" parent="CanvasLayer"]
+[node name="PopupOverlay" type="HBoxContainer" parent="CanvasLayer" node_paths=PackedStringArray("control")]
 visible = false
 anchors_preset = 15
 anchor_right = 1.0
@@ -72,6 +76,7 @@ grow_horizontal = 0
 size_flags_horizontal = 3
 alignment = 2
 script = ExtResource("9")
+control = NodePath("../Control")
 
 [node name="PopupSound" type="AudioStreamPlayer" parent="CanvasLayer/PopupOverlay"]
 
@@ -99,7 +104,7 @@ grow_horizontal = 0
 grow_vertical = 0
 script = ExtResource("7")
 
-[node name="UnitButtons" type="VBoxContainer" parent="CanvasLayer/Control"]
+[node name="UnitButtons" type="VBoxContainer" parent="CanvasLayer/Control" node_paths=PackedStringArray("primaryControls", "specializedControls", "advancedControls")]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -110,6 +115,9 @@ grow_horizontal = 2
 grow_vertical = 0
 size_flags_vertical = 0
 script = ExtResource("12")
+primaryControls = NodePath("PrimaryUnitControls")
+specializedControls = NodePath("SpecializedUnitControls")
+advancedControls = NodePath("AdvancedUnitControls")
 
 [node name="AdvancedUnitControls" type="HBoxContainer" parent="CanvasLayer/Control/UnitButtons"]
 layout_mode = 2
@@ -147,9 +155,10 @@ grow_horizontal = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Control/ToolBar/MarginContainer"]
 layout_mode = 2
 
-[node name="MenuButton" type="TextureButton" parent="CanvasLayer/Control/ToolBar/MarginContainer/HBoxContainer"]
+[node name="MenuButton" type="TextureButton" parent="CanvasLayer/Control/ToolBar/MarginContainer/HBoxContainer" node_paths=PackedStringArray("popupOverlay")]
 layout_mode = 2
 script = ExtResource("4")
+popupOverlay = NodePath("../../../../../PopupOverlay")
 
 [node name="CivilopediaButton" type="TextureButton" parent="CanvasLayer/Control/ToolBar/MarginContainer/HBoxContainer"]
 layout_mode = 2

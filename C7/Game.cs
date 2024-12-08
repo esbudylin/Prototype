@@ -50,6 +50,7 @@ public partial class Game : Node2D {
 	// that. This is useful so that the unit autoselector can be prevented from interfering with the player selecting fortified units.
 	public bool KeepCSUWhenFortified = false;
 
+	[Export]
 	Control Toolbar;
 	private bool IsMovingCamera;
 	private Vector2 OldPosition;
@@ -57,7 +58,12 @@ public partial class Game : Node2D {
 	Stopwatch loadTimer = new Stopwatch();
 	GlobalSingleton Global;
 
+	[Export]
 	private PopupOverlay popupOverlay;
+	[Export]
+	private VSlider slider;
+	[Export]
+	private AnimationPlayer animationPlayer;
 
 	bool errorOnLoad = false;
 
@@ -70,7 +76,6 @@ public partial class Game : Node2D {
 	// that gives an error if we fail to load for some reason.
 	public override void _Ready() {
 		Global = GetNode<GlobalSingleton>("/root/GlobalSingleton");
-		popupOverlay = GetNode<PopupOverlay>(PopupOverlay.NodePath);
 
 		try {
 			var animSoundPlayer = new AudioStreamPlayer();
@@ -103,8 +108,6 @@ public partial class Game : Node2D {
 						mapView.centerCameraOnTile(startingSettler.location);
 				}
 			}
-
-			Toolbar = GetNode<Control>("CanvasLayer/Control/ToolBar/MarginContainer/HBoxContainer");
 
 			//TODO: What was this supposed to do?  It throws errors and occasinally causes crashes now, because _OnViewportSizeChanged doesn't exist
 			// GetTree().Root.Connect("size_changed",new Callable(this,"_OnViewportSizeChanged"));
@@ -314,7 +317,6 @@ public partial class Game : Node2D {
 	}
 
 	public void AdjustZoomSlider(int numSteps, Vector2 zoomCenter) {
-		VSlider slider = GetNode<VSlider>("CanvasLayer/Control/SlideOutBar/VBoxContainer/Zoom");
 		double newScale = slider.Value + slider.Step * (double)numSteps;
 		if (newScale < slider.MinValue)
 			newScale = slider.MinValue;
@@ -466,7 +468,6 @@ public partial class Game : Node2D {
 			}
 		} else if (@event is InputEventMagnifyGesture magnifyGesture) {
 			// UI slider has the min/max zoom settings for now
-			VSlider slider = GetNode<VSlider>("CanvasLayer/Control/SlideOutBar/VBoxContainer/Zoom");
 			double newScale = mapView.cameraZoom * magnifyGesture.Factor;
 			if (newScale < slider.MinValue)
 				newScale = slider.MinValue;
@@ -536,11 +537,9 @@ public partial class Game : Node2D {
 		if (Input.IsActionJustPressed(C7Action.ToggleZoom)) {
 			if (mapView.cameraZoom != 1) {
 				mapView.setCameraZoomFromMiddle(1.0f);
-				VSlider slider = GetNode<VSlider>("CanvasLayer/Control/SlideOutBar/VBoxContainer/Zoom");
 				slider.Value = 1.0f;
 			} else {
 				mapView.setCameraZoomFromMiddle(0.5f);
-				VSlider slider = GetNode<VSlider>("CanvasLayer/Control/SlideOutBar/VBoxContainer/Zoom");
 				slider.Value = 0.5f;
 			}
 		}
@@ -620,9 +619,9 @@ public partial class Game : Node2D {
 
 	private void _on_SlideToggle_toggled(bool buttonPressed) {
 		if (buttonPressed) {
-			GetNode<AnimationPlayer>("CanvasLayer/Control/SlideOutBar/AnimationPlayer").PlayBackwards("SlideOutAnimation");
+			animationPlayer.PlayBackwards("SlideOutAnimation");
 		} else {
-			GetNode<AnimationPlayer>("CanvasLayer/Control/SlideOutBar/AnimationPlayer").Play("SlideOutAnimation");
+			animationPlayer.Play("SlideOutAnimation");
 		}
 	}
 

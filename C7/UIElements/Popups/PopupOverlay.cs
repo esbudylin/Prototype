@@ -1,6 +1,7 @@
 using Godot;
 using Serilog;
 
+[GlobalClass]
 public partial class PopupOverlay : HBoxContainer
 {
 
@@ -14,9 +15,8 @@ public partial class PopupOverlay : HBoxContainer
 
 	Control currentChild = null;
 
-	public static readonly string NodePath = "/root/C7Game/CanvasLayer/PopupOverlay";
-
-	private static readonly string ControlNodePath = "/root/C7Game/CanvasLayer/Control";
+	[Export]
+	private Control control;
 
 	public enum PopupCategory {
 		Advisor,
@@ -32,7 +32,6 @@ public partial class PopupOverlay : HBoxContainer
 		currentChild = null;
 		Hide();
 
-		Control control = getControlNode();
 		// 2. enable mouse interactions with other UI elements
 		setMouseFilter(control, MouseFilterEnum.Pass);
 
@@ -47,10 +46,6 @@ public partial class PopupOverlay : HBoxContainer
 		AudioStreamPlayer player = GetNode<AudioStreamPlayer>("PopupSound");
 		player.Stream = wav;
 		player.Play();
-	}
-
-	private Control getControlNode() {
-		return GetNode<Control>(ControlNodePath);
 	}
 
 	private void setMouseFilter(Node n, MouseFilterEnum filter) {
@@ -92,8 +87,6 @@ public partial class PopupOverlay : HBoxContainer
 
 		// 1. prevent mouse interaction with non-UI elements (ie. the map)
 		MouseFilter = MouseFilterEnum.Stop;
-
-		Control control = getControlNode();
 
 		// 2. prevent clicking other UI elements
 		control.ProcessMode = ProcessModeEnum.Disabled;
