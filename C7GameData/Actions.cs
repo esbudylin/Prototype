@@ -1,28 +1,46 @@
 namespace C7GameData {
 	public static class C7Action {
-		public static readonly string EndTurn = "end_turn";
-		public static readonly string Escape = "escape";
-		public static readonly string MoveUnitSouthwest = "move_unit_southwest";
-		public static readonly string MoveUnitSouth = "move_unit_south";
-		public static readonly string MoveUnitSoutheast = "move_unit_southeast";
-		public static readonly string MoveUnitWest = "move_unit_west";
-		public static readonly string MoveUnitEast = "move_unit_east";
-		public static readonly string MoveUnitNorthwest = "move_unit_northwest";
-		public static readonly string MoveUnitNorth = "move_unit_north";
-		public static readonly string MoveUnitNortheast = "move_unit_northeast";
-		public static readonly string ToggleAnimations = "toggle_animations";
-		public static readonly string ToggleGrid = "toggle_grid";
-		public static readonly string ToggleZoom = "toggle_zoom";
-		public static readonly string UnitBombard = "unit_bombard";
-		public static readonly string UnitBuildCity = "unit_build_city";
-		public static readonly string UnitBuildRoad = "unit_build_road";
-		public static readonly string UnitDisband = "unit_disband";
-		public static readonly string UnitExplore = "unit_explore";
-		public static readonly string UnitFortify = "unit_fortify";
-		public static readonly string UnitGoto = "unit_goto";
-		public static readonly string UnitHold = "unit_hold";
-		public static readonly string UnitSentry = "unit_sentry";
-		public static readonly string UnitSentryEnemyOnly = "unit_sentry_enemy_only";
-		public static readonly string UnitWait = "unit_wait";
+		public const string EndTurn = "end_turn";
+		public const string Escape = "escape";
+		public const string MoveUnitSouthwest = "move_unit_southwest";
+		public const string MoveUnitSouth = "move_unit_south";
+		public const string MoveUnitSoutheast = "move_unit_southeast";
+		public const string MoveUnitWest = "move_unit_west";
+		public const string MoveUnitEast = "move_unit_east";
+		public const string MoveUnitNorthwest = "move_unit_northwest";
+		public const string MoveUnitNorth = "move_unit_north";
+		public const string MoveUnitNortheast = "move_unit_northeast";
+		public const string ToggleAnimations = "toggle_animations";
+		public const string ToggleGrid = "toggle_grid";
+		public const string ToggleZoom = "toggle_zoom";
+		public const string UnitBombard = "unit_bombard";
+		public const string UnitBuildCity = "unit_build_city";
+		public const string UnitBuildRoad = "unit_build_road";
+		public const string UnitDisband = "unit_disband";
+		public const string UnitExplore = "unit_explore";
+		public const string UnitFortify = "unit_fortify";
+		public const string UnitGoto = "unit_goto";
+		public const string UnitHold = "unit_hold";
+		public const string UnitSentry = "unit_sentry";
+		public const string UnitSentryEnemyOnly = "unit_sentry_enemy_only";
+		public const string UnitWait = "unit_wait";
+
+		// This method transforms an action string into a TileDirection.
+		// The boolean value in the returned tuple indicates whether the conversion was successful.
+		public static (bool, TileDirection) ToTileDirection(string action) {
+			// TODO: replace bool with an invalid TileDirection enum
+			// More in this issue: https://github.com/C7-Game/Prototype/issues/397
+			return action switch {
+				MoveUnitSouthwest => (true, TileDirection.SOUTHWEST),
+				MoveUnitSouth => (true, TileDirection.SOUTH),
+				MoveUnitSoutheast => (true, TileDirection.SOUTHEAST),
+				MoveUnitWest => (true, TileDirection.WEST),
+				MoveUnitEast => (true, TileDirection.EAST),
+				MoveUnitNorthwest => (true, TileDirection.NORTHWEST),
+				MoveUnitNorth => (true, TileDirection.NORTH),
+				MoveUnitNortheast => (true, TileDirection.NORTHEAST),
+				_ => (false, TileDirection.NORTH),
+			};
+		}
 	}
 }
