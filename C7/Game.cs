@@ -522,28 +522,8 @@ public partial class Game : Node2D {
 		}
 
 		if (this.HasCurrentlySelectedUnit()) {
-			// TODO: replace bool with an invalid TileDirection enum
-			TileDirection dir = TileDirection.NORTH;
-			bool moveUnit = true;
-			if (currentAction == C7Action.MoveUnitSouthwest) {
-				dir = TileDirection.SOUTHWEST;
-			} else if (currentAction == C7Action.MoveUnitSouth) {
-				dir = TileDirection.SOUTH;
-			} else if (currentAction == C7Action.MoveUnitSoutheast) {
-				dir = TileDirection.SOUTHEAST;
-			} else if (currentAction == C7Action.MoveUnitWest) {
-				dir = TileDirection.WEST;
-			} else if (currentAction == C7Action.MoveUnitEast) {
-				dir = TileDirection.EAST;
-			} else if (currentAction == C7Action.MoveUnitNorthwest) {
-				dir = TileDirection.NORTHWEST;
-			} else if (currentAction == C7Action.MoveUnitNorth) {
-				dir = TileDirection.NORTH;
-			} else if (currentAction == C7Action.MoveUnitNortheast) {
-				dir = TileDirection.NORTHEAST;
-			} else {
-				moveUnit = false;
-			}
+			(bool moveUnit, TileDirection dir) = C7Action.ToTileDirection(currentAction);
+			
 			if (moveUnit) {
 				new MsgMoveUnit(CurrentlySelectedUnit.id, dir).send();
 				setSelectedUnit(CurrentlySelectedUnit); //also triggers updating the lower-left info box
