@@ -26,20 +26,18 @@ namespace C7GameData {
 		public const string UnitWait = "unit_wait";
 
 		// This method transforms an action string into a TileDirection.
-		// The boolean value in the returned tuple indicates whether the conversion was successful.
-		public static (bool, TileDirection) ToTileDirection(string action) {
-			// TODO: replace bool with an invalid TileDirection enum
-			// More in this issue: https://github.com/C7-Game/Prototype/issues/397
+		// A null value will be returned if the conversion is unsuccessful.
+		public static TileDirection? ToTileDirection(string action) {
 			return action switch {
-				MoveUnitSouthwest => (true, TileDirection.SOUTHWEST),
-				MoveUnitSouth => (true, TileDirection.SOUTH),
-				MoveUnitSoutheast => (true, TileDirection.SOUTHEAST),
-				MoveUnitWest => (true, TileDirection.WEST),
-				MoveUnitEast => (true, TileDirection.EAST),
-				MoveUnitNorthwest => (true, TileDirection.NORTHWEST),
-				MoveUnitNorth => (true, TileDirection.NORTH),
-				MoveUnitNortheast => (true, TileDirection.NORTHEAST),
-				_ => (false, TileDirection.NORTH),
+				MoveUnitSouthwest => TileDirection.SOUTHWEST,
+				MoveUnitSouth => TileDirection.SOUTH,
+				MoveUnitSoutheast => TileDirection.SOUTHEAST,
+				MoveUnitWest => TileDirection.WEST,
+				MoveUnitEast => TileDirection.EAST,
+				MoveUnitNorthwest => TileDirection.NORTHWEST,
+				MoveUnitNorth => TileDirection.NORTH,
+				MoveUnitNortheast => TileDirection.NORTHEAST,
+				_ => null,
 			};
 		}
 	}

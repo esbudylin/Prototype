@@ -509,10 +509,10 @@ public partial class Game : Node2D {
 		}
 
 		if (this.HasCurrentlySelectedUnit()) {
-			(bool moveUnit, TileDirection dir) = C7Action.ToTileDirection(currentAction);
+			TileDirection? dir = C7Action.ToTileDirection(currentAction);
 			
-			if (moveUnit) {
-				new MsgMoveUnit(CurrentlySelectedUnit.id, dir).send();
+			if (dir.HasValue) {
+				new MsgMoveUnit(CurrentlySelectedUnit.id, dir.Value).send();
 				setSelectedUnit(CurrentlySelectedUnit); //also triggers updating the lower-left info box
 			}
 		}
