@@ -62,7 +62,7 @@ public partial class Credits : Node2D
 		goBackButton.TextureNormal = goBackTexture;
 		goBackButton.SetPosition(new Vector2(952, 720));
 		AddChild(goBackButton);
-		goBackButton.Connect("pressed",new Callable(this,"ReturnToMenu"));
+		goBackButton.Pressed += ReturnToMenu;
 	}
 	public void ReturnToMenu()
 	{

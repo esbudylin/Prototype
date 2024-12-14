@@ -31,7 +31,7 @@ public partial class UnitControlButton : TextureButton {
 		this.TextureHover = rolloverTexture;
 		this.TexturePressed = pressedTexture;
 
-		this.Connect("pressed", new Callable(this, "onButtonPress"));
+		this.Pressed += onButtonPress;
 	}
 
 	private void onButtonPress() {

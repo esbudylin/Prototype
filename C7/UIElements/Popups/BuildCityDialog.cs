@@ -60,7 +60,7 @@ public partial class BuildCityDialog : Popup
 		cityName.SelectAll();
 		cityName.GrabFocus();
 
-		cityName.Connect("text_submitted", new Callable(this, "OnCityNameEntered"));
+		cityName.TextSubmitted += OnCityNameEntered;
 
 		//Cancel/confirm buttons.  Note the X button is thinner than the O button.
 		ImageTexture circleTexture= Util.LoadTextureFromPCX("Art/X-o_ALLstates-sprite.pcx", 1, 1, 19, 19);
@@ -82,8 +82,8 @@ public partial class BuildCityDialog : Popup
 		cancelButton.SetPosition(new Vector2(500, 213));
 		AddChild(cancelButton);
 
-		confirmButton.Connect("pressed",new Callable(this,"OnConfirmButtonPressed"));
-		cancelButton.Connect("pressed",new Callable(GetParent(),"OnHidePopup"));
+		confirmButton.Pressed += OnConfirmButtonPressed;
+		cancelButton.Pressed += GetParent<PopupOverlay>().OnHidePopup;
 	}
 
 	/**
@@ -98,8 +98,8 @@ public partial class BuildCityDialog : Popup
 	{
 		GetViewport().SetInputAsHandled();
 		log.Debug("The user hit enter with a city name of " + name);
-		GetParent().EmitSignal("BuildCity", name);
-		GetParent().EmitSignal("HidePopup");
+		GetParent().EmitSignal(PopupOverlay.SignalName.BuildCity, name);
+		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 
 }
