@@ -225,7 +225,7 @@ public partial class Game : Node2D {
 				//without a manual cast to int.
 				//https://github.com/godotengine/godot/issues/16388
 				if (Input.IsKeyPressed(Godot.Key.F1)) {
-					EmitSignal("ShowSpecificAdvisor", "F1");
+					EmitSignal(SignalName.ShowSpecificAdvisor, "F1");
 				}
 			}
 		}
@@ -286,9 +286,9 @@ public partial class Game : Node2D {
 		// Also emit the signal for a new unit being selected, so other areas such as Game Status and Unit Buttons can update
 		if (CurrentlySelectedUnit != MapUnit.NONE) {
 			ParameterWrapper<MapUnit> wrappedUnit = new ParameterWrapper<MapUnit>(CurrentlySelectedUnit);
-			EmitSignal("NewAutoselectedUnit", wrappedUnit);
+			EmitSignal(SignalName.NewAutoselectedUnit, wrappedUnit);
 		} else {
-			EmitSignal("NoMoreAutoselectableUnits");
+			EmitSignal(SignalName.NoMoreAutoselectableUnits);
 		}
 	}
 
@@ -303,7 +303,7 @@ public partial class Game : Node2D {
 	private void OnPlayerStartTurn() {
 		log.Information("Starting player turn");
 		int turnNumber = TurnHandling.GetTurnNumber();
-		EmitSignal("TurnStarted", turnNumber);
+		EmitSignal(SignalName.TurnStarted, turnNumber);
 		CurrentState = GameState.PlayerTurn;
 
 		using (var gameDataAccess = new UIGameDataAccess()) {
@@ -314,7 +314,7 @@ public partial class Game : Node2D {
 	private void OnPlayerEndTurn() {
 		if (CurrentState == GameState.PlayerTurn) {
 			log.Information("Ending player turn");
-			EmitSignal("TurnEnded");
+			EmitSignal(SignalName.TurnEnded);
 			log.Information("Starting computer turn");
 			CurrentState = GameState.ComputerTurn;
 			new MsgEndTurn().send(); // Triggers actual backend processing

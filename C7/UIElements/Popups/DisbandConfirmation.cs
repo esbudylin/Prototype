@@ -65,8 +65,8 @@ public partial class DisbandConfirmation : Popup
 		warningMessage.SetPosition(new Vector2(25, 170));
 		AddChild(warningMessage);
 
-		AddButton("Yes, we need to!", 215, "disband");
-		AddButton("No. Maybe you are right, advisor.", 245, "cancel");
+		AddButton("Yes, we need to!", 215, disband);
+		AddButton("No. Maybe you are right, advisor.", 245, cancel);
 
 		loadTimer.Stop();
 		TimeSpan stopwatchElapsed = loadTimer.Elapsed;
@@ -76,12 +76,12 @@ public partial class DisbandConfirmation : Popup
 	private void disband()
 	{
 		//tell the game to disband it.  right now we're doing that first, which is WRONG!
-		GetParent().EmitSignal("UnitDisbanded");
-		GetParent().EmitSignal("HidePopup");
+		GetParent().EmitSignal(PopupOverlay.SignalName.UnitDisbanded);
+		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 
 	private void cancel()
 	{
-		GetParent().EmitSignal("HidePopup");
+		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 }

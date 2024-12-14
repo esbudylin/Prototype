@@ -36,10 +36,10 @@ public partial class MainMenu : Node2D
 		Global.ResetLoadGamePath();
 		LoadDialog = new Util.Civ3FileDialog();
 		LoadDialog.RelPath = @"Conquests/Saves";
-		LoadDialog.Connect("file_selected",new Callable(this,nameof(_on_FileDialog_file_selected)));
+		LoadDialog.FileSelected += _on_FileDialog_file_selected;
 		LoadScenarioDialog = new Util.Civ3FileDialog();
 		LoadScenarioDialog.RelPath = @"Conquests/Scenarios";
-		LoadScenarioDialog.Connect("file_selected",new Callable(this,nameof(_on_FileDialog_file_selected)));
+		LoadScenarioDialog.FileSelected += _on_FileDialog_file_selected;
 		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadDialog);
 		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadScenarioDialog);
 		DisplayTitleScreen();
@@ -53,16 +53,16 @@ public partial class MainMenu : Node2D
 			InactiveButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 1, 1, 20, 20, false);
 			HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20, false);
 
-			AddButton("New Game", 0, "StartGame");
-			AddButton("Quick Start", 35, "StartGame");
-			AddButton("Tutorial", 70, "StartGame");
-			AddButton("Load Game", 105, "LoadGame");
-			AddButton("Load Scenario", 140, "LoadScenario");
-			AddButton("Hall of Fame", 175, "HallOfFame");
-			AddButton("Preferences", 210, "Preferences");
-			AddButton("Audio Preferences", 245, "Preferences");
-			AddButton("Credits", 280, "showCredits");
-			AddButton("Exit", 315, "_on_Exit_pressed");
+			AddButton("New Game", 0, StartGame);
+			AddButton("Quick Start", 35, StartGame);
+			AddButton("Tutorial", 70, StartGame);
+			AddButton("Load Game", 105, LoadGame);
+			AddButton("Load Scenario", 140, LoadScenario);
+			AddButton("Hall of Fame", 175, HallOfFame);
+			AddButton("Preferences", 210, Preferences);
+			AddButton("Audio Preferences", 245, Preferences);
+			AddButton("Credits", 280, showCredits);
+			AddButton("Exit", 315, _on_Exit_pressed);
 
 			// Hide select home folder if valid path is present as proven by reaching this point in code
 			SetCiv3Home.Visible = false;
@@ -81,14 +81,14 @@ public partial class MainMenu : Node2D
 		MainMenuBackground.Texture = TitleScreenTexture;
 	}
 
-	private void AddButton(string label, int verticalPosition, string actionName)
+	private void AddButton(string label, int verticalPosition, Action action)
 	{
 		TextureButton newButton = new TextureButton();
 		newButton.TextureNormal = InactiveButton;
 		newButton.TextureHover = HoverButton;
 		newButton.SetPosition(new Vector2(MENU_OFFSET_FROM_LEFT, MENU_OFFSET_FROM_TOP + verticalPosition));
 		MainMenuBackground.AddChild(newButton);
-		newButton.Connect("pressed",new Callable(this, actionName));
+		newButton.Pressed += action;
 
 		Theme theme = new Theme();
 		theme.SetFontSize("font_size", "Button", 14);
@@ -98,7 +98,7 @@ public partial class MainMenu : Node2D
 
 		newButtonLabel.SetPosition(new Vector2(MENU_OFFSET_FROM_LEFT + 25, MENU_OFFSET_FROM_TOP + verticalPosition + BUTTON_LABEL_OFFSET));
 		MainMenuBackground.AddChild(newButtonLabel);
-		newButtonLabel.Connect("pressed", new Callable(this, actionName));
+		newButtonLabel.Pressed += action;
 	}
 
 	public void StartGame()

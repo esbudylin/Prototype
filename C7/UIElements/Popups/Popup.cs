@@ -44,7 +44,7 @@ public partial class Popup : TextureRect
 	private static ImageTexture HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20, false);
 	private static Dictionary<(int, int), ImageTexture> backgroundCache = new Dictionary<(int, int), ImageTexture>();
 
-	protected void AddButton(string label, int verticalPosition, string actionName)
+	protected void AddButton(string label, int verticalPosition, Action action)
 	{
 		const int HORIZONTAL_POSITION = 30;
 		TextureButton newButton = new TextureButton();
@@ -52,7 +52,7 @@ public partial class Popup : TextureRect
 		newButton.TextureHover = HoverButton;
 		newButton.SetPosition(new Vector2(HORIZONTAL_POSITION, verticalPosition));
 		AddChild(newButton);
-		newButton.Connect("pressed",new Callable(this,actionName));
+		newButton.Pressed += action;
 
 		Theme theme = new Theme();
 		theme.SetFontSize("font_size", "Button", 14);
@@ -62,7 +62,7 @@ public partial class Popup : TextureRect
 
 		newButtonLabel.SetPosition(new Vector2(HORIZONTAL_POSITION + 25, verticalPosition + BUTTON_LABEL_OFFSET));
 		AddChild(newButtonLabel);
-		newButtonLabel.Connect("pressed",new Callable(this,actionName));
+		newButtonLabel.Pressed += action;
 	}
 
 	protected void AddHeader(string text, int vOffset)

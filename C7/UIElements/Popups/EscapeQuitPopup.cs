@@ -33,17 +33,17 @@ public partial class EscapeQuitPopup : Popup
 		warningMessage.SetPosition(new Vector2(25, 62));
 		AddChild(warningMessage);
 
-		AddButton("No, not really", 88, "cancel");
-		AddButton("Yes, immediately!", 116, "quit");
+		AddButton("No, not really", 88, cancel);
+		AddButton("Yes, immediately!", 116, quit);
 	}
 
 	private void quit()
 	{
-		GetParent().EmitSignal("Quit");
+		GetParent().EmitSignal(PopupOverlay.SignalName.Quit);
 	}
 
 	private void cancel()
 	{
-		GetParent().EmitSignal("HidePopup");
+		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 }

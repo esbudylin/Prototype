@@ -28,7 +28,7 @@ public partial class ErrorMessage : Popup
 		errorDescription.SetPosition(new Vector2(25, 162));
 		AddChild(errorDescription);
 
-		AddButton("Return to Menu", 290, "quit");
+		AddButton("Return to Menu", 290, quit);
 	}
 
 	private void quit()

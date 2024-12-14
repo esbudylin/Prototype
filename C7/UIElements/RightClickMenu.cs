@@ -70,7 +70,7 @@ public partial class RightClickMenu : VBoxContainer {
 			button.Icon = icon;
 		}
 		button.Alignment = HorizontalAlignment.Left;
-		button.Connect("pressed", Callable.From(action));
+		button.Pressed += action;
 		this.AddChild(button);
 	}
 

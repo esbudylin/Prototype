@@ -46,7 +46,7 @@ public partial class DomesticAdvisor : TextureRect
 		GoBackButton.TextureNormal = GoBackTexture;
 		GoBackButton.SetPosition(new Vector2(952, 720));
 		AddChild(GoBackButton);
-		GoBackButton.Connect("pressed",new Callable(this,"ReturnToMenu"));
+		GoBackButton.Pressed += ReturnToMenu;
 	}
 
 	private void ReturnToMenu()

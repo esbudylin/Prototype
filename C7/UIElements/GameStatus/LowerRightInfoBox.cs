@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using ConvertCiv3Media;
 using C7GameData;
 using Serilog;
@@ -46,7 +45,7 @@ public partial class LowerRightInfoBox : TextureRect
 		nextTurnButton.TextureHover = nextTurnOnTexture;
 		nextTurnButton.SetPosition(new Vector2(0, 0));
 		AddChild(nextTurnButton);
-		nextTurnButton.Connect("pressed",new Callable(this,"turnEnded"));
+		nextTurnButton.Pressed += turnEnded;
 
 
 		//Labels and whatnot in this text box
@@ -95,7 +94,7 @@ public partial class LowerRightInfoBox : TextureRect
 		//Setup up, but do not start, the timer.
 		blinkingTimer.OneShot = false;
 		blinkingTimer.WaitTime = 0.6f;
-		blinkingTimer.Connect("timeout",new Callable(this,"toggleEndTurnButton"));
+		blinkingTimer.Timeout += toggleEndTurnButton;
 		AddChild(blinkingTimer);
 	}
 
@@ -136,7 +135,7 @@ public partial class LowerRightInfoBox : TextureRect
 
 	private void turnEnded() {
 		log.Debug("Emitting the blinky button pressed signal");
-		GetParent().EmitSignal("BlinkyEndTurnButtonPressed");
+		GetParent().EmitSignal(GameStatus.SignalName.BlinkyEndTurnButtonPressed);
 	}
 
 	public void UpdateUnitInfo(MapUnit NewUnit, TerrainType terrain)
