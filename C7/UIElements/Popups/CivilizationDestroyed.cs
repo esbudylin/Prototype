@@ -40,7 +40,7 @@ public partial class CivilizationDestroyed : Popup
 		message.SetPosition(new Vector2(25, 170));
 		AddChild(message);
 
-		AddButton("Very well.", 215, "ContinueAction");
+		AddButton("Very well.", 215, ContinueAction);
 	}
 
 	private void ContinueAction()
