@@ -6,10 +6,7 @@ namespace C7GameData
 	using System.Linq;
 	public class Tile
 	{
-		// ExtraInfo will eventually be type object and use a type descriminator in JSON to determine
-		//   how to deserialze. See https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-polymorphism
-		//   and https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#support-polymorphic-deserialization
-		//   Needed for saving to and loading from a serializable format
+		public ID Id {get; internal set;}
 		public Civ3ExtraInfo ExtraInfo;
 		public int xCoordinate;
 		public int yCoordinate;
@@ -24,7 +21,6 @@ namespace C7GameData
 		public bool HasCity => cityAtTile != null && cityAtTile != City.NONE;
 		public CityResident personWorkingTile = null;	//allows us to see if another city is working this tile
 		public bool hasBarbarianCamp = false;
-
 		//One thing to decide is do we want to have a tile have a list of units on it,
 		//or a unit have reference to the tile it is on, or both?
 		//The downside of both is that both have to be updated (and it uses a miniscule amount
@@ -55,11 +51,14 @@ namespace C7GameData
 
 		public TileOverlays overlays = new TileOverlays();
 
-		public Tile()
+		public Tile(ID id)
 		{
+			this.Id = id;
 			unitsOnTile = new List<MapUnit>();
 			Resource = Resource.NONE;
 		}
+
+		internal Tile() {}
 
 		// TODO: this should be either an extension in C7Engine, or otherwise
 		// calculated somewhere else, but it's not obvious to someone unfamiliar
@@ -69,7 +68,7 @@ namespace C7GameData
 			return overlayTerrainType.movementCost;
 		}
 
-		public static Tile NONE = new Tile() {
+		public static Tile NONE = new Tile(ID.None("tile")) {
 			xCoordinate = -1,
 			yCoordinate = -1,
 		};
@@ -217,6 +216,41 @@ namespace C7GameData
 		public string YieldString(Player player) {
 			return $"{foodYield(player)}/{productionYield(player)}/{commerceYield(player)})";
 		}
+
+		// Returns the x and y coordinates of the neighbor in the specified direction.
+		public static Tuple<int, int> NeighborCoordinate(int x, int y, TileDirection direction) {
+			switch (direction) {
+				case TileDirection.NORTH:
+					y-=2;
+					break;
+				case TileDirection.NORTHEAST:
+					y--;
+					x++;
+					break;
+				case TileDirection.EAST:
+					x+=2;
+					break;
+				case TileDirection.SOUTHEAST:
+					y++;
+					x++;
+					break;
+				case TileDirection.SOUTH:
+					y+=2;
+					break;
+				case TileDirection.SOUTHWEST:
+					y++;
+					x--;
+					break;
+				case TileDirection.WEST:
+					x-=2;
+					break;
+				case TileDirection.NORTHWEST:
+					x--;
+					y--;
+					break;
+			}
+			return Tuple.Create(x, y);
+		}
 	}
 
 	public enum TileDirection {
@@ -227,7 +261,7 @@ namespace C7GameData
 		SOUTH,
 		SOUTHWEST,
 		WEST,
-		NORTHWEST
+		NORTHWEST,
 	}
 
 	public static class TileDirectionExtensions {
@@ -260,6 +294,20 @@ namespace C7GameData
 			default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
 			}
 		}
+
+		// public static string shortName(this TileDirection dir) {
+		// 	switch (dir) {
+		// 	case TileDirection.NORTH:     return "N";
+		// 	case TileDirection.NORTHEAST: return "NE";
+		// 	case TileDirection.EAST:      return "E";
+		// 	case TileDirection.SOUTHEAST: return "SE";
+		// 	case TileDirection.SOUTH:     return "S";
+		// 	case TileDirection.SOUTHWEST: return "SW";
+		// 	case TileDirection.WEST:      return "W";
+		// 	case TileDirection.NORTHWEST: return "NW";
+		// 	default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
+		// 	}
+		// }
 	}
 
 	public class TileOverlays {

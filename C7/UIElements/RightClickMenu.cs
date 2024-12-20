@@ -3,12 +3,11 @@ using Godot;
 using C7GameData;
 using C7Engine;
 
-public class RightClickMenu : VBoxContainer
-{
+public partial class RightClickMenu : VBoxContainer {
 	protected Game game;
+	protected Vector2 position;
 
-	protected RightClickMenu(Game game) : base()
-	{
+	protected RightClickMenu(Game game) : base() {
 		this.game = game;
 
 		// Set theme for menu node. TODO: This should be made moddable. I noticed in the Godot docs something about loading themes from files
@@ -16,12 +15,12 @@ public class RightClickMenu : VBoxContainer
 		Color black = Color.Color8(0, 0, 0, 255);
 		var theme = new Theme();
 		theme.SetConstant("separation", "VBoxContainer", 0);
-		theme.SetColor("font_color"        , "Button", black);
-		theme.SetColor("font_color_hover"  , "Button", black);
-		theme.SetColor("font_color_pressed", "Button", black);
-		theme.SetColor("font_color_focus"  , "Button", black);
-		theme.SetStylebox("normal" , "Button", GetItemStyleBox(Color.Color8(255, 247, 222, 255)));
-		theme.SetStylebox("hover"  , "Button", GetItemStyleBox(Color.Color8(255, 189, 107, 255)));
+		theme.SetColor("font_color", "Button", black);
+		theme.SetColor("font_hover_color", "Button", black);
+		theme.SetColor("font_pressed_color", "Button", black);
+		theme.SetColor("font_focus_color", "Button", black);
+		theme.SetStylebox("normal", "Button", GetItemStyleBox(Color.Color8(255, 247, 222, 255)));
+		theme.SetStylebox("hover", "Button", GetItemStyleBox(Color.Color8(255, 189, 107, 255)));
 		theme.SetStylebox("pressed", "Button", GetItemStyleBox(Color.Color8(140, 200, 200, 255)));
 		this.Theme = theme;
 
@@ -32,92 +31,84 @@ public class RightClickMenu : VBoxContainer
 		game.GetNode("CanvasLayer").AddChild(this);
 	}
 
-	public void Open(Vector2 position)
-	{
+	public void Open(Vector2 position) {
 		// Must show the container first in order to update its RectSize
 		this.Show();
 
 		// Move "position" if the menu would extend past the right or bottom edges of the screen
-		Vector2 offScreen = position + this.RectSize - GetViewport().Size;
-		if (offScreen.x > 0) {
-			position.x -= offScreen.x;
-			if (position.x < 0)
-				position.x = 0;
+		Vector2 offScreen = position + this.Size - DisplayServer.WindowGetSize();
+		if (offScreen.X > 0) {
+			position.X = Mathf.Max(0, position.X - offScreen.X);
 		}
-		if (offScreen.y > 0) {
-			position.y -= offScreen.y;
-			if (position.y < 0)
-				position.y = 0;
+		if (offScreen.Y > 0) {
+			position.Y = Mathf.Max(0, position.Y - offScreen.Y);
 		}
+		this.SetPosition(position);
 
-		this.RectPosition = position;
+		// Godot 4.2.1 does not have an accessor for the position, so store it ourselves.
+		this.position = position;
 	}
 
-	public void CloseAndDelete()
-	{
+	public void CloseAndDelete() {
 		this.QueueFree();
 	}
 
-	private static StyleBoxFlat GetItemStyleBox(Color color)
-	{
+	private static StyleBoxFlat GetItemStyleBox(Color color) {
 		return new StyleBoxFlat() {
 			BgColor = color,
-			ContentMarginLeft   = 4f,
-			ContentMarginTop    = 2f,
-			ContentMarginRight  = 4f,
+			ContentMarginLeft = 4f,
+			ContentMarginTop = 2f,
+			ContentMarginRight = 4f,
 			ContentMarginBottom = 2f
 		};
 	}
 
-	public Button AddItem(string text, Texture icon = null)
-	{
-		var button = new Button();
+	public void AddItem(string text, System.Action action, Texture2D icon = null) {
+		Button button = new Button();
 		button.Text = text;
-		if (icon != null)
+		if (icon != null) {
 			button.Icon = icon;
-		button.Align = Button.TextAlign.Left;
+		}
+		button.Alignment = HorizontalAlignment.Left;
+		button.Pressed += action;
 		this.AddChild(button);
-		return button;
 	}
 
-	public void RemoveAll()
-	{
-		foreach (Node child in this.GetChildren())
+	public void RemoveAll() {
+		foreach (Node child in this.GetChildren()) {
 			child.QueueFree();
+		}
 	}
 
-	public override void _Input(InputEvent @event)
-	{
-		bool mouseOverMenu = new Rect2(Vector2.Zero, this.RectSize).HasPoint(this.GetLocalMousePosition());
-		bool escapeKeyWasPressed = (@event is InputEventKey keyEvent) && keyEvent.Pressed && keyEvent.Scancode == (int)Godot.KeyList.Escape;
+	public override void _Input(InputEvent @event) {
+		bool mouseOverMenu = new Rect2(Vector2.Zero, this.Size).HasPoint(this.GetLocalMousePosition());
+		bool escapeKeyWasPressed = (@event is InputEventKey keyEvent) && keyEvent.Pressed && keyEvent.Keycode == Godot.Key.Escape;
 		bool mouseClickedOutsideMenu = (@event is InputEventMouseButton mouseButtonEvent) && mouseButtonEvent.IsPressed() && !mouseOverMenu;
 
 		if (escapeKeyWasPressed || mouseClickedOutsideMenu) {
 			this.AcceptEvent(); // Prevents other controls from receiving this event
 			CloseAndDelete();
-
-		// Eat all events other than mouse events while the cursor is over the menu. We want the menu to grab all input while it's open but we
-		// must make sure not to block mouse events from reaching its child buttons. (This had me confused for a while since the Godot docs
-		// say that events reach children before their parents, but the catch is that there are three phases of input processing. The "input"
-		// phase, this function, then "gui input", and finally "unhandled input". If a control eats an event during the "input" phase it won't
-		// proceed to the "gui input" phase where buttons actually respond to it.)
+			// Eat all events other than mouse events while the cursor is over the menu. We want the menu to grab all input while it's open but we
+			// must make sure not to block mouse events from reaching its child buttons. (This had me confused for a while since the Godot docs
+			// say that events reach children before their parents, but the catch is that there are three phases of input processing. The "input"
+			// phase, this function, then "gui input", and finally "unhandled input". If a control eats an event during the "input" phase it won't
+			// proceed to the "gui input" phase where buttons actually respond to it.)
 		} else if (!((@event is InputEventMouse) && mouseOverMenu)) {
 			this.AcceptEvent();
 		}
 	}
 }
 
-public class RightClickTileMenu : RightClickMenu
-{
+public partial class RightClickTileMenu : RightClickMenu {
 	public RightClickTileMenu(Game game, Tile tile) : base(game) {
 		ResetItems(tile);
 	}
 
-	private bool isUnitFortified(MapUnit unit, Dictionary<string, bool> uiStates) {
-		if (uiStates is null || !uiStates.ContainsKey(unit.guid)) {
+	private bool isUnitFortified(MapUnit unit, Dictionary<ID, bool> uiStates) {
+		if (uiStates is null || !uiStates.ContainsKey(unit.id)) {
 			return unit.isFortified;
 		}
-		return uiStates[unit.guid];
+		return uiStates[unit.id];
 	}
 
 	private string getUnitAction(MapUnit unit, bool isFortified) {
@@ -131,39 +122,45 @@ public class RightClickTileMenu : RightClickMenu
 	// and false if they were selected in the previous action. This is to update the UI
 	// since the actions update the engine asynchronously and otherwise the UI may not
 	// reflect these changes immediately.
-	public void ResetItems(Tile tile, Dictionary<string, bool> uiUpdatedUnitStates = null) {
+	public void ResetItems(Tile tile, Dictionary<ID, bool> uiUpdatedUnitStates = null) {
 		RemoveAll();
 
 		int fortifiedCount = 0;
-		List<MapUnit> units = tile.unitsOnTile.FindAll(unit => unit.owner.guid == game.controller.guid);
+		List<MapUnit> units = tile.unitsOnTile.FindAll(unit => unit.owner.id == game.controller.id);
 
 		foreach (MapUnit unit in units) {
 			bool isFortified = isUnitFortified(unit, uiUpdatedUnitStates);
 			fortifiedCount += isFortified ? 1 : 0;
-			string action = getUnitAction(unit, isFortified);
-
-			AddItem($"{action} {unit.Describe()}").Connect("pressed", this, "SelectUnit", new Godot.Collections.Array() {unit.guid});
+			string actionName = getUnitAction(unit, isFortified);
+			AddItem($"{actionName} {unit.Describe()}", () => SelectUnit(unit.id));
 		}
 		int unfortifiedCount = units.Count - fortifiedCount;
 
 		if (fortifiedCount > 1) {
-			AddItem($"Wake All ({fortifiedCount} units)").Connect("pressed", this, "ForAll", new Godot.Collections.Array() {tile.xCoordinate, tile.yCoordinate, false});
+			AddItem($"Wake All ({fortifiedCount} units)", () => ForAll(tile.xCoordinate, tile.yCoordinate, false));
 		}
 		if (unfortifiedCount > 1) {
-			AddItem($"Fortify All ({unfortifiedCount} units)").Connect("pressed", this, "ForAll", new Godot.Collections.Array() {tile.xCoordinate, tile.yCoordinate, true});
+			AddItem($"Fortify All ({unfortifiedCount} units)", () => ForAll(tile.xCoordinate, tile.yCoordinate, true));
+		}
+		if (tile.cityAtTile?.owner == game.controller) {
+			AddItem("Change Production (Shift+right click)", () => {
+				// Close the first menu before opening the second menu.
+				this.CloseAndDelete();
+				new RightClickChooseProductionMenu(game, tile.cityAtTile).Open(this.position);
+			});
 		}
 	}
 
-	public void SelectUnit(string guid) {
+	public void SelectUnit(ID id) {
 		using (var gameDataAccess = new UIGameDataAccess()) {
-			MapUnit toSelect = gameDataAccess.gameData.mapUnits.Find(u => u.guid == guid);
+			MapUnit toSelect = gameDataAccess.gameData.mapUnits.Find(u => u.id == id);
 			if (toSelect != null && toSelect.owner == game.controller) {
 				game.setSelectedUnit(toSelect);
-				new MsgSetFortification(toSelect.guid, false).send();
-				ResetItems(toSelect.location, new Dictionary<string, bool>() {{toSelect.guid, false}});
+				new MsgSetFortification(toSelect.id, false).send();
+				ResetItems(toSelect.location, new Dictionary<ID, bool>() { { toSelect.id, false } });
 			}
 		}
-		if (!Input.IsKeyPressed((int)KeyList.Shift)) {
+		if (!Input.IsKeyPressed(Godot.Key.Shift)) {
 			CloseAndDelete();
 		}
 	}
@@ -172,11 +169,11 @@ public class RightClickTileMenu : RightClickMenu
 		using (var gameDataAccess = new UIGameDataAccess()) {
 			bool hasSelectedUnit = false;
 			Tile tile = gameDataAccess.gameData.map.tileAt(tileX, tileY);
-			Dictionary<string, bool> modified = new Dictionary<string, bool>();
+			Dictionary<ID, bool> modified = new Dictionary<ID, bool>();
 			foreach (MapUnit unit in tile.unitsOnTile) {
 				if (unit.isFortified != isFortify) {
-					modified[unit.guid] = isFortify;
-					new MsgSetFortification(unit.guid, isFortify).send();
+					modified[unit.id] = isFortify;
+					new MsgSetFortification(unit.id, isFortify).send();
 
 					if (!hasSelectedUnit && !isFortify) {
 						game.setSelectedUnit(unit);
@@ -185,41 +182,54 @@ public class RightClickTileMenu : RightClickMenu
 			}
 			ResetItems(tile, modified);
 		}
-		if (!Input.IsKeyPressed((int)KeyList.Shift)) {
+		if (!Input.IsKeyPressed(Godot.Key.Shift)) {
 			CloseAndDelete();
 		}
 	}
-
 }
 
-public class RightClickChooseProductionMenu : RightClickMenu
-{
-	private string cityGUID;
+// A right click menu for the player's city when there are no units.
+public partial class RightClickCityMenu : RightClickMenu {
+	public RightClickCityMenu(Game game, Tile tile) : base(game) {
+		ResetItems(tile);
+	}
 
-	private ImageTexture GetProducibleIcon(IProducible producible)
-	{
+	public void ResetItems(Tile tile) {
+		RemoveAll();
+
+		if (tile.cityAtTile?.owner == game.controller) {
+			AddItem("Change Production (Shift+right click)", () => {
+				// Close the first menu before opening the second menu.
+				this.CloseAndDelete();
+				new RightClickChooseProductionMenu(game, tile.cityAtTile).Open(this.position);
+			});
+		}
+	}
+}
+
+public partial class RightClickChooseProductionMenu : RightClickMenu {
+	private ID cityID;
+
+	private ImageTexture GetProducibleIcon(IProducible producible) {
 		if (producible is UnitPrototype proto) {
 			const int iconWidth = 32, iconHeight = 32, iconsPerRow = 14;
 			int x = 1 + 33 * (proto.iconIndex % iconsPerRow),
-			    y = 1 + 33 * (proto.iconIndex / iconsPerRow);
+				y = 1 + 33 * (proto.iconIndex / iconsPerRow);
 			return Util.LoadTextureFromPCX("Art/Units/units_32.pcx", x, y, iconWidth, iconHeight);
 		} else
 			return null;
 	}
 
-	public RightClickChooseProductionMenu(Game game, City city) : base(game)
-	{
-		cityGUID = city.guid;
+	public RightClickChooseProductionMenu(Game game, City city) : base(game) {
+		cityID = city.id;
 		foreach (IProducible option in city.ListProductionOptions()) {
 			int buildTime = city.TurnsToProduce(option);
-			AddItem($"{option.name} ({buildTime} turns)", GetProducibleIcon(option))
-				.Connect("pressed", this, "ChooseProduction", new Godot.Collections.Array() { option.name });
+			AddItem($"{option.name} ({buildTime} turns)", () => ChooseProduction(option.name), GetProducibleIcon(option));
 		}
 	}
 
-	public void ChooseProduction(string producibleName)
-	{
-		new MsgChooseProduction(cityGUID, producibleName).send();
+	public void ChooseProduction(string producibleName) {
+		new MsgChooseProduction(cityID, producibleName).send();
 		CloseAndDelete();
 	}
 }

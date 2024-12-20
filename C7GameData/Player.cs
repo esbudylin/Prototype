@@ -1,24 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using C7Engine.AI.StrategicAI;
-using C7GameData.AIData;
 
 namespace C7GameData
 {
-using System;
 
 public class Player
 {
-	public string guid { get; set; }
-	public int color { get; set; }
-	public bool isBarbarians = false;
+	public ID id { get; internal set; }
+        public int colorIndex;
+        public bool isBarbarians = false;
 	//TODO: Refactor front-end so it sends player GUID with requests.
 	//We should allow multiple humans, this is a temporary measure.
 	public bool isHuman = false;
 	public bool hasPlayedThisTurn = false;
 
 	public Civilization civilization;
-	private int cityNameIndex = 0;
+	internal int cityNameIndex = 0;
 
 	public List<MapUnit> units = new List<MapUnit>();
 	public List<City> cities = new List<City>();
@@ -27,19 +25,6 @@ public class Player
 	//Ordered list of priority data.  First is most important.
 	public List<StrategicPriority> strategicPriorityData = new List<StrategicPriority>();
 	public int turnsUntilPriorityReevaluation = 0;
-
-	public Player(uint color)
-	{
-		guid = Guid.NewGuid().ToString();
-		this.color = (int)(color & 0xFFFFFFFF);
-	}
-
-	public Player(Civilization civilization, uint color)
-	{
-		this.civilization = civilization;
-		guid = Guid.NewGuid().ToString();
-		this.color = (int)(color & 0xFFFFFFFF);
-	}
 
 	public void AddUnit(MapUnit unit)
 	{
@@ -81,6 +66,17 @@ public class Player
 	// in place.
 	public bool KnowsAboutResource(Resource resource) {
 		return true;
+	}
+
+	public int RemainingCities() {
+		int result = 0;
+		foreach (City city in cities) {
+			// Destroyed cities have a size of zero.
+			if (city.size > 0) {
+				++result;
+			}
+		}
+		return result;
 	}
 
 	public override string ToString() {

@@ -1,22 +1,22 @@
 using Godot;
-using ConvertCiv3Media;
-using System;
-using System.Diagnostics;
 using Serilog;
 
-public class PopupOverlay : HBoxContainer
+[GlobalClass]
+public partial class PopupOverlay : HBoxContainer
 {
 
 	private ILogger log = LogManager.ForContext<PopupOverlay>();
 
-	[Signal] public delegate void UnitDisbanded();
-	[Signal] public delegate void Quit();
-	[Signal] public delegate void BuildCity(string name);
-	[Signal] public delegate void HidePopup();
+	[Signal] public delegate void UnitDisbandedEventHandler();
+	[Signal] public delegate void QuitEventHandler();
+	[Signal] public delegate void RetireEventHandler();
+	[Signal] public delegate void BuildCityEventHandler(string name);
+	[Signal] public delegate void HidePopupEventHandler();
 
 	Control currentChild = null;
 
-	public const string NodePath = "/root/C7Game/CanvasLayer/PopupOverlay";
+	[Export]
+	private Control control;
 
 	public enum PopupCategory {
 		Advisor,
@@ -24,60 +24,77 @@ public class PopupOverlay : HBoxContainer
 		Info	//Sounds similar to the above, but lower-pitched in the second half
 	}
 
-	public override void _Ready()
+	public void OnHidePopup()
 	{
-		base._Ready();
-	}
-
-	private void OnHidePopup()
-	{
-		log.Debug("Hiding popup");
+		// 1. enable mouse interaction with non-UI nodes
+		MouseFilter = MouseFilterEnum.Pass;
 		RemoveChild(currentChild);
+		currentChild = null;
 		Hide();
+
+		// 2. enable mouse interactions with other UI elements
+		setMouseFilter(control, MouseFilterEnum.Pass);
+
+		// 3. enable clicking other UI elements
+		control.ProcessMode = ProcessModeEnum.Inherit;
 	}
 
-	public void PlaySound(AudioStreamSample wav)
+	public bool ShowingPopup => currentChild is not null;
+
+	public void PlaySound(AudioStreamWav wav)
 	{
 		AudioStreamPlayer player = GetNode<AudioStreamPlayer>("PopupSound");
 		player.Stream = wav;
 		player.Play();
 	}
 
+	private void setMouseFilter(Node n, MouseFilterEnum filter) {
+		foreach (Node child in n?.GetChildren()) {
+			setMouseFilter(child, filter);
+		}
+		if (n is Control control) {
+			control.MouseFilter = filter;
+		}
+	}
+
 	public void ShowPopup(Popup child, PopupCategory category)
 	{
-		if (child == null) // not necessary if we don't pass null?
-		{
+		if (child is null) {
+			// not necessary if we don't pass null?
 			log.Error("Received request to show null popup");
 			return;
 		}
 
 		Alignment = child.alignment;
-		MarginTop = child.margins.top;
-		MarginBottom = child.margins.bottom;
-		MarginLeft = child.margins.left;
-		MarginRight = child.margins.right;
+		OffsetTop = child.margins.top;
+		OffsetBottom = child.margins.bottom;
+		OffsetLeft = child.margins.left;
+		OffsetRight = child.margins.right;
 
 		AddChild(child);
 		currentChild = child;
 
-		string soundFile = "";
-		switch (category)
-		{
-			case PopupCategory.Advisor:
-				soundFile = "Sounds/PopupAdvisor.wav";
-				break;
-			case PopupCategory.Console:
-				soundFile = "Sounds/PopupConsole.wav";
-				break;
-			case PopupCategory.Info:
-				soundFile = "Sounds/PopupInfo.wav";
-				break;
-			default:
-				log.Error("Invalid popup category");
-				break;
+		string soundFile = category switch {
+			PopupCategory.Advisor => "Sounds/PopupAdvisor.wav",
+			PopupCategory.Console => "Sounds/PopupConsole.wav",
+			PopupCategory.Info => "Sounds/PopupInfo.wav",
+			_ => "",
+		};
+		if (soundFile == "") {
+			log.Error("Invalid popup category");
 		}
-		AudioStreamSample wav = Util.LoadWAVFromDisk(Util.Civ3MediaPath(soundFile));
-		Visible = true;
+		AudioStreamWav wav = Util.LoadWAVFromDisk(Util.Civ3MediaPath(soundFile));
+
+		// 1. prevent mouse interaction with non-UI elements (ie. the map)
+		MouseFilter = MouseFilterEnum.Stop;
+
+		// 2. prevent clicking other UI elements
+		control.ProcessMode = ProcessModeEnum.Disabled;
+
+		// 3. ignore all mouse input on other UI elements (ie. button color changes on hover)
+		setMouseFilter(control, MouseFilterEnum.Ignore);
+
+		Show();
 		PlaySound(wav);
 	}
 
@@ -90,17 +107,11 @@ public class PopupOverlay : HBoxContainer
 	 **/
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (this.Visible) {
-			if (@event is InputEventKey eventKey)
-			{
-				//As I've added more shortcuts, I've realized checking all of them here could be irksome.
-				//For now, I'm thinking it would make more sense to process or allow through the ones that should go through,
-				//as most of the global ones should *not* go through here.
-				if (eventKey.Pressed)
-				{
-					GetTree().SetInputAsHandled();
-				}
-			}
+		if (Visible && @event is InputEventKey eventKey && eventKey.Pressed) {
+			// As I've added more shortcuts, I've realized checking all of them here could be irksome.
+			// For now, I'm thinking it would make more sense to process or allow through the ones that should go through,
+			// as most of the global ones should *not* go through here.
+			GetViewport().SetInputAsHandled();
 		}
 	}
 }

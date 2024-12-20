@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
 using C7GameData;
-using C7Engine;
+using Godot;
 
-public class AnimationTracker {
-	private Civ3AnimData civ3AnimData;
+public partial class AnimationTracker {
+	private AnimationManager civ3AnimData;
 	public bool endAllImmediately = false; // If true, update() ends all running animations regardless of time remaining.
 
-	public AnimationTracker(Civ3AnimData civ3AnimData)
+	public AnimationTracker(AnimationManager civ3AnimData)
 	{
 		this.civ3AnimData = civ3AnimData;
 	}
@@ -19,24 +19,17 @@ public class AnimationTracker {
 		public long startTimeMS, endTimeMS;
 		public AutoResetEvent completionEvent;
 		public AnimationEnding ending;
-		public Civ3Anim anim;
+		public C7Animation anim;
 	}
 
-	private Dictionary<string, ActiveAnimation> activeAnims = new Dictionary<string, ActiveAnimation>();
+	private Dictionary<ID, ActiveAnimation> activeAnims = new Dictionary<ID, ActiveAnimation>();
 
 	public long getCurrentTimeMS()
 	{
 		return DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 	}
 
-	private string getTileID(Tile tile)
-	{
-		// Generate a string to ID this tile that won't conflict with the unit GUIDs. TODO: Eventually we'll implement a common way of ID'ing
-		// all game objects. Use that here instead.
-		return String.Format("Tile.{0}.{1}", tile.xCoordinate, tile.yCoordinate);
-	}
-
-	private void startAnimation(string id, Civ3Anim anim, AutoResetEvent completionEvent, AnimationEnding ending)
+	private void startAnimation(ID id, C7Animation anim, AutoResetEvent completionEvent, AnimationEnding ending)
 	{
 		long currentTimeMS = getCurrentTimeMS();
 		long animDurationMS = (long)(1000.0 * anim.getDuration());
@@ -58,30 +51,30 @@ public class AnimationTracker {
 
 	public void startAnimation(MapUnit unit, MapUnit.AnimatedAction action, AutoResetEvent completionEvent, AnimationEnding ending)
 	{
-		startAnimation(unit.guid, civ3AnimData.forUnit(unit.unitType.name, action), completionEvent, ending);
+		startAnimation(unit.id, civ3AnimData.forUnit(unit.unitType, action), completionEvent, ending);
 	}
 
 	public void startAnimation(Tile tile, AnimatedEffect effect, AutoResetEvent completionEvent, AnimationEnding ending)
 	{
-		startAnimation(getTileID(tile), civ3AnimData.forEffect(effect), completionEvent, ending);
+		startAnimation(tile.Id, civ3AnimData.forEffect(effect), completionEvent, ending);
 	}
 
 	public void endAnimation(MapUnit unit)
 	{
 		ActiveAnimation aa;
-		if (activeAnims.TryGetValue(unit.guid, out aa)) {
+		if (activeAnims.TryGetValue(unit.id, out aa)) {
 			if (aa.completionEvent != null)
 				aa.completionEvent.Set();
-			activeAnims.Remove(unit.guid);
+			activeAnims.Remove(unit.id);
 		}
 	}
 
 	public bool hasCurrentAction(MapUnit unit)
 	{
-		return activeAnims.ContainsKey(unit.guid);
+		return activeAnims.ContainsKey(unit.id);
 	}
 
-	public (MapUnit.AnimatedAction, float) getCurrentActionAndProgress(string id)
+	public (MapUnit.AnimatedAction, float) getCurrentActionAndProgress(ID id)
 	{
 		ActiveAnimation aa = activeAnims[id];
 
@@ -100,18 +93,18 @@ public class AnimationTracker {
 
 	public (MapUnit.AnimatedAction, float) getCurrentActionAndProgress(MapUnit unit)
 	{
-		return getCurrentActionAndProgress(unit.guid);
+		return getCurrentActionAndProgress(unit.id);
 	}
 
 	public (MapUnit.AnimatedAction, float) getCurrentActionAndProgress(Tile tile)
 	{
-		return getCurrentActionAndProgress(getTileID(tile));
+		return getCurrentActionAndProgress(tile.Id);
 	}
 
 	public void update()
 	{
 		long currentTimeMS = (! endAllImmediately) ? getCurrentTimeMS() : long.MaxValue;
-		var keysToRemove = new List<string>();
+		var keysToRemove = new List<ID>();
 		foreach (var guidAAPair in activeAnims.Where(guidAAPair => guidAAPair.Value.endTimeMS <= currentTimeMS)) {
 			var (id, aa) = (guidAAPair.Key, guidAAPair.Value);
 			if (aa.completionEvent != null) {
@@ -143,23 +136,20 @@ public class AnimationTracker {
 				progress = progress,
 				offsetX = offsetX,
 				offsetY = offsetY
-				};
-		} else
+			};
+		} else {
 			return new MapUnit.Appearance {
 				action = unit.isFortified ? MapUnit.AnimatedAction.FORTIFY : MapUnit.AnimatedAction.DEFAULT,
 				direction = unit.facingDirection,
 				progress = 1f,
 				offsetX = 0f,
 				offsetY = 0f
-				};
+			};
+		}
 	}
 
-	public Civ3Anim getTileEffect(Tile tile)
+	public C7Animation getTileEffect(Tile tile)
 	{
-		ActiveAnimation aa;
-		if (activeAnims.TryGetValue(getTileID(tile), out aa))
-			return aa.anim;
-		else
-			return null;
+		return activeAnims.TryGetValue(tile.Id, out ActiveAnimation aa) ? aa.anim : null;
 	}
 }

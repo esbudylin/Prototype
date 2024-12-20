@@ -3,17 +3,19 @@ using System;
 using C7Engine;
 using Serilog;
 
-public class MainMenu : Node2D
+public partial class MainMenu : Node2D
 {
 	private ILogger log;
 
-	readonly int BUTTON_LABEL_OFFSET = 4;
+	readonly int BUTTON_LABEL_OFFSET = 0;
 
 	ImageTexture InactiveButton;
 	ImageTexture HoverButton;
 	TextureRect MainMenuBackground;
 	Util.Civ3FileDialog LoadDialog;
+	[Export]
 	Button SetCiv3Home;
+	[Export]
 	FileDialog SetCiv3HomeDialog;
 	Util.Civ3FileDialog LoadScenarioDialog;
 	GlobalSingleton Global;
@@ -27,20 +29,18 @@ public class MainMenu : Node2D
 		log = LogManager.ForContext<MainMenu>();
 		log.Debug("enter MainMenu._Ready");
 
+		DisplayServer.WindowSetTitle("C7 - Godot 4");
+
 		// To pass data between scenes, putting path string in a global singleton and reading it later in createGame
 		Global = GetNode<GlobalSingleton>("/root/GlobalSingleton");
 		Global.ResetLoadGamePath();
 		LoadDialog = new Util.Civ3FileDialog();
 		LoadDialog.RelPath = @"Conquests/Saves";
-		LoadDialog.Connect("file_selected", this, nameof(_on_FileDialog_file_selected));
+		LoadDialog.FileSelected += _on_FileDialog_file_selected;
 		LoadScenarioDialog = new Util.Civ3FileDialog();
 		LoadScenarioDialog.RelPath = @"Conquests/Scenarios";
-		LoadScenarioDialog.Connect("file_selected", this, nameof(_on_FileDialog_file_selected));
+		LoadScenarioDialog.FileSelected += _on_FileDialog_file_selected;
 		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadDialog);
-		SetCiv3Home = GetNode<Button>("CanvasLayer/SetCiv3Home");
-		SetCiv3HomeDialog = GetNode<FileDialog>("CanvasLayer/SetCiv3HomeDialog");
-		// For some reason this option isn't available in the scene UI
-		SetCiv3HomeDialog.Mode = FileDialog.ModeEnum.OpenDir;
 		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadScenarioDialog);
 		DisplayTitleScreen();
 	}
@@ -50,25 +50,23 @@ public class MainMenu : Node2D
 		try {
 			SetMainMenuBackground();
 
-			InactiveButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 1, 1, 20, 20);
-			HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20);
+			InactiveButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 1, 1, 20, 20, false);
+			HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20, false);
 
-			AddButton("New Game", 0, "StartGame");
-			AddButton("Quick Start", 35, "StartGame");
-			AddButton("Tutorial", 70, "StartGame");
-			AddButton("Load Game", 105, "LoadGame");
-			AddButton("Load Scenario", 140, "LoadScenario");
-			AddButton("Hall of Fame", 175, "HallOfFame");
-			AddButton("Preferences", 210, "Preferences");
-			AddButton("Audio Preferences", 245, "Preferences");
-			AddButton("Credits", 280, "showCredits");
-			AddButton("Exit", 315, "_on_Exit_pressed");
+			AddButton("New Game", 0, StartGame);
+			AddButton("Quick Start", 35, StartGame);
+			AddButton("Tutorial", 70, StartGame);
+			AddButton("Load Game", 105, LoadGame);
+			AddButton("Load Scenario", 140, LoadScenario);
+			AddButton("Hall of Fame", 175, HallOfFame);
+			AddButton("Preferences", 210, Preferences);
+			AddButton("Audio Preferences", 245, Preferences);
+			AddButton("Credits", 280, showCredits);
+			AddButton("Exit", 315, _on_Exit_pressed);
 
 			// Hide select home folder if valid path is present as proven by reaching this point in code
 			SetCiv3Home.Visible = false;
-		}
-		catch(Exception ex)
-		{
+		} catch(Exception ex) {
 			log.Error(ex, "Could not set up the main menu");
 			GetNode<Label>("CanvasLayer/Label").Visible = true;
 			GetNode<ColorRect>("CanvasLayer/ColorRect").Visible = true;
@@ -83,48 +81,51 @@ public class MainMenu : Node2D
 		MainMenuBackground.Texture = TitleScreenTexture;
 	}
 
-	private void AddButton(string label, int verticalPosition, string actionName)
+	private void AddButton(string label, int verticalPosition, Action action)
 	{
 		TextureButton newButton = new TextureButton();
 		newButton.TextureNormal = InactiveButton;
 		newButton.TextureHover = HoverButton;
 		newButton.SetPosition(new Vector2(MENU_OFFSET_FROM_LEFT, MENU_OFFSET_FROM_TOP + verticalPosition));
 		MainMenuBackground.AddChild(newButton);
-		newButton.Connect("pressed", this, actionName);
+		newButton.Pressed += action;
 
+		Theme theme = new Theme();
+		theme.SetFontSize("font_size", "Button", 14);
 		Button newButtonLabel = new Button();
+		newButtonLabel.Theme = theme;
 		newButtonLabel.Text = label;
 
 		newButtonLabel.SetPosition(new Vector2(MENU_OFFSET_FROM_LEFT + 25, MENU_OFFSET_FROM_TOP + verticalPosition + BUTTON_LABEL_OFFSET));
 		MainMenuBackground.AddChild(newButtonLabel);
-		newButtonLabel.Connect("pressed", this, actionName);
+		newButtonLabel.Pressed += action;
 	}
 
 	public void StartGame()
 	{
 		log.Information("start game button pressed");
 		PlayButtonPressedSound();
-		GetTree().ChangeScene("res://C7Game.tscn");
+		GetTree().ChangeSceneToFile("res://C7Game.tscn");
 	}
 
 	public void LoadGame()
 	{
 		log.Information("load game button pressed");
 		PlayButtonPressedSound();
-		LoadDialog.Popup_();
+		LoadDialog.Popup();
 	}
 
 	public void LoadScenario()
 	{
 		log.Information("load scenario button pressed");
 		PlayButtonPressedSound();
-		LoadScenarioDialog.Popup_();
+		LoadScenarioDialog.Popup();
 	}
 
 	public void showCredits()
 	{
 		log.Information("credits button pressed");
-		GetTree().ChangeScene("res://Credits.tscn");
+		GetTree().ChangeSceneToFile("res://Credits.tscn");
 	}
 
 	public void HallOfFame()
@@ -134,18 +135,17 @@ public class MainMenu : Node2D
 
 	public void Preferences()
 	{
-
 		PlayButtonPressedSound();
 	}
 
 	public void _on_Exit_pressed()
 	{
-		GetTree().Notification(MainLoop.NotificationWmQuitRequest);
+		GetTree().Quit(); // no need to notify the scene tree
 	}
 
 	private void PlayButtonPressedSound()
 	{
-		AudioStreamSample wav = Util.LoadWAVFromDisk(Util.Civ3MediaPath("Sounds/Button1.wav"));
+		AudioStreamWav wav = Util.LoadWAVFromDisk(Util.Civ3MediaPath("Sounds/Button1.wav"));
 		AudioStreamPlayer player = GetNode<AudioStreamPlayer>("CanvasLayer/SoundEffectPlayer");
 		player.Stream = wav;
 		player.Play();
@@ -153,14 +153,14 @@ public class MainMenu : Node2D
 
 	private void _on_FileDialog_file_selected(string path)
 	{
-		log.Information("loading {path}", path);
+		log.Information($"loading {path}");
 		Global.LoadGamePath = path;
-		GetTree().ChangeScene("res://C7Game.tscn");
+		GetTree().ChangeSceneToFile("res://C7Game.tscn");
 	}
 
 	private void _on_SetCiv3Home_pressed()
 	{
-		SetCiv3HomeDialog.Popup_();
+		SetCiv3HomeDialog.Popup();
 	}
 
 	private void _on_SetCiv3HomeDialog_dir_selected(string path)

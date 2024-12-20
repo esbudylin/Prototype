@@ -4,7 +4,7 @@ using System.Diagnostics;
 using C7GameData;
 using Serilog;
 
-public class DisbandConfirmation : Popup
+public partial class DisbandConfirmation : Popup
 {
 	private ILogger log = LogManager.ForContext<DisbandConfirmation>();
 
@@ -18,7 +18,7 @@ public class DisbandConfirmation : Popup
 
 	public DisbandConfirmation(MapUnit unit)
 	{
-		alignment = BoxContainer.AlignMode.End;
+		alignment = BoxContainer.AlignmentMode.End;
 		margins = new Margins(right: 10);
 		unitType = unit.unitType.name;
 	}
@@ -41,7 +41,7 @@ public class DisbandConfirmation : Popup
 		// out the size of this TextureRect, and it won't be able to align it properly.
 		AddTexture(530, 320);
 
-		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupDOMESTIC.pcx", 1, 40, 149, 110);
+		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupDOMESTIC.pcx", 1, 40, 149, 110, false);
 		TextureRect AdvisorHead = new TextureRect();
 		AdvisorHead.Texture = AdvisorHappy;
 		//Appears at 400, 110 in game, but leftmost 25px are transparent with default graphics
@@ -65,8 +65,8 @@ public class DisbandConfirmation : Popup
 		warningMessage.SetPosition(new Vector2(25, 170));
 		AddChild(warningMessage);
 
-		AddButton("Yes, we need to!", 215, "disband");
-		AddButton("No. Maybe you are right, advisor.", 245, "cancel");
+		AddButton("Yes, we need to!", 215, disband);
+		AddButton("No. Maybe you are right, advisor.", 245, cancel);
 
 		loadTimer.Stop();
 		TimeSpan stopwatchElapsed = loadTimer.Elapsed;
@@ -76,12 +76,12 @@ public class DisbandConfirmation : Popup
 	private void disband()
 	{
 		//tell the game to disband it.  right now we're doing that first, which is WRONG!
-		GetParent().EmitSignal("UnitDisbanded");
-		GetParent().EmitSignal("HidePopup");
+		GetParent().EmitSignal(PopupOverlay.SignalName.UnitDisbanded);
+		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 
 	private void cancel()
 	{
-		GetParent().EmitSignal("HidePopup");
+		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 }

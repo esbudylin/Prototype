@@ -1,4 +1,3 @@
-
 # Godot-specific ignores
 .import/
 export.cfg
@@ -14,6 +13,9 @@ mono_crash.*.blob
 # Exports folder ignores
 C7/Exports
 Exports/
+
+# Test runtime files
+C7GameDataTests/data/
 
 # Mono-specific ignores
 .mono/
@@ -44,6 +46,7 @@ project.lock.json
 *.sln.docstates
 C7.ini
 log.txt
+*.csproj.old
 
 # Build results
 [Dd]ebug/

@@ -1,8 +1,11 @@
 using Godot;
 using ConvertCiv3Media;
 
-public class MenuButton : TextureButton
+public partial class MenuButton : TextureButton
 {
+
+	[Export]
+	private PopupOverlay popupOverlay;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -16,7 +19,6 @@ public class MenuButton : TextureButton
 
 	public override void _Pressed()
 	{
-		PopupOverlay popupOverlay = GetNode<PopupOverlay>(PopupOverlay.NodePath);
 		popupOverlay.ShowPopup(new GameMenu(), PopupOverlay.PopupCategory.Info);
 	}
 

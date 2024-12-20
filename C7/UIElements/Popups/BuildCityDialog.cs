@@ -1,7 +1,7 @@
 using Godot;
 using Serilog;
 
-public class BuildCityDialog : Popup
+public partial class BuildCityDialog : Popup
 {
 
 	LineEdit cityName = new LineEdit();
@@ -11,8 +11,10 @@ public class BuildCityDialog : Popup
 
 	public BuildCityDialog(string defaultName)
 	{
+		cityName.Theme = ThemeFactory.DefaultTheme;
+		cityName.CaretBlink = true;
 		this.defaultName = defaultName;
-		alignment = BoxContainer.AlignMode.End;
+		alignment = BoxContainer.AlignmentMode.End;
 		margins = new Margins(right: -10); // 10px margin from the right
 	}
 
@@ -25,7 +27,7 @@ public class BuildCityDialog : Popup
 
 		AddTexture(530, 260);
 
-		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupCULTURE.pcx", 1, 40, 149, 110);
+		ImageTexture AdvisorHappy = Util.LoadTextureFromPCX("Art/SmallHeads/popupCULTURE.pcx", 1, 40, 149, 110, false);
 		TextureRect AdvisorHead = new TextureRect();
 		AdvisorHead.Texture = AdvisorHappy;
 		//Appears at 400, 110 in game, but leftmost 25px are transparent with default graphics
@@ -37,8 +39,8 @@ public class BuildCityDialog : Popup
 		AddHeader("Name this town?", 120);
 
 		HBoxContainer labelAndName = new HBoxContainer();
-		labelAndName.Alignment = BoxContainer.AlignMode.Begin;
-		labelAndName.SizeFlagsHorizontal = 3;   //fill and expand
+		labelAndName.Alignment = BoxContainer.AlignmentMode.Begin;
+		labelAndName.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 		labelAndName.SizeFlagsStretchRatio = 1;
 		labelAndName.AnchorLeft = 0.0f;
 		labelAndName.AnchorRight = 0.85f;
@@ -48,7 +50,7 @@ public class BuildCityDialog : Popup
 		nameLabel.Text = "Name: ";
 		labelAndName.AddChild(nameLabel);
 
-		cityName.SizeFlagsHorizontal = 3;  //fill and expand
+		cityName.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 		cityName.SizeFlagsStretchRatio = 1;
 		cityName.Text = defaultName;
 		labelAndName.AddChild(cityName);
@@ -58,7 +60,7 @@ public class BuildCityDialog : Popup
 		cityName.SelectAll();
 		cityName.GrabFocus();
 
-		cityName.Connect("text_entered", this, "OnCityNameEntered");
+		cityName.TextSubmitted += OnCityNameEntered;
 
 		//Cancel/confirm buttons.  Note the X button is thinner than the O button.
 		ImageTexture circleTexture= Util.LoadTextureFromPCX("Art/X-o_ALLstates-sprite.pcx", 1, 1, 19, 19);
@@ -80,8 +82,8 @@ public class BuildCityDialog : Popup
 		cancelButton.SetPosition(new Vector2(500, 213));
 		AddChild(cancelButton);
 
-		confirmButton.Connect("pressed", this, "OnConfirmButtonPressed");
-		cancelButton.Connect("pressed", GetParent(), "OnHidePopup");
+		confirmButton.Pressed += OnConfirmButtonPressed;
+		cancelButton.Pressed += GetParent<PopupOverlay>().OnHidePopup;
 	}
 
 	/**
@@ -94,23 +96,10 @@ public class BuildCityDialog : Popup
 
 	public void OnCityNameEntered(string name)
 	{
-		GetTree().SetInputAsHandled();
+		GetViewport().SetInputAsHandled();
 		log.Debug("The user hit enter with a city name of " + name);
-		GetParent().EmitSignal("BuildCity", name);
-		GetParent().EmitSignal("HidePopup");
+		GetParent().EmitSignal(PopupOverlay.SignalName.BuildCity, name);
+		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 
-	public override void _UnhandledInput(InputEvent @event)
-	{
-		if (this.Visible) {
-			if (@event is InputEventKey eventKey && eventKey.Pressed)
-			{
-				if (eventKey.Scancode == (int)Godot.KeyList.Escape)
-				{
-					GetTree().SetInputAsHandled();
-					GetParent().EmitSignal("HidePopup");
-				}
-			}
-		}
-	}
 }
