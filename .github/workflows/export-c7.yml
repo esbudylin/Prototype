@@ -19,14 +19,14 @@ on:
         default: true
 
 env:
-  GODOT_VERSION: 3.5
+  GODOT_VERSION: 4.3
   EXPORT_NAME: C7
 
 jobs:
   Export-C7-Windows:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:mono-3.5
+      image: barichello/godot-ci:4.3
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -48,14 +48,14 @@ jobs:
           exit 1
         fi
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.FOLDER_NAME }}-Windows
         path: build/${{ ENV.FOLDER_NAME }}
   Export-C7-Linux:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:mono-3.5
+      image: barichello/godot-ci:4.3
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -80,14 +80,14 @@ jobs:
       run: |
         tar -C build -zcvf build/${FOLDER_NAME}.tgz ${FOLDER_NAME}
     - name: Upload  Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         path: build/${{ env.FOLDER_NAME }}.tgz
         name: ${{ env.FOLDER_NAME }}-Linux-x86_64
   Export-C7-Mac:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:mono-3.5
+      image: barichello/godot-ci:4.3
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -110,7 +110,7 @@ jobs:
           exit 1
         fi
     - name: Upload  Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.FOLDER_NAME }}-Mac
         path: build/${{ env.FOLDER_NAME }}.zip
