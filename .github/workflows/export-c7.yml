@@ -19,14 +19,14 @@ on:
         default: true
 
 env:
-  GODOT_VERSION: 4.3
+  GODOT_VERSION: 4.2
   EXPORT_NAME: C7
 
 jobs:
   Export-C7-Windows:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.3
+      image: barichello/godot-ci:4.2
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -55,7 +55,7 @@ jobs:
   Export-C7-Linux:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.3
+      image: barichello/godot-ci:4.2
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -87,7 +87,7 @@ jobs:
   Export-C7-Mac:
     runs-on: ubuntu-latest
     container:
-      image: barichello/godot-ci:4.3
+      image: barichello/godot-ci:4.2
     steps:
     - name: Checkout
       uses: actions/checkout@v2
