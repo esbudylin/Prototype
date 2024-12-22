@@ -4,11 +4,14 @@ description: "Performs cross-platform build setup"
 runs:
   using: "composite"
   steps:
-  - name: Optionally set DEBUG_BUILD
+  - name: Optionally set BUILD_SUFFIX
     shell: bash
-    if: github.event.inputs.debug-build == 'true'
     run: |
-      echo "DEBUG_BUILD=-debug" >> $GITHUB_ENV
+      if [[ ${{ github.event.inputs.debug-build }} == 'true' ]]; then
+        echo "BUILD_SUFFIX=-debug" >> $GITHUB_ENV
+      else
+        echo "BUILD_SUFFIX=-release" >> $GITHUB_ENV
+      fi
   - name: Optionally set GH_USERNAME
     shell: bash
     if: github.event.inputs.include-username == 'true'
@@ -38,4 +41,4 @@ runs:
     run: |
       mkdir -v -p ~/.local/share/godot/export_templates
       mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
- 
+
