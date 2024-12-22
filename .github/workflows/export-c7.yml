@@ -98,7 +98,7 @@ jobs:
       run: |
         mkdir -v -p build/${FOLDER_NAME}
         cd ${EXPORT_NAME}
-        godot -v --headless --export${BUILD_SUFFIX} "Mac OSX" ../build/${FOLDER_NAME}.zip
+        godot -v --headless --export${BUILD_SUFFIX} "macOS" ../build/${FOLDER_NAME}.zip
     - name: Copy Static Files
       run: |
         cd ${EXPORT_NAME}
