@@ -5,10 +5,8 @@ runs:
   using: "composite"
   steps:
   - name: Optionally set DEBUG_BUILD
-    shell: bash
-    if: github.event.inputs.debug-build == 'true'
-    run: |
-      echo "DEBUG_BUILD=-debug" >> $GITHUB_ENV
+    env: 
+      DEBUG_BUILD: ${{ github.event.inputs.debug-build == 'true' && '-debug' || '-release' }}
   - name: Optionally set GH_USERNAME
     shell: bash
     if: github.event.inputs.include-username == 'true'
