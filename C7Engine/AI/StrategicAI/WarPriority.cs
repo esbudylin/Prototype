@@ -31,9 +31,11 @@ namespace C7GameData.AIData {
 				int landScore = UtilityCalculations.CalculateAvailableLandScore(player);
 				//N.B. Eventually this won't be an all-or-nothing proposition; if land is getting tight but not quite zero,
 				//the AI may decide it's time for the next phrase of the game, especially if it's aggressive.
-				if (landScore == 0) {   //nowhere else to expand
-										//Figure out who to fight.  This should obviously be more sophisticated and should favor reachable opponents.
-										//However, we don't yet store info on who's been discovered, so for now we'll choose someone randomly
+
+				//nowhere else to expand
+				if (landScore == 0) {
+					//Figure out who to fight.  This should obviously be more sophisticated and should favor reachable opponents.
+					//However, we don't yet store info on who's been discovered, so for now we'll choose someone randomly
 					int opponentCount = EngineStorage.gameData.players.Count - 1;
 					foreach (Player nation in EngineStorage.gameData.players) {
 						if (nation != player) {

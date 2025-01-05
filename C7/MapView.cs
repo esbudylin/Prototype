@@ -448,7 +448,8 @@ public partial class BuildingLayer : LooseLayer {
 	public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter) {
 		if (tile.hasBarbarianCamp) {
 			var texRect = new Rect2(buildingSpriteSize * new Vector2 (2, 0), buildingSpriteSize); //(2, 0) is the offset in the TerrainBuildings.PCX file (top row, third in)
-																								  // TODO: Modify this calculation so it doesn't assume buildingSpriteSize is the same as the size of the terrain tiles
+
+			// TODO: Modify this calculation so it doesn't assume buildingSpriteSize is the same as the size of the terrain tiles
 			var screenRect = new Rect2(tileCenter - (float)0.5 * buildingSpriteSize, buildingSpriteSize);
 			looseView.DrawTextureRectRegion(buildingsTex, screenRect, texRect);
 		}
