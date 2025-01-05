@@ -1,15 +1,13 @@
 using Serilog;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	using System;
 	using C7GameData;
 
 	public abstract class MessageToEngine {
 		public abstract void process();
 
-		public void send()
-		{
+		public void send() {
 			EngineStorage.pendingMessages.Enqueue(this);
 			EngineStorage.actionAddedToQueue.Set();
 		}
@@ -18,25 +16,21 @@ namespace C7Engine
 	public class MsgShutdownEngine : MessageToEngine {
 		private ILogger log = Log.ForContext<MsgShutdownEngine>();
 
-		public override void process()
-		{
+		public override void process() {
 			log.Information("Engine received shutdown message.");
 		}
 	}
 
-	public class MsgSetFortification : MessageToEngine
-	{
+	public class MsgSetFortification : MessageToEngine {
 		private ID unitID;
 		private bool fortifyElseWake;
 
-		public MsgSetFortification(ID unitID, bool fortifyElseWake)
-		{
+		public MsgSetFortification(ID unitID, bool fortifyElseWake) {
 			this.unitID = unitID;
 			this.fortifyElseWake = fortifyElseWake;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 
 			// Simply do nothing if we weren't given a valid GUID. TODO: Maybe this is an error we need to handle? In an MP game, we should reject
@@ -50,55 +44,46 @@ namespace C7Engine
 		}
 	}
 
-	public class MsgMoveUnit : MessageToEngine
-	{
+	public class MsgMoveUnit : MessageToEngine {
 		private ID unitID;
 		private TileDirection dir;
 
-		public MsgMoveUnit(ID unitID, TileDirection dir)
-		{
+		public MsgMoveUnit(ID unitID, TileDirection dir) {
 			this.unitID = unitID;
 			this.dir = dir;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.move(dir);
 		}
 	}
 
-	public class MsgSetUnitPath : MessageToEngine
-	{
+	public class MsgSetUnitPath : MessageToEngine {
 		private ID unitID;
 		private int destX;
 		private int destY;
 
-		public MsgSetUnitPath(ID unitID, Tile tile)
-		{
+		public MsgSetUnitPath(ID unitID, Tile tile) {
 			this.unitID = unitID;
 			this.destX = tile.xCoordinate;
 			this.destY = tile.yCoordinate;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.setUnitPath(EngineStorage.gameData.map.tileAt(destX, destY));
 		}
 	}
 
-	public class MsgSkipUnitTurn : MessageToEngine
-	{
+	public class MsgSkipUnitTurn : MessageToEngine {
 		private ID unitID;
 
-		public MsgSkipUnitTurn(ID unitID)
-		{
+		public MsgSkipUnitTurn(ID unitID) {
 			this.unitID = unitID;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.skipTurn();
 		}
@@ -107,13 +92,11 @@ namespace C7Engine
 	public class MsgDisbandUnit : MessageToEngine {
 		private ID unitID;
 
-		public MsgDisbandUnit(ID unitID)
-		{
+		public MsgDisbandUnit(ID unitID) {
 			this.unitID = unitID;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.disband();
 		}
@@ -123,14 +106,12 @@ namespace C7Engine
 		private ID unitID;
 		private string cityName;
 
-		public MsgBuildCity(ID unitID, string cityName)
-		{
+		public MsgBuildCity(ID unitID, string cityName) {
 			this.unitID = unitID;
 			this.cityName = cityName;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.buildCity(cityName);
 		}
@@ -153,14 +134,12 @@ namespace C7Engine
 		private ID cityID;
 		private string producibleName;
 
-		public MsgChooseProduction(ID cityID, string producibleName)
-		{
+		public MsgChooseProduction(ID cityID, string producibleName) {
 			this.cityID = cityID;
 			this.producibleName = producibleName;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			City city = EngineStorage.gameData.cities.Find(c => c.id == cityID);
 			if (city != null) {
 				foreach (IProducible producible in city.ListProductionOptions()) {
@@ -177,8 +156,7 @@ namespace C7Engine
 
 		private ILogger log = Log.ForContext<MsgEndTurn>();
 
-		public override void process()
-		{
+		public override void process() {
 			Player controller = EngineStorage.gameData.GetPlayer(EngineStorage.uiControllerID);
 
 			foreach (MapUnit unit in controller.units) {
@@ -196,13 +174,11 @@ namespace C7Engine
 	public class MsgSetAnimationsEnabled : MessageToEngine {
 		private bool enabled;
 
-		public MsgSetAnimationsEnabled(bool enabled)
-		{
+		public MsgSetAnimationsEnabled(bool enabled) {
 			this.enabled = enabled;
 		}
 
-		public override void process()
-		{
+		public override void process() {
 			EngineStorage.animationsEnabled = enabled;
 		}
 	}

@@ -89,7 +89,7 @@ namespace C7.Map {
 			int productionDescriptionWidth = (int)smallFont.GetStringSize(productionDescription).X;
 			int maxTextWidth = Math.Max(cityNameAndGrowthWidth, productionDescriptionWidth);
 
-			int cityLabelWidth = maxTextWidth + (city.IsCapital()? 70 : 45);	//TODO: Is 65 right?  70?  Will depend on whether it's capital, too
+			int cityLabelWidth = maxTextWidth + (city.IsCapital()? 70 : 45);    //TODO: Is 65 right?  70?  Will depend on whether it's capital, too
 			int textAreaWidth = cityLabelWidth - (city.IsCapital() ? 50 : 25);
 			if (log.IsEnabled(LogEventLevel.Verbose)) {
 				log.Verbose("Width of city name = " + maxTextWidth);
@@ -99,7 +99,7 @@ namespace C7.Map {
 
 			if (cityLabelWidth != lastLabelWidth) {
 				Image labelBackground = CreateLabelBackground(cityLabelWidth, city, textAreaWidth);
-				cityLabel =  ImageTexture.CreateFromImage(labelBackground);
+				cityLabel = ImageTexture.CreateFromImage(labelBackground);
 				lastLabelWidth = cityLabelWidth;
 			}
 
@@ -107,8 +107,7 @@ namespace C7.Map {
 			DrawTextOnLabel(tileCenter, cityNameAndGrowthWidth, productionDescriptionWidth, city, cityNameAndGrowth, productionDescription, cityLabelWidth);
 		}
 
-		private void DrawLabelOnScreen(Vector2I tileCenter, int cityLabelWidth, City city, ImageTexture cityLabel)
-		{
+		private void DrawLabelOnScreen(Vector2I tileCenter, int cityLabelWidth, City city, ImageTexture cityLabel) {
 			labelTextureRect.OffsetLeft = tileCenter.X + (cityLabelWidth / -2);
 			labelTextureRect.OffsetTop = tileCenter.Y + 24;
 			labelTextureRect.Texture = cityLabel;
@@ -150,8 +149,7 @@ namespace C7.Map {
 			popSizeLabel.OffsetTop = tileCenter.Y + 22;
 		}
 
-		private Image CreateLabelBackground(int cityLabelWidth, City city, int textAreaWidth)
-		{
+		private Image CreateLabelBackground(int cityLabelWidth, City city, int textAreaWidth) {
 			//Label/name/producing area
 			Image labelImage = Image.Create(cityLabelWidth, CITY_LABEL_HEIGHT, false, Image.Format.Rgba8);
 			labelImage.Fill(Color.Color8(0, 0, 0, 0));

@@ -2,8 +2,7 @@ using Godot;
 using System;
 using ConvertCiv3Media;
 
-public partial class PCXToGodot : GodotObject
-{
+public partial class PCXToGodot : GodotObject {
 	private readonly static byte CIV3_TRANSPARENCY_START = 254;
 
 	public static ImageTexture getImageTextureFromPCX(Pcx pcx) {
@@ -125,7 +124,7 @@ public partial class PCXToGodot : GodotObject
 		return (getImageFromBufferData(width, height, baseLayer), getImageFromBufferData(width, height, tintLayer));
 	}
 
-        // Utility for loading a civilization color from an ntp file
+	// Utility for loading a civilization color from an ntp file
 	public static Color GetColorFromPCX(Pcx pcx) {
 		int paletteLookupIdx = pcx.ColorIndexAt(0, 0);
 

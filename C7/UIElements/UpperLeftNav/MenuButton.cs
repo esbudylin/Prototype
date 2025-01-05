@@ -1,15 +1,13 @@
 using Godot;
 using ConvertCiv3Media;
 
-public partial class MenuButton : TextureButton
-{
+public partial class MenuButton : TextureButton {
 
 	[Export]
 	private PopupOverlay popupOverlay;
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		Pcx buttonPcx = Util.LoadPCX("Art/interface/menuButtons.pcx");
 		Pcx buttonPcxAlpha = Util.LoadPCX("Art/interface/menuButtonsAlpha.pcx");
 		//TODO: Caching for these textures
@@ -17,8 +15,7 @@ public partial class MenuButton : TextureButton
 		this.TextureNormal = menuTexture;
 	}
 
-	public override void _Pressed()
-	{
+	public override void _Pressed() {
 		popupOverlay.ShowPopup(new GameMenu(), PopupOverlay.PopupCategory.Info);
 	}
 

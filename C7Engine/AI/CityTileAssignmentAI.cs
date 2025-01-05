@@ -2,12 +2,10 @@ using System;
 using C7GameData;
 using Serilog;
 
-namespace C7Engine.AI
-{
-	public class CityTileAssignmentAI
-	{
+namespace C7Engine.AI {
+	public class CityTileAssignmentAI {
 		public static int DesiredFoodSurplusPerTurn = 2;
-		private static readonly int FOOD_PER_CITIZEN = 2;	//eventually will be configured by rules
+		private static readonly int FOOD_PER_CITIZEN = 2;   //eventually will be configured by rules
 
 
 		private static int foodPriorityRate = 40;
@@ -16,8 +14,7 @@ namespace C7Engine.AI
 
 		private static ILogger log = Log.ForContext<CityTileAssignmentAI>();
 
-		public static void AssignNewCitizenToTile(City city, CityResident newResident)
-		{
+		public static void AssignNewCitizenToTile(City city, CityResident newResident) {
 			int foodYield = city.CurrentFoodYield();
 
 			int desiredFoodRate = city.size * FOOD_PER_CITIZEN + DesiredFoodSurplusPerTurn;
@@ -47,8 +44,7 @@ namespace C7Engine.AI
 			city.residents.Add(newResident);
 		}
 
-		public static double CalculateTileYieldScore(Tile t, int targetFoodAmount, Player player)
-		{
+		public static double CalculateTileYieldScore(Tile t, int targetFoodAmount, Player player) {
 			int score = t.foodYield(player) * foodPriorityRate + t.productionYield(player) * productionPriorityRate + t.commerceYield(player) * commercePriorityRate;
 			int penalty = (targetFoodAmount - t.foodYield(player));
 			if (penalty <= 0) {

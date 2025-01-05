@@ -5,7 +5,7 @@ namespace C7Engine.Pathing {
 	/**
 	 * https://en.wikipedia.org/wiki/Binary_heap
 	 */
-	public class BinaryMinHeap<TValue> where TValue: IComparable<TValue> {
+	public class BinaryMinHeap<TValue> where TValue : IComparable<TValue> {
 		private readonly List<TValue> data = new List<TValue>();
 
 		public int count { get => data.Count; }

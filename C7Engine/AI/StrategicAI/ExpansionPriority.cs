@@ -7,10 +7,10 @@ using Serilog;
 namespace C7GameData.AIData {
 	public class ExpansionPriority : StrategicPriority {
 		private readonly int TEMP_GAME_LENGTH = 540;
-		private readonly int EARLY_GAME_CUTOFF = 25;	//what percentage of the game is early game, which should give expansion a boost?
+		private readonly int EARLY_GAME_CUTOFF = 25;    //what percentage of the game is early game, which should give expansion a boost?
 
-		private static readonly int SETTLER_FLAT_APPEAL = 30;			//the base "flat" appeal of settler-type units
-		private static readonly float SETTLER_WEIGHTED_APPEAL = 4.0f;	//the multiplier effect on settler-type units
+		private static readonly int SETTLER_FLAT_APPEAL = 30;           //the base "flat" appeal of settler-type units
+		private static readonly float SETTLER_WEIGHTED_APPEAL = 4.0f;   //the multiplier effect on settler-type units
 
 		private ILogger log = Log.ForContext<ExpansionPriority>();
 
@@ -60,8 +60,7 @@ namespace C7GameData.AIData {
 			return "ExpansionPriority";
 		}
 
-		private int ApplyEarlyGameMultiplier(int score)
-		{
+		private int ApplyEarlyGameMultiplier(int score) {
 			//If it's early game, multiply this score.
 			//TODO: We haven't implemented the part for "how many turns does the game have?" yet.  So this is hard-coded.
 			int gameTurn = EngineStorage.gameData.turn;

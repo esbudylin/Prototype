@@ -1,5 +1,4 @@
-﻿namespace C7Engine
-{
+﻿namespace C7Engine {
 	using System.IO;
 	using C7GameData;
 	using C7GameData.Save;
@@ -13,10 +12,8 @@
 
 	// The engine performs all save file creating, reading, and updating
 	// via the SaveManager
-	public static class SaveManager
-	{
-		private static SaveFileFormat getFileFormat(string path)
-		{
+	public static class SaveManager {
+		private static SaveFileFormat getFileFormat(string path) {
 			return Path.GetExtension(path).ToUpper() switch {
 				".SAV" => SaveFileFormat.Sav,
 				".BIQ" => SaveFileFormat.Biq,
@@ -27,8 +24,7 @@
 		}
 
 		// Load and initialize a save
-		public static SaveGame LoadSave(string path, string bicPath)
-		{
+		public static SaveGame LoadSave(string path, string bicPath) {
 			SaveGame save = getFileFormat(path) switch {
 				SaveFileFormat.Sav => ImportCiv3.ImportSav(path, bicPath),
 				SaveFileFormat.Biq => ImportCiv3.ImportBiq(path, bicPath),

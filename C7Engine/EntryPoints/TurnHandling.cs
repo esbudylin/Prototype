@@ -2,15 +2,13 @@ using System.Diagnostics;
 using C7Engine.AI;
 using Serilog;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	using C7GameData;
 	using System;
 	public class TurnHandling {
 		private static ILogger log = Log.ForContext<TurnHandling>();
 
-		internal static void OnBeginTurn()
-		{
+		internal static void OnBeginTurn() {
 			GameData gameData = EngineStorage.gameData;
 			log.Information("\n*** Beginning turn " + gameData.turn + " ***");
 
@@ -55,23 +53,20 @@ namespace C7Engine
 		/// <param name="gameData"></param>
 		/// <param name="firstTurn"></param>
 		/// <returns>true when it is time for the human to take control again</returns>
-		private static bool PlayPlayerTurns(GameData gameData, bool firstTurn)
-		{
+		private static bool PlayPlayerTurns(GameData gameData, bool firstTurn) {
 			foreach (Player player in gameData.players) {
 				if ((!player.hasPlayedThisTurn) &&
-				    !(firstTurn && player.SitsOutFirstTurn())) {
+					!(firstTurn && player.SitsOutFirstTurn())) {
 					if (player.isBarbarians) {
 						//Call the barbarian AI
 						//TODO: The AIs should be stored somewhere on the game state as some of them will store state (plans,
 						//strategy, etc.) For now, we only have a random AI, so that will be in a future commit
 						new BarbarianAI().PlayTurn(player, gameData);
 						player.hasPlayedThisTurn = true;
-					}
-					else if (!player.isHuman) {
+					} else if (!player.isHuman) {
 						PlayerAI.PlayTurn(player, GameData.rng);
 						player.hasPlayedThisTurn = true;
-					}
-					else if (player.id != EngineStorage.uiControllerID) {
+					} else if (player.id != EngineStorage.uiControllerID) {
 						player.hasPlayedThisTurn = true;
 					}
 					//Human player check.  Let the human see what's going on even if they are in observer mode.
@@ -83,8 +78,7 @@ namespace C7Engine
 			}
 			return false;
 		}
-		private static void SpawnBarbarians(GameData gameData)
-		{
+		private static void SpawnBarbarians(GameData gameData) {
 			//Generate new barbarian units.
 			Player barbPlayer = gameData.players.Find(player => player.isBarbarians);
 			foreach (Tile tile in gameData.map.barbarianCamps) {
@@ -105,8 +99,7 @@ namespace C7Engine
 					gameData.mapUnits.Add(newUnit);
 					barbPlayer.units.Add(newUnit);
 					log.Debug("New barbarian added at " + tile);
-				}
-				else if (tile.NeighborsWater() && result < 6) {
+				} else if (tile.NeighborsWater() && result < 6) {
 					MapUnit newUnit = new MapUnit(gameData.ids.CreateID(gameData.barbarianInfo.barbarianSeaUnit.name));
 					newUnit.location = tile;
 					newUnit.owner = gameData.players[0]; //todo: make this reliably point to the barbs
@@ -123,8 +116,7 @@ namespace C7Engine
 				}
 			}
 		}
-		private static void HandleCityResults(GameData gameData)
-		{
+		private static void HandleCityResults(GameData gameData) {
 
 			log.Information("\n*** City production for turn " + gameData.turn + " ***");
 
@@ -136,13 +128,11 @@ namespace C7Engine
 					CityResident newResident = new CityResident();
 					newResident.nationality = city.owner.civilization;
 					CityTileAssignmentAI.AssignNewCitizenToTile(city, newResident);
-				}
-				else if (newSize < initialSize) {
+				} else if (newSize < initialSize) {
 					int diff = initialSize - newSize;
 					if (newSize <= 0) {
 						log.Error($"Attempting to remove the last resident from {city}");
-					}
-					else {
+					} else {
 						city.RemoveCitizens(diff);
 					}
 				}
@@ -172,8 +162,7 @@ namespace C7Engine
 		}
 
 		///Eventually we'll have a game year or month or whatever, but for now this provides feedback on our progression
-		public static int GetTurnNumber()
-		{
+		public static int GetTurnNumber() {
 			return EngineStorage.gameData.turn;
 		}
 	}

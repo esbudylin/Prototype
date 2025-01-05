@@ -31,8 +31,7 @@ start:
 						//TODO: This should use a message, and the message handler should cause the disbanding to happen.
 						CityInteractions.BuildCity(unit.location.xCoordinate, unit.location.yCoordinate, player.id, unit.owner.GetNextCityName());
 						unit.disband();
-					}
-					else {
+					} else {
 						//If the settler has no destination, then disband rather than crash later.
 						if (settlerAi.destination == Tile.NONE) {
 							log.Information("Disbanding settler " + unit.id + " with no valid destination");
@@ -42,8 +41,7 @@ start:
 						try {
 							Tile nextTile = settlerAi.pathToDestination.Next();
 							unit.move(unit.location.directionTo(nextTile));
-						}
-						catch (Exception ex) {
+						} catch (Exception ex) {
 							//This occurs when on the previous turn, a settler tries to move to the next location on its path, but cannot, due to another
 							//civilization's unit (or a barbarian unit) being on that tile.
 							//TODO: #213 - If the path cannot be completed, we should create a different path instead.
@@ -57,8 +55,7 @@ start:
 						//TODO: Actually join the city.  Haven't added that action.
 						//For now, just get rid of the unit.  Sorry, bro.
 						unit.disband();
-					}
-					else {
+					} else {
 						//TODO: Eventually, go to the city we're supposed to join
 						//For now, just disband
 						unit.disband();

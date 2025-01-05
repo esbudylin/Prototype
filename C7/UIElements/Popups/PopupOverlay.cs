@@ -2,8 +2,7 @@ using Godot;
 using Serilog;
 
 [GlobalClass]
-public partial class PopupOverlay : HBoxContainer
-{
+public partial class PopupOverlay : HBoxContainer {
 
 	private ILogger log = LogManager.ForContext<PopupOverlay>();
 
@@ -21,11 +20,10 @@ public partial class PopupOverlay : HBoxContainer
 	public enum PopupCategory {
 		Advisor,
 		Console,
-		Info	//Sounds similar to the above, but lower-pitched in the second half
+		Info    //Sounds similar to the above, but lower-pitched in the second half
 	}
 
-	public void OnHidePopup()
-	{
+	public void OnHidePopup() {
 		// 1. enable mouse interaction with non-UI nodes
 		MouseFilter = MouseFilterEnum.Pass;
 		RemoveChild(currentChild);
@@ -41,8 +39,7 @@ public partial class PopupOverlay : HBoxContainer
 
 	public bool ShowingPopup => currentChild is not null;
 
-	public void PlaySound(AudioStreamWav wav)
-	{
+	public void PlaySound(AudioStreamWav wav) {
 		AudioStreamPlayer player = GetNode<AudioStreamPlayer>("PopupSound");
 		player.Stream = wav;
 		player.Play();
@@ -57,8 +54,7 @@ public partial class PopupOverlay : HBoxContainer
 		}
 	}
 
-	public void ShowPopup(Popup child, PopupCategory category)
-	{
+	public void ShowPopup(Popup child, PopupCategory category) {
 		if (child is null) {
 			// not necessary if we don't pass null?
 			log.Error("Received request to show null popup");
@@ -105,8 +101,7 @@ public partial class PopupOverlay : HBoxContainer
 	 * If we find that the majority of popups should close on Escape, we may want to make that the default,
 	 * but so far, 2 out of 3 popups do not close on escape.
 	 **/
-	public override void _UnhandledInput(InputEvent @event)
-	{
+	public override void _UnhandledInput(InputEvent @event) {
 		if (Visible && @event is InputEventKey eventKey && eventKey.Pressed) {
 			// As I've added more shortcuts, I've realized checking all of them here could be irksome.
 			// For now, I'm thinking it would make more sense to process or allow through the ones that should go through,

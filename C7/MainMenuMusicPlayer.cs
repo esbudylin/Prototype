@@ -3,15 +3,13 @@ using System;
 using C7Engine;
 using Serilog;
 
-public partial class MainMenuMusicPlayer : AudioStreamPlayer
-{
+public partial class MainMenuMusicPlayer : AudioStreamPlayer {
 	private ILogger log;
 
 	private bool musicEnabled = true;
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		log = LogManager.ForContext<MainMenuMusicPlayer>();
 		//Figured out how to load the mp3 from this post: https://godotengine.org/qa/30210/how-do-load-resource-works
 
@@ -20,7 +18,7 @@ public partial class MainMenuMusicPlayer : AudioStreamPlayer
 			FileAccess mp3File = FileAccess.Open(mp3Path, FileAccess.ModeFlags.Read);
 
 			AudioStreamMP3 mp3 = new AudioStreamMP3();
-			long fileSize = (long)mp3File.GetLength();	//might blow up if it's > 2 GB, oh well
+			long fileSize = (long)mp3File.GetLength();  //might blow up if it's > 2 GB, oh well
 			mp3.Data = mp3File.GetBuffer(fileSize);
 			mp3.Loop = true;
 			this.Stream = mp3;
@@ -38,8 +36,7 @@ public partial class MainMenuMusicPlayer : AudioStreamPlayer
 				AudioServer.SetBusVolumeDb(busIndex, targetVolumeOffset);
 				Play();
 			}
-		}
-		catch(ApplicationException ex) {
+		} catch (ApplicationException ex) {
 			log.Error(ex, "could not load mp3 for main menu music");
 		}
 	}
@@ -51,8 +48,7 @@ public partial class MainMenuMusicPlayer : AudioStreamPlayer
 	 * Our users are probably more used to a 0% to 100% system.
 	 * So this method converts between them.
 	 */
-	private float GetVolumeOffset(string volume)
-	{
+	private float GetVolumeOffset(string volume) {
 		if (volume == null) {
 			//First run.  Save the setting.
 			C7Settings.SetValue("audio", "musicVolume", "100");
@@ -62,11 +58,9 @@ public partial class MainMenuMusicPlayer : AudioStreamPlayer
 		int userVolumeSetting = int.Parse(volume);
 		if (userVolumeSetting == 100) {
 			return 0;
-		}
-		else if (userVolumeSetting == 0) {
+		} else if (userVolumeSetting == 0) {
 			return float.MinValue;
-		}
-		else {
+		} else {
 			//Conversion math based on https://stackoverflow.com/a/37810295/3534605
 			return 20.0f * (float)(Math.Log10(userVolumeSetting / 100.0f));
 		}

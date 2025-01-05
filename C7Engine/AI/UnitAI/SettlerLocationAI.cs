@@ -6,8 +6,7 @@ using System.Linq;
 using C7GameData.AIData;
 using Serilog;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	public class SettlerLocationAI {
 		private static ILogger log = Log.ForContext<SettlerLocationAI>();
 
@@ -21,14 +20,13 @@ namespace C7Engine
 		public static Tile findSettlerLocation(Tile start, Player player) {
 			Dictionary<Tile, int> scores = GetScoredSettlerCandidates(start, player);
 			if (scores.Count == 0 || scores.Values.Max() <= 0) {
-				return Tile.NONE;	//nowhere to settle
+				return Tile.NONE;   //nowhere to settle
 			}
 
 			IOrderedEnumerable<KeyValuePair<Tile, int> > orderedScores = scores.OrderByDescending(t => t.Value);
 			log.Debug("Top city location candidates from " + start + ":");
 			Tile returnValue = null;
-			foreach (KeyValuePair<Tile, int> kvp in orderedScores.Take(5))
-			{
+			foreach (KeyValuePair<Tile, int> kvp in orderedScores.Take(5)) {
 				if (returnValue == null) {
 					returnValue = kvp.Key;
 				}
@@ -46,8 +44,7 @@ namespace C7Engine
 			return scores;
 		}
 
-		private static Dictionary<Tile, int> AssignTileScores(Tile startTile, Player player, IEnumerable<Tile> candidates, List<MapUnit> playerSettlers)
-		{
+		private static Dictionary<Tile, int> AssignTileScores(Tile startTile, Player player, IEnumerable<Tile> candidates, List<MapUnit> playerSettlers) {
 			Dictionary<Tile, int> scores = new Dictionary<Tile, int>();
 			candidates = candidates.Where(t => !SettlerAlreadyMovingTowardsTile(t, playerSettlers) && t.IsAllowCities());
 			foreach (Tile t in candidates) {
@@ -83,15 +80,13 @@ namespace C7Engine
 			}
 			return scores;
 		}
-		private static int GetTileYieldScore(Tile t, Player owner)
-		{
+		private static int GetTileYieldScore(Tile t, Player owner) {
 			int score = t.foodYield(owner) * 5;
 			score += t.productionYield(owner) * 3;
 			score += t.commerceYield(owner) * 2;
 			if (t.Resource.Category == ResourceCategory.STRATEGIC) {
 				score += STRATEGIC_RESOURCE_BONUS;
-			}
-			else if (t.Resource.Category == ResourceCategory.LUXURY) {
+			} else if (t.Resource.Category == ResourceCategory.LUXURY) {
 				score += LUXURY_RESOURCE_BONUS;
 			}
 			return score;
@@ -129,8 +124,7 @@ namespace C7Engine
 		/// <param name="playerSettlers">The settlers owned by the AI considering building a city.</param>
 		/// <returns></returns>
 		public static bool SettlerAlreadyMovingTowardsTile(Tile tile, List<MapUnit> playerSettlers) {
-			foreach (MapUnit otherSettler in playerSettlers)
-			{
+			foreach (MapUnit otherSettler in playerSettlers) {
 				if (otherSettler.currentAIData is SettlerAIData otherSettlerAI) {
 					if (otherSettlerAI.destination == tile) {
 						return true;

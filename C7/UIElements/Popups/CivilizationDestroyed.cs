@@ -4,19 +4,16 @@ using System.Diagnostics;
 using C7GameData;
 using Serilog;
 
-public partial class CivilizationDestroyed : Popup
-{
+public partial class CivilizationDestroyed : Popup {
 	string civNoun = "";
 
-	public CivilizationDestroyed(Civilization civ)
-	{
+	public CivilizationDestroyed(Civilization civ) {
 		alignment = BoxContainer.AlignmentMode.End;
 		margins = new Margins(right: 10);
 		civNoun = civ.noun;
 	}
 
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		base._Ready();
 
 		//Dimensions are 530x260 (roughly).
@@ -43,8 +40,7 @@ public partial class CivilizationDestroyed : Popup
 		AddButton("Very well.", 215, ContinueAction);
 	}
 
-	private void ContinueAction()
-	{
+	private void ContinueAction() {
 		GetParent().EmitSignal("HidePopup");
 	}
 }

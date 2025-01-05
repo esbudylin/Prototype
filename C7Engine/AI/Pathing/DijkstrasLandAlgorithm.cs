@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using C7GameData;
 
-namespace C7Engine.Pathing
-{
+namespace C7Engine.Pathing {
 	/**
 	 * Uses Dijkstra's Algorithm to find a path between two tiles.
 	 * Advantages: Finds the shortest path accounting for tile movement cost

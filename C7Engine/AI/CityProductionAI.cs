@@ -4,8 +4,7 @@ using System.Linq;
 using C7Engine.AI.StrategicAI;
 using Serilog;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	using C7GameData;
 
 	/**
@@ -14,8 +13,7 @@ namespace C7Engine
 	 * eventually.  For now, I just want to separate it out from the main
 	 * interaction events and make it clear that it's an AI component.
 	 */
-	public class CityProductionAI
-	{
+	public class CityProductionAI {
 
 		private static ILogger log = Log.ForContext<CityProductionAI>();
 
@@ -83,7 +81,7 @@ namespace C7Engine
 				if (unit.movement > 1) {
 					//Multiple by 0.5 for each movement point
 					//N.B. Eventually this should be influenced by the military strategy
-					baseScore = baseScore + baseScore/2 * (unit.movement - 1);
+					baseScore = baseScore + baseScore / 2 * (unit.movement - 1);
 				}
 				baseScore = baseScore - unit.shieldCost;
 				baseScore = baseScore - 10 * unit.populationCost;
@@ -123,7 +121,7 @@ namespace C7Engine
 				}
 				idx++;
 			}
-			return items[0];	//TODO: Fallback
+			return items[0];    //TODO: Fallback
 		}
 
 		public static float AdjustScoreByPopCost(City city, UnitPrototype unitPrototype, float baseScore) {

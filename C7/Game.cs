@@ -178,7 +178,7 @@ public partial class Game : Node2D {
 					// are still alive, etc.
 					if (mCD.city.owner.RemainingCities() == 0) {
 						popupOverlay.ShowPopup(new CivilizationDestroyed(mCD.city.owner.civilization), PopupOverlay.PopupCategory.Advisor);
-						for (int i =0; i < mCD.city.owner.units.Count; ++i) {
+						for (int i = 0; i < mCD.city.owner.units.Count; ++i) {
 							MapUnitExtensions.disband(mCD.city.owner.units[i]);
 						}
 					}
@@ -523,7 +523,7 @@ public partial class Game : Node2D {
 
 		if (this.HasCurrentlySelectedUnit()) {
 			TileDirection? dir = C7Action.ToTileDirection(currentAction);
-			
+
 			if (dir.HasValue) {
 				new MsgMoveUnit(CurrentlySelectedUnit.id, dir.Value).send();
 				setSelectedUnit(CurrentlySelectedUnit); //also triggers updating the lower-left info box

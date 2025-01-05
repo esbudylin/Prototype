@@ -7,8 +7,7 @@ namespace C7.Map {
 	public class CityLayer : LooseLayer {
 		private Dictionary<City, CityScene> citySceneLookup = new();
 
-		public CityLayer()
-		{
+		public CityLayer() {
 		}
 
 		public void UpdateAfterCityDestruction(City city) {
@@ -16,8 +15,7 @@ namespace C7.Map {
 			cityScene.Hide();
 		}
 
-		public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter)
-		{
+		public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter) {
 			if (tile.cityAtTile is null) {
 				return;
 			}

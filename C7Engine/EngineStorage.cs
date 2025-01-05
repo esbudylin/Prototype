@@ -1,5 +1,4 @@
-namespace C7Engine
-{
+namespace C7Engine {
 	using System;
 	using System.Threading;
 	using System.Collections.Concurrent;
@@ -14,24 +13,22 @@ namespace C7Engine
 	 * all be handled within C7GameData.  We just need a pointer to the main, top level
 	 * so we don't forget the state of the game after we create it.
 	 **/
-	public static class EngineStorage
-	{
+	public static class EngineStorage {
 		public static Mutex gameDataMutex = new Mutex();
-		internal static GameData gameData {get; set;}
+		internal static GameData gameData { get; set; }
 		public static ID uiControllerID;
 		internal static bool animationsEnabled = true;
 
 		private static Thread engineThread = null;
 		internal static AutoResetEvent uiEvent = new AutoResetEvent(false); // Used to block engineThread while waiting for the UI, f.e. while
-										   // an animation plays.
+																			// an animation plays.
 
 		internal static ConcurrentQueue<MessageToEngine> pendingMessages = new ConcurrentQueue<MessageToEngine>();
 		internal static AutoResetEvent actionAddedToQueue = new AutoResetEvent(false);
 
 		public static ConcurrentQueue<MessageToUI> messagesToUI = new ConcurrentQueue<MessageToUI>();
 
-		private static void processActions()
-		{
+		private static void processActions() {
 			bool stopProcessing = false;
 			while (!stopProcessing) {
 				actionAddedToQueue.WaitOne();
@@ -48,8 +45,7 @@ namespace C7Engine
 			}
 		}
 
-		internal static void createThread()
-		{
+		internal static void createThread() {
 			// TODO: What if engineThread is not null, i.e. if the thread has already been created? Should we join() it? Does it matter?
 			engineThread = new Thread(processActions);
 			engineThread.Start();
@@ -57,13 +53,11 @@ namespace C7Engine
 	}
 
 	public class UIGameDataAccess : IDisposable {
-		public UIGameDataAccess()
-		{
+		public UIGameDataAccess() {
 			EngineStorage.gameDataMutex.WaitOne();
 		}
 
-		public void Dispose()
-		{
+		public void Dispose() {
 			EngineStorage.gameDataMutex.ReleaseMutex();
 		}
 

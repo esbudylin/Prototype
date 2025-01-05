@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using C7GameData;
 
-namespace C7Engine.Pathing
-{
+namespace C7Engine.Pathing {
 	public abstract class PathingAlgorithm {
 		public abstract TilePath PathFrom(Tile start, Tile destination);
 
