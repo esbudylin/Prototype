@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using C7GameData;
 using Godot;
 
-namespace C7.Map
-{
+namespace C7.Map {
 	public partial class RoadLayer : LooseLayer {
 		private readonly ImageTexture roadTexture;
 		private readonly ImageTexture railroadTexture;

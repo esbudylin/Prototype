@@ -126,7 +126,7 @@ namespace C7Engine.AI {
 				}
 				idx++;
 			}
-			return new WarPriority();	//TODO: Fallback
+			return new WarPriority();   //TODO: Fallback
 		}
 	}
 }

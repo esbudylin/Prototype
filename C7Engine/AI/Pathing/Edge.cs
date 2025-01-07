@@ -1,8 +1,7 @@
 using System;
 
-namespace C7Engine.Pathing
-{
-	public class Edge<TNode>: IComparable<Edge<TNode>> {
+namespace C7Engine.Pathing {
+	public class Edge<TNode> : IComparable<Edge<TNode>> {
 		public readonly TNode prev;
 		public readonly TNode current;
 		public float distanceToCurrent { get; private set; }

@@ -1,16 +1,14 @@
 using System;
 using Godot;
 
-public partial class GameMenu : Popup
-{
+public partial class GameMenu : Popup {
 
 	public GameMenu() {
 		alignment = BoxContainer.AlignmentMode.Center;
 		margins = new Margins(top: 100);
 	}
 
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		base._Ready();
 
 		AddTexture(370, 300);
@@ -43,18 +41,15 @@ public partial class GameMenu : Popup
 		throw new NotImplementedException();
 	}
 
-	private void quit()
-	{
+	private void quit() {
 		GetParent().EmitSignal(PopupOverlay.SignalName.Quit);
 	}
 
-	private void retire()
-	{
+	private void retire() {
 		GetParent().EmitSignal(PopupOverlay.SignalName.Retire);
 	}
 
-	private void map()
-	{
+	private void map() {
 		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 

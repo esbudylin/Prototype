@@ -3,23 +3,19 @@ using Godot;
 using Resource = C7GameData.Resource;
 using Serilog;
 
-namespace C7.Map
-{
-	public partial class ResourceLayer : LooseLayer
-	{
+namespace C7.Map {
+	public partial class ResourceLayer : LooseLayer {
 		private ILogger log = LogManager.ForContext<ResourceLayer>();
 
 		private static readonly Vector2 resourceSize = new Vector2(50, 50);
 		private int maxRow;
 		private ImageTexture resourceTexture;
 
-		public ResourceLayer()
-		{
+		public ResourceLayer() {
 			resourceTexture = Util.LoadTextureFromPCX("Art/resources.pcx");
 			maxRow = (resourceTexture.GetHeight() / 50) - 1;
 		}
-		public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter)
-		{
+		public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter) {
 			Resource resource = tile.Resource;
 			if (resource != Resource.NONE) {
 				int resourceIcon = tile.Resource.Icon;

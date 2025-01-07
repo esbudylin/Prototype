@@ -3,15 +3,13 @@ using Godot;
 using Resource = C7GameData.Resource;
 using Serilog;
 
-namespace C7.Map
-{
+namespace C7.Map {
 	/// <summary>
 	/// Displays terrain yield overlays (from the tnt.pcx file).  These are most well known for letting you know where
 	/// there are bonus grasslands.
 	/// Note: I don't know why it's called tnt.
 	/// </summary>
-	public partial class TntLayer : LooseLayer
-	{
+	public partial class TntLayer : LooseLayer {
 		private ILogger log = LogManager.ForContext<TntLayer>();
 
 		private static readonly Vector2 tntSize = new Vector2(128, 64);
@@ -28,12 +26,10 @@ namespace C7.Map
 		private readonly int FLOOD_PLAIN_ROW = 5;
 #pragma warning restore CS0414
 
-		public TntLayer()
-		{
+		public TntLayer() {
 			tntTexture = Util.LoadTextureFromPCX("Art/Terrain/tnt.pcx");
 		}
-		public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter)
-		{
+		public override void drawObject(LooseView looseView, GameData gameData, Tile tile, Vector2 tileCenter) {
 			if (tile.overlayTerrainType.Key == "grassland" && tile.isBonusShield) {
 				Rect2 tntRectangle = new Rect2(0, BONUS_GRASSLAND_TNT_OFF_ROW * tntSize.Y, tntSize);
 				Rect2 screenTarget = new Rect2(tileCenter - 0.5f * tntSize, tntSize);

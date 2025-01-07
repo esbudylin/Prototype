@@ -1,19 +1,16 @@
 using System.Linq;
 using Serilog;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	using C7GameData;
 	using System.Collections.Generic;
 
-	public class UnitInteractions
-	{
+	public class UnitInteractions {
 
 		private static Queue<MapUnit> waitQueue = new Queue<MapUnit>();
 		private static ILogger log = Log.ForContext<UnitInteractions>();
 
-		public static MapUnit getNextSelectedUnit(GameData gameData)
-		{
+		public static MapUnit getNextSelectedUnit(GameData gameData) {
 			foreach (Player player in gameData.players.Where(p => p.isHuman)) {
 				//TODO: Should pass in a player GUID instead of checking for human
 				//This current limits us to one human player, although it's better
@@ -39,8 +36,7 @@ namespace C7Engine
 		 * We probably *should* be returning just a list of the actions.  However, we're passing the result around via Godot signals, so
 		 * I'm going to save that for a separate commit.
 		 **/
-		public static MapUnit UnitWithAvailableActions(MapUnit unit)
-		{
+		public static MapUnit UnitWithAvailableActions(MapUnit unit) {
 			unit.availableActions.Clear();
 
 			if (unit == MapUnit.NONE) {
@@ -70,17 +66,13 @@ namespace C7Engine
 			return unit;
 		}
 
-		public static void ClearWaitQueue()
-		{
+		public static void ClearWaitQueue() {
 			waitQueue.Clear();
 		}
 
-		public static void waitUnit(GameData gameData, ID id)
-		{
-			foreach (MapUnit unit in gameData.mapUnits)
-			{
-				if (unit.id == id)
-				{
+		public static void waitUnit(GameData gameData, ID id) {
+			foreach (MapUnit unit in gameData.mapUnits) {
+				if (unit.id == id) {
 					log.Verbose("Found matching unit with id " + id + " of type " + unit.GetType().Name + "; adding it to the wait queue");
 					waitQueue.Enqueue(unit);
 				}

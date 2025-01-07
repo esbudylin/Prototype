@@ -1,16 +1,13 @@
 using Godot;
 
-public partial class EscapeQuitPopup : Popup
-{
+public partial class EscapeQuitPopup : Popup {
 
-	public EscapeQuitPopup()
-	{
+	public EscapeQuitPopup() {
 		alignment = BoxContainer.AlignmentMode.Center;
 		margins = new Margins(top: 100);
 	}
 
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		base._Ready();
 
 		// Dimensions in-game are 270x295, centered at the top
@@ -37,13 +34,11 @@ public partial class EscapeQuitPopup : Popup
 		AddButton("Yes, immediately!", 116, quit);
 	}
 
-	private void quit()
-	{
+	private void quit() {
 		GetParent().EmitSignal(PopupOverlay.SignalName.Quit);
 	}
 
-	private void cancel()
-	{
+	private void cancel() {
 		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 }

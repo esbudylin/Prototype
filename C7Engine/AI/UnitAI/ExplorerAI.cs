@@ -7,18 +7,15 @@ using C7GameData.AIData;
 using C7Engine.Pathing;
 using Serilog;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	public class ExplorerAI : UnitAI {
 		private static ILogger log = Log.ForContext<ExplorerAI>();
 
-		public bool PlayTurn(Player player, MapUnit unit)
-		{
+		public bool PlayTurn(Player player, MapUnit unit) {
 			ExplorerAIData explorerData = (ExplorerAIData)unit.currentAIData;
 			if (MovingToNewExplorationArea(explorerData)) {
 				return MoveToNextTileOnPath(explorerData, unit);
-			}
-			else {
+			} else {
 				bool foundNeighboringTileToExplore = ExploreNeighboringTile(player, unit, explorerData);
 				if (foundNeighboringTileToExplore) {
 					return true;
@@ -74,8 +71,7 @@ namespace C7Engine
 			watch.Start();
 			List<Tile> validExplorerTiles = new List<Tile>();
 			foreach (Tile t in player.tileKnowledge.AllKnownTiles()
-					.Where(t => unit.CanEnterTile(t, false) && t.cityAtTile == null && numUnknownNeighboringTiles(player, t) > 0))
-			{
+					.Where(t => unit.CanEnterTile(t, false) && t.cityAtTile == null && numUnknownNeighboringTiles(player, t) > 0)) {
 				validExplorerTiles.Add(t);
 			}
 
@@ -136,8 +132,7 @@ namespace C7Engine
 			return true;
 		}
 
-		public static KeyValuePair<Tile, float> FindTopScoringTileForExploration(Player player, IEnumerable<Tile> possibleNewLocations, ExplorerAIData.ExplorationType type)
-		{
+		public static KeyValuePair<Tile, float> FindTopScoringTileForExploration(Player player, IEnumerable<Tile> possibleNewLocations, ExplorerAIData.ExplorationType type) {
 			//Technically, this should be the *estimated* new tiles revealed.  If a mountain blocks visibility,
 			//we won't know that till we move there.
 			Dictionary<Tile, float> explorationScore = new Dictionary<Tile, float>();
@@ -145,8 +140,7 @@ namespace C7Engine
 				int baseScore = numUnknownNeighboringTiles(player, t);
 				if (baseScore == 0) {
 					explorationScore[t] = 0;
-				}
-				else if (type == ExplorerAIData.ExplorationType.NEAR_CITIES) {
+				} else if (type == ExplorerAIData.ExplorationType.NEAR_CITIES) {
 					if (baseScore == 0) {
 						explorationScore[t] = 0;
 					}
@@ -175,14 +169,11 @@ namespace C7Engine
 			}
 			//Calculate whether it, and its neighbors are in known tiles.
 			int discoverableTiles = 0;
-			if (!player.tileKnowledge.isTileKnown(t))
-			{
+			if (!player.tileKnowledge.isTileKnown(t)) {
 				discoverableTiles++;
 			}
-			foreach (Tile n in t.neighbors.Values)
-			{
-				if (!player.tileKnowledge.isTileKnown(n))
-				{
+			foreach (Tile n in t.neighbors.Values) {
+				if (!player.tileKnowledge.isTileKnown(n)) {
 					discoverableTiles++;
 				}
 			}

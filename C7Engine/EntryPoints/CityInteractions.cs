@@ -1,14 +1,11 @@
 using System.Linq;
 using C7Engine.AI;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	using C7GameData;
 
-	public class CityInteractions
-	{
-		public static void BuildCity(int x, int y, ID playerID, string name)
-		{
+	public class CityInteractions {
+		public static void BuildCity(int x, int y, ID playerID, string name) {
 			GameData gameData = EngineStorage.gameData;
 			Player owner = gameData.GetPlayer(playerID);
 			Tile tileWithNewCity = gameData.map.tileAt(x, y);

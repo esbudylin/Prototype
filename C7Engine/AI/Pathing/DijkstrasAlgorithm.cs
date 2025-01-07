@@ -4,7 +4,7 @@ using C7GameData;
 
 namespace C7Engine.Pathing {
 
-	public class DijkstrasAlgorithm: PathingAlgorithm {
+	public class DijkstrasAlgorithm : PathingAlgorithm {
 		private readonly EdgeWalker<Tile> edgeWalker;
 
 		public DijkstrasAlgorithm(EdgeWalker<Tile> edgeWalker) {
@@ -21,8 +21,7 @@ namespace C7Engine.Pathing {
 		 * when stopWhenReachDestination == false it calculates distances to each available point
 		 */
 		public static Dictionary<TNode, Edge<TNode>> run<TNode>(TNode start, TNode destination,
-			EdgeWalker<TNode> edgeWalker, bool stopWhenReachDestination = true)
-		{
+			EdgeWalker<TNode> edgeWalker, bool stopWhenReachDestination = true) {
 			Dictionary<TNode, Edge<TNode>> visitedNodes = new Dictionary<TNode, Edge<TNode>>();
 			BinaryMinHeap<Edge<TNode>> edgesQueue = new BinaryMinHeap<Edge<TNode>>();
 

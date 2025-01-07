@@ -45,8 +45,7 @@ namespace C7Engine {
 				}
 			}
 		}
-		private static bool UnitIsFreeToMove(MapUnit unit)
-		{
+		private static bool UnitIsFreeToMove(MapUnit unit) {
 			if (!unit.location.hasBarbarianCamp) {
 				return true;
 			}

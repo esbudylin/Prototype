@@ -4,8 +4,7 @@ using System.Diagnostics;
 using C7GameData;
 using Serilog;
 
-public partial class DisbandConfirmation : Popup
-{
+public partial class DisbandConfirmation : Popup {
 	private ILogger log = LogManager.ForContext<DisbandConfirmation>();
 
 	string unitType = "";
@@ -14,22 +13,19 @@ public partial class DisbandConfirmation : Popup
 
 	//So Godot doesn't print error " Cannot construct temporary MonoObject because the class does not define a parameterless constructor"
 	//Not sure how important that is *shrug*
-	public DisbandConfirmation() {}
+	public DisbandConfirmation() { }
 
-	public DisbandConfirmation(MapUnit unit)
-	{
+	public DisbandConfirmation(MapUnit unit) {
 		alignment = BoxContainer.AlignmentMode.End;
 		margins = new Margins(right: 10);
 		unitType = unit.unitType.name;
 	}
 
-	public override void _EnterTree()
-	{
+	public override void _EnterTree() {
 		loadTimer.Start();
 	}
 
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		base._Ready();
 
 		// Dimensions in-game are 530x320
@@ -73,15 +69,13 @@ public partial class DisbandConfirmation : Popup
 		log.Verbose("Disband popup load time: " + Convert.ToInt32(stopwatchElapsed.TotalMilliseconds) + " ms");
 	}
 
-	private void disband()
-	{
+	private void disband() {
 		//tell the game to disband it.  right now we're doing that first, which is WRONG!
 		GetParent().EmitSignal(PopupOverlay.SignalName.UnitDisbanded);
 		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 
-	private void cancel()
-	{
+	private void cancel() {
 		GetParent().EmitSignal(PopupOverlay.SignalName.HidePopup);
 	}
 }

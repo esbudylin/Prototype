@@ -5,10 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Serilog;
 
-public partial class Margins
-{
-	public Margins(float top = 0, float bottom = 0, float left = 0, float right = 0)
-	{
+public partial class Margins {
+	public Margins(float top = 0, float bottom = 0, float left = 0, float right = 0) {
 		this.top = top;
 		this.bottom = bottom;
 		this.left = left;
@@ -29,8 +27,7 @@ public partial class Margins
  * pixels lower than it would otherwise. This is used when a popup includes an advisor, since the vOffset adds a
  * transparent region above the top of the popup background in which the advisor texture can be drawn.
  */
-public partial class Popup : TextureRect
-{
+public partial class Popup : TextureRect {
 	private ILogger log = LogManager.ForContext<Popup>();
 
 	public BoxContainer.AlignmentMode alignment;
@@ -38,14 +35,13 @@ public partial class Popup : TextureRect
 
 	const int HTILE_SIZE = 61;
 	const int VTILE_SIZE = 44;
-	private readonly static int BUTTON_LABEL_OFFSET = 0;	//Necessary in Godot 3, appears unnecessary in 4
+	private readonly static int BUTTON_LABEL_OFFSET = 0;    //Necessary in Godot 3, appears unnecessary in 4
 
 	private static ImageTexture InactiveButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 1, 1, 20, 20, false);
 	private static ImageTexture HoverButton = Util.LoadTextureFromPCX("Art/buttonsFINAL.pcx", 22, 1, 20, 20, false);
 	private static Dictionary<(int, int), ImageTexture> backgroundCache = new Dictionary<(int, int), ImageTexture>();
 
-	protected void AddButton(string label, int verticalPosition, Action action)
-	{
+	protected void AddButton(string label, int verticalPosition, Action action) {
 		const int HORIZONTAL_POSITION = 30;
 		TextureButton newButton = new TextureButton();
 		newButton.TextureNormal = InactiveButton;
@@ -65,8 +61,7 @@ public partial class Popup : TextureRect
 		newButtonLabel.Pressed += action;
 	}
 
-	protected void AddHeader(string text, int vOffset)
-	{
+	protected void AddHeader(string text, int vOffset) {
 		HBoxContainer header = new HBoxContainer();
 		header.Alignment = BoxContainer.AlignmentMode.Center;
 		Label advisorType = new Label();
@@ -92,14 +87,12 @@ public partial class Popup : TextureRect
 		AddChild(header);
 	}
 
-	private void DrawRow(Image image, int vOffset, int width, Image left, Image center, Image right)
-	{
+	private void DrawRow(Image image, int vOffset, int width, Image left, Image center, Image right) {
 
 		image.BlitRect(left, new Rect2I(new Vector2I(0, 0), new Vector2I(left.GetWidth(), left.GetHeight())), new Vector2I(0, vOffset));
 
 		int leftOffset = HTILE_SIZE;
-		for (; leftOffset < width - HTILE_SIZE; leftOffset += HTILE_SIZE)
-		{
+		for (; leftOffset < width - HTILE_SIZE; leftOffset += HTILE_SIZE) {
 			image.BlitRect(center, new Rect2I(new Vector2I(0, 0), new Vector2I(center.GetWidth(), center.GetHeight())), new Vector2I(leftOffset, vOffset));
 		}
 
@@ -107,26 +100,22 @@ public partial class Popup : TextureRect
 		image.BlitRect(right, new Rect2I(new Vector2I(0, 0), new Vector2I(right.GetWidth(), right.GetHeight())), new Vector2I(leftOffset, vOffset));
 	}
 
-	protected void AddTexture(int width, int height)
-	{
+	protected void AddTexture(int width, int height) {
 		Image image = Image.Create(width, height, false, Image.Format.Rgba8);
 		image.Fill(Color.Color8(0, 0, 0, 0));
 		this.Texture = ImageTexture.CreateFromImage(image);
 	}
 
-	protected void AddBackground(int width, int height, int vOffset = 0)
-	{
+	protected void AddBackground(int width, int height, int vOffset = 0) {
 		TextureRect background = CreateBackground(width, height);
 		background.SetPosition(new Vector2(0, vOffset));
 		AddChild(background);
 	}
 
-	private TextureRect CreateBackground(int width, int height)
-	{
+	private TextureRect CreateBackground(int width, int height) {
 		TextureRect rect = new TextureRect();
 
-		if (backgroundCache.ContainsKey((width, height)))
-		{
+		if (backgroundCache.ContainsKey((width, height))) {
 			rect.Texture = backgroundCache[(width, height)];
 			return rect;
 		}
@@ -161,8 +150,7 @@ public partial class Popup : TextureRect
 		int vOffset = 0;
 		DrawRow(image, vOffset, width, topLeftPopup, topCenterPopup, topRightPopup);
 		vOffset += VTILE_SIZE;
-		for (; vOffset < height - VTILE_SIZE; vOffset += VTILE_SIZE)
-		{
+		for (; vOffset < height - VTILE_SIZE; vOffset += VTILE_SIZE) {
 			DrawRow(image, vOffset, width, middleLeftPopup, middleCenterPopup, middleRightPopup);
 		}
 		vOffset = height - VTILE_SIZE;

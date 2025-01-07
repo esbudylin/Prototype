@@ -2,12 +2,10 @@ using Godot;
 using System;
 using ConvertCiv3Media;
 
-public partial class TestUnit : Node2D
-{
+public partial class TestUnit : Node2D {
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		//AudioStreamPlayer player = GetNode<AudioStreamPlayer>("CanvasLayer/SoundEffectPlayer");
 
 		AnimatedSprite2D sprite = new AnimatedSprite2D();
@@ -22,7 +20,7 @@ public partial class TestUnit : Node2D
 
 		ShaderMaterial material = new ShaderMaterial();
 		material.Shader = GD.Load<Shader>("res://UnitTint.gdshader");
-		material.SetShaderParameter("tintColor", new Vector3(1f,1f,1f));
+		material.SetShaderParameter("tintColor", new Vector3(1f, 1f, 1f));
 		spriteTint.Material = material;
 
 		AddChild(sprite);
@@ -47,7 +45,6 @@ public partial class TestUnit : Node2D
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
+	public override void _Process(double delta) {
 	}
 }

@@ -2,8 +2,7 @@ using Godot;
 using ConvertCiv3Media;
 using System;
 
-public partial class Civ3Unit : Civ3UnitSprite
-{
+public partial class Civ3Unit : Civ3UnitSprite {
 	public MovingSprite AS;
 	public SpriteFrames SF;
 	// constructor to copy existing unit
@@ -53,8 +52,7 @@ public partial class Civ3Unit : Civ3UnitSprite
 		AS.Play(actnName);
 	}
 	public override void Move(Direction direction, float speed = (float)0.6) {
-		switch (direction)
-		{
+		switch (direction) {
 			case Direction.SW:
 				AS.Velocity = new Vector2(-2, 1).Normalized() * speed;
 				break;
@@ -103,7 +101,7 @@ public partial class Civ3Unit : Civ3UnitSprite
 			short* sPtr;
 			bPtr[0] = 66;    //B
 			bPtr[1] = 77;    //M
-			bPtr+=2;
+			bPtr += 2;
 			iPtr = (int*)bPtr;
 			iPtr[0] = bmpSize;  //size of BMP file in bytes
 			iPtr[1] = 0;    //reserved, two shorts
@@ -111,11 +109,11 @@ public partial class Civ3Unit : Civ3UnitSprite
 			iPtr[3] = 40;   //size of Windows 3 BMP header
 			iPtr[4] = width;
 			iPtr[5] = height;
-			bPtr+=24;   //6 * 4
+			bPtr += 24;   //6 * 4
 			sPtr = (short*)bPtr;
 			sPtr[0] = 1;    //num color planes
 			sPtr[1] = 32;   //bit depth.  we want 32-bit with alpha
-			bPtr+=4;
+			bPtr += 4;
 			iPtr = (int*)bPtr;
 			iPtr[0] = 0;    //compression - none.  Godot doesn't support compression
 			iPtr[1] = bmpSize - 54; //size, without headers
@@ -123,18 +121,16 @@ public partial class Civ3Unit : Civ3UnitSprite
 			iPtr[3] = 0;    //vertical resolution.  ignored.
 			iPtr[4] = 0;    //num colors in palette.  not relevant for 32-bit
 			iPtr[5] = 0;    //num important colors in palette.  not relevant.
-			bPtr+=24;   //6 * 4
+			bPtr += 24;   //6 * 4
 			iPtr = (int*)bPtr;
 			//Ready for image data
 
 			int c = 0;
 			//The BMP data is stored bottom-to-top, whereas our data is top-to-bottom
 			//Thus we'll use c to calculate the index for each row
-			for (int y = height - 1; y > -1; y--)
-			{
+			for (int y = height - 1; y > -1; y--) {
 				c = width * y;
-				for (int x = 0; x < width; x++)
-				{
+				for (int x = 0; x < width; x++) {
 					if (shadows && colorIndices[c] > 239) {
 						// using black and transparency
 						iPtr[0] = ((255 - colorIndices[c]) << 4) << 24;

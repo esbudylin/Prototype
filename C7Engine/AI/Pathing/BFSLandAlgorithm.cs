@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using C7GameData;
 
-namespace C7Engine.Pathing
-{
+namespace C7Engine.Pathing {
 	/**
 	 * Uses the Breadth-First Search Algorithm to find a path between two tiles.
 	 * Advantages: Simple.  Allows avoidance of obstacles such as water.
@@ -13,11 +12,9 @@ namespace C7Engine.Pathing
 	 * Modifications: Use the predecessors structure to allow us to backtrack and
 	 * find the path used for the shortest route, not just the distance.
 	 */
-	public class BFSLandAlgorithm : PathingAlgorithm
-	{
+	public class BFSLandAlgorithm : PathingAlgorithm {
 		//N.B. This should really be static, but we can't put a static method on interfaces, so it isn't.
-		public override TilePath PathFrom(Tile start, Tile destination)
-		{
+		public override TilePath PathFrom(Tile start, Tile destination) {
 			if (start == destination) {
 				return TilePath.EmptyPath(destination);
 			}
@@ -30,7 +27,7 @@ namespace C7Engine.Pathing
 			Queue<Tile> tilesToVisit = new Queue<Tile>();
 			distances[start] = 0;
 
-			foreach(Tile tile in start.GetLandNeighbors()) {
+			foreach (Tile tile in start.GetLandNeighbors()) {
 				distances[tile] = 1;
 				predecessors[tile] = start;
 				tilesToVisit.Enqueue(tile);

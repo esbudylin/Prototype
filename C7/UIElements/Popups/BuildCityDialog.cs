@@ -1,16 +1,14 @@
 using Godot;
 using Serilog;
 
-public partial class BuildCityDialog : Popup
-{
+public partial class BuildCityDialog : Popup {
 
 	LineEdit cityName = new LineEdit();
 	private string defaultName = "";
 
 	private ILogger log = LogManager.ForContext<BuildCityDialog>();
 
-	public BuildCityDialog(string defaultName)
-	{
+	public BuildCityDialog(string defaultName) {
 		cityName.Theme = ThemeFactory.DefaultTheme;
 		cityName.CaretBlink = true;
 		this.defaultName = defaultName;
@@ -18,8 +16,7 @@ public partial class BuildCityDialog : Popup
 		margins = new Margins(right: -10); // 10px margin from the right
 	}
 
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		base._Ready();
 
 		//Dimensions are 530x260 (roughly).
@@ -89,13 +86,11 @@ public partial class BuildCityDialog : Popup
 	/**
 	 * Need a second method b/c the LineEdit sends a param and the ConfirmButton doesn't.
 	 **/
-	public void OnConfirmButtonPressed()
-	{
+	public void OnConfirmButtonPressed() {
 		this.OnCityNameEntered(cityName.Text);
 	}
 
-	public void OnCityNameEntered(string name)
-	{
+	public void OnCityNameEntered(string name) {
 		GetViewport().SetInputAsHandled();
 		log.Debug("The user hit enter with a city name of " + name);
 		GetParent().EmitSignal(PopupOverlay.SignalName.BuildCity, name);

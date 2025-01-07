@@ -3,8 +3,7 @@ using System;
 using C7Engine;
 using Serilog;
 
-public partial class MainMenu : Node2D
-{
+public partial class MainMenu : Node2D {
 	private ILogger log;
 
 	readonly int BUTTON_LABEL_OFFSET = 0;
@@ -24,8 +23,7 @@ public partial class MainMenu : Node2D
 	readonly int MENU_OFFSET_FROM_LEFT = 180;
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		log = LogManager.ForContext<MainMenu>();
 		log.Debug("enter MainMenu._Ready");
 
@@ -45,8 +43,7 @@ public partial class MainMenu : Node2D
 		DisplayTitleScreen();
 	}
 
-	private void DisplayTitleScreen()
-	{
+	private void DisplayTitleScreen() {
 		try {
 			SetMainMenuBackground();
 
@@ -66,23 +63,21 @@ public partial class MainMenu : Node2D
 
 			// Hide select home folder if valid path is present as proven by reaching this point in code
 			SetCiv3Home.Visible = false;
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			log.Error(ex, "Could not set up the main menu");
 			GetNode<Label>("CanvasLayer/Label").Visible = true;
 			GetNode<ColorRect>("CanvasLayer/ColorRect").Visible = true;
 		}
 	}
 
-	private void SetMainMenuBackground()
-	{
+	private void SetMainMenuBackground() {
 		ImageTexture TitleScreenTexture = Util.LoadTextureFromC7JPG("Art/Title_Screen.jpg");
 		MainMenuBackground = GetNode<TextureRect>("CanvasLayer/MainMenuBackground");
 		MainMenuBackground.StretchMode = TextureRect.StretchModeEnum.Scale;
 		MainMenuBackground.Texture = TitleScreenTexture;
 	}
 
-	private void AddButton(string label, int verticalPosition, Action action)
-	{
+	private void AddButton(string label, int verticalPosition, Action action) {
 		TextureButton newButton = new TextureButton();
 		newButton.TextureNormal = InactiveButton;
 		newButton.TextureHover = HoverButton;
@@ -101,70 +96,59 @@ public partial class MainMenu : Node2D
 		newButtonLabel.Pressed += action;
 	}
 
-	public void StartGame()
-	{
+	public void StartGame() {
 		log.Information("start game button pressed");
 		PlayButtonPressedSound();
 		GetTree().ChangeSceneToFile("res://C7Game.tscn");
 	}
 
-	public void LoadGame()
-	{
+	public void LoadGame() {
 		log.Information("load game button pressed");
 		PlayButtonPressedSound();
 		LoadDialog.Popup();
 	}
 
-	public void LoadScenario()
-	{
+	public void LoadScenario() {
 		log.Information("load scenario button pressed");
 		PlayButtonPressedSound();
 		LoadScenarioDialog.Popup();
 	}
 
-	public void showCredits()
-	{
+	public void showCredits() {
 		log.Information("credits button pressed");
 		GetTree().ChangeSceneToFile("res://Credits.tscn");
 	}
 
-	public void HallOfFame()
-	{
+	public void HallOfFame() {
 		PlayButtonPressedSound();
 	}
 
-	public void Preferences()
-	{
+	public void Preferences() {
 		PlayButtonPressedSound();
 	}
 
-	public void _on_Exit_pressed()
-	{
+	public void _on_Exit_pressed() {
 		GetTree().Quit(); // no need to notify the scene tree
 	}
 
-	private void PlayButtonPressedSound()
-	{
+	private void PlayButtonPressedSound() {
 		AudioStreamWav wav = Util.LoadWAVFromDisk(Util.Civ3MediaPath("Sounds/Button1.wav"));
 		AudioStreamPlayer player = GetNode<AudioStreamPlayer>("CanvasLayer/SoundEffectPlayer");
 		player.Stream = wav;
 		player.Play();
 	}
 
-	private void _on_FileDialog_file_selected(string path)
-	{
+	private void _on_FileDialog_file_selected(string path) {
 		log.Information($"loading {path}");
 		Global.LoadGamePath = path;
 		GetTree().ChangeSceneToFile("res://C7Game.tscn");
 	}
 
-	private void _on_SetCiv3Home_pressed()
-	{
+	private void _on_SetCiv3Home_pressed() {
 		SetCiv3HomeDialog.Popup();
 	}
 
-	private void _on_SetCiv3HomeDialog_dir_selected(string path)
-	{
+	private void _on_SetCiv3HomeDialog_dir_selected(string path) {
 		Util.Civ3Root = path;
 		C7Settings.SetValue("locations", "civ3InstallDir", path);
 		C7Settings.SaveSettings();

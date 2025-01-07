@@ -9,13 +9,11 @@ using C7Engine.AI.StrategicAI;
 using C7Engine.AI.UnitAI;
 using Serilog;
 
-namespace C7Engine
-{
+namespace C7Engine {
 	public class PlayerAI {
 		private static ILogger log = Log.ForContext<PlayerAI>();
 
-		public static void PlayTurn(Player player, Random rng)
-		{
+		public static void PlayTurn(Player player, Random rng) {
 			if (player.isHuman || player.isBarbarians) {
 				return;
 			}
@@ -42,7 +40,7 @@ namespace C7Engine
 
 				bool unitDone = false;
 				int attempts = 0;
-				int maxAttempts = 2;	//safety valve so we don't freeze the UI if SetAIForUnit returns something that fails
+				int maxAttempts = 2;    //safety valve so we don't freeze the UI if SetAIForUnit returns something that fails
 				while (!unitDone) {
 					if (unit.currentAIData == null || attempts > 0) {
 						SetAIForUnit(unit, player);
@@ -62,8 +60,7 @@ namespace C7Engine
 			}
 		}
 
-		public static void SetAIForUnit(MapUnit unit, Player player)
-		{
+		public static void SetAIForUnit(MapUnit unit, Player player) {
 			//figure out an AI behavior
 			//TODO: Use strategies, not names
 			if (unit.unitType.name == "Settler") {
@@ -73,8 +70,7 @@ namespace C7Engine
 				if (player.cities.Count == 0 && unit.location.cityAtTile == null) {
 					settlerAiData.destination = unit.location;
 					log.Information("No cities yet!  Set AI for unit to settler AI with destination of " + settlerAiData.destination);
-				}
-				else {
+				} else {
 					settlerAiData.destination = SettlerLocationAI.findSettlerLocation(unit.location, player);
 					if (settlerAiData.destination == Tile.NONE) {
 						//This is possible if all tiles within 4 tiles of a city are either not land, or already claimed
@@ -82,49 +78,42 @@ namespace C7Engine
 						//but right now we'll just spike the football to stop the clock and avoid building immediately next to another city.
 						settlerAiData.goal = SettlerAIData.SettlerGoal.JOIN_CITY;
 						log.Information("Set AI for unit to JOIN_CITY due to lack of locations to settle");
-					}
-					else {
+					} else {
 						PathingAlgorithm algorithm = PathingAlgorithmChooser.GetAlgorithm(unit.IsLandUnit());
 						settlerAiData.pathToDestination = algorithm.PathFrom(unit.location, settlerAiData.destination);
 						log.Information("Set AI for unit to BUILD_CITY with destination of " + settlerAiData.destination);
 					}
 				}
 				unit.currentAIData = settlerAiData;
-			}
-			else if (unit.location.cityAtTile != null && unit.location.unitsOnTile.Count(u => u.unitType.defense > 0 && u != unit) == 0) {
+			} else if (unit.location.cityAtTile != null && unit.location.unitsOnTile.Count(u => u.unitType.defense > 0 && u != unit) == 0) {
 				DefenderAIData ai = new DefenderAIData();
 				ai.goal = DefenderAIData.DefenderGoal.DEFEND_CITY;
 				ai.destination = unit.location;
 				log.Information("Set defender AI for " + unit + " with destination of " + ai.destination);
 				unit.currentAIData = ai;
-			}
-			else if (UnitCanAttackNearbyBarbCamp(unit, player)) {
+			} else if (UnitCanAttackNearbyBarbCamp(unit, player)) {
 				log.Information("Set unit " + unit + " to take out barb camp");
-			}
-			else if (unit.unitType.name == "Catapult") {
+			} else if (unit.unitType.name == "Catapult") {
 				//For now tell catapults to sit tight.  It's getting really annoying watching them pointlessly bombard barb camps forever
 				DefenderAIData ai = new DefenderAIData();
 				ai.goal = DefenderAIData.DefenderGoal.DEFEND_CITY;
 				ai.destination = unit.location;
 				log.Information("Set defender AI for " + unit + " with destination of " + ai.destination);
 				unit.currentAIData = ai;
-			}
-			else {
+			} else {
 
 				if (unit.unitType.categories.Contains("Sea")) {
 					ExplorerAIData ai = new ExplorerAIData();
 					ai.type = ExplorerAIData.ExplorationType.COASTLINE;
 					unit.currentAIData = ai;
 					log.Information("Set coastline exploration AI for " + unit);
-				}
-				else if (unit.location.unitsOnTile.Exists((x) => x.unitType.categories.Contains("Sea"))) {
+				} else if (unit.location.unitsOnTile.Exists((x) => x.unitType.categories.Contains("Sea"))) {
 					ExplorerAIData ai = new ExplorerAIData();
 					ai.type = ExplorerAIData.ExplorationType.ON_A_BOAT;
 					unit.currentAIData = ai;
 					//TODO: Actually put the unit on the boat
 					log.Information("Set ON_A_BOAT exploration AI for " + unit);
-				}
-				else {
+				} else {
 					//Isn't a Settler.  If there's a city at the location, it's defended.  No boats involved.  What's our priority?
 					//If there is land to explore, we'll try to explore it.
 					//Long-term TODO: Should only send tiles on this landmass.
@@ -133,8 +122,7 @@ namespace C7Engine
 						ExplorerAIData ai = new ExplorerAIData();
 						//What type of exploration should we do?
 						int nearbyExplorers = 0;
-						foreach (MapUnit mapUnit in player.units)
-						{
+						foreach (MapUnit mapUnit in player.units) {
 							if (mapUnit.currentAIData is ExplorerAIData explorerAI) {
 								if (explorerAI.type == ExplorerAIData.ExplorationType.NEAR_CITIES) {
 									nearbyExplorers++;
@@ -148,8 +136,7 @@ namespace C7Engine
 						}
 						unit.currentAIData = ai;
 						log.Information($"Set {ai.type} exploration AI for {unit}");
-					}
-					else {
+					} else {
 						//Nowhere to explore.  What to do now?
 						//Priority 1: Adequate defense of cities.
 						//Future Priority 1: Escorting Settlers
@@ -218,8 +205,7 @@ namespace C7Engine
 		 *
 		 * However, in the spirit of incrementalism, sending units to defend is still better than not sending them to defend.
 		 */
-		private static City FindNearbyCityToDefend(MapUnit unit, Player player)
-		{
+		private static City FindNearbyCityToDefend(MapUnit unit, Player player) {
 			int minDefenders = int.MaxValue;
 			//TODO: Just being there doesn't mean a unit is a defender.
 			List<City> citiesWithFewestDefenders = new List<City>();
@@ -255,18 +241,14 @@ namespace C7Engine
 		 * too, for example, and one AIData class might be able to call up multiple types of AIs.
 		 * It also likely will become mod-supporting someday, but we can't add everything on day one.
 		 **/
-		public static UnitAI getAIForUnitStrategy(UnitAIData aiData)
-		{
+		public static UnitAI getAIForUnitStrategy(UnitAIData aiData) {
 			if (aiData is SettlerAIData sai) {
 				return new SettlerAI();
-			}
-			else if (aiData is DefenderAIData dai) {
+			} else if (aiData is DefenderAIData dai) {
 				return new DefenderAI();
-			}
-			else if (aiData is ExplorerAIData eai) {
+			} else if (aiData is ExplorerAIData eai) {
 				return new ExplorerAI();
-			}
-			else if (aiData is CombatAIData cai) {
+			} else if (aiData is CombatAIData cai) {
 				return new CombatAI();
 			}
 			throw new Exception("AI data not recognized" + aiData);

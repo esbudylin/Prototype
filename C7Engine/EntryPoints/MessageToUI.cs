@@ -1,11 +1,9 @@
-namespace C7Engine
-{
+namespace C7Engine {
 	using System.Threading;
 	using C7GameData;
 
 	public class MessageToUI {
-		public void send()
-		{
+		public void send() {
 			EngineStorage.messagesToUI.Enqueue(this);
 		}
 	}
@@ -16,8 +14,7 @@ namespace C7Engine
 		public AutoResetEvent completionEvent;
 		public AnimationEnding ending;
 
-		public MsgStartUnitAnimation(MapUnit unit, MapUnit.AnimatedAction action, AutoResetEvent completionEvent, AnimationEnding ending)
-		{
+		public MsgStartUnitAnimation(MapUnit unit, MapUnit.AnimatedAction action, AutoResetEvent completionEvent, AnimationEnding ending) {
 			this.unitID = unit.id;
 			this.action = action;
 			this.completionEvent = completionEvent;
@@ -31,8 +28,7 @@ namespace C7Engine
 		public AutoResetEvent completionEvent;
 		public AnimationEnding ending;
 
-		public MsgStartEffectAnimation(Tile tile, AnimatedEffect effect, AutoResetEvent completionEvent, AnimationEnding ending)
-		{
+		public MsgStartEffectAnimation(Tile tile, AnimatedEffect effect, AutoResetEvent completionEvent, AnimationEnding ending) {
 			this.tileIndex = EngineStorage.gameData.map.tileCoordsToIndex(tile.xCoordinate, tile.yCoordinate);
 			this.effect = effect;
 			this.completionEvent = completionEvent;
@@ -40,14 +36,13 @@ namespace C7Engine
 		}
 	}
 
-	public class MsgStartTurn : MessageToUI {}
+	public class MsgStartTurn : MessageToUI { }
 
 
 	public class MsgCityDestroyed : MessageToUI {
 		public City city;
 
-		public MsgCityDestroyed(City city)
-		{
+		public MsgCityDestroyed(City city) {
 			this.city = city;
 		}
 	}

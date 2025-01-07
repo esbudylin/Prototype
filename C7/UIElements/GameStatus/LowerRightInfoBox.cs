@@ -3,8 +3,7 @@ using ConvertCiv3Media;
 using C7GameData;
 using Serilog;
 
-public partial class LowerRightInfoBox : TextureRect
-{
+public partial class LowerRightInfoBox : TextureRect {
 	private ILogger log = LogManager.ForContext<LowerRightInfoBox>();
 
 	TextureButton nextTurnButton = new TextureButton();
@@ -18,11 +17,10 @@ public partial class LowerRightInfoBox : TextureRect
 	Label yearAndGold = new Label();
 
 	Timer blinkingTimer = new Timer();
-	bool timerStarted = false;	//This "isStopped" returns false if it's never been started.  So we need this to know if we've ever started it.
+	bool timerStarted = false;  //This "isStopped" returns false if it's never been started.  So we need this to know if we've ever started it.
 
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		this.CreateUI();
 	}
 
@@ -81,7 +79,7 @@ public partial class LowerRightInfoBox : TextureRect
 		civAndGovt.AnchorLeft = 0.5f;
 		civAndGovt.AnchorRight = 0.5f;
 		boxRightRectangle.AddChild(civAndGovt);
-		civAndGovt.OffsetLeft = -1 * (civAndGovt.Size.X/2.0f);
+		civAndGovt.OffsetLeft = -1 * (civAndGovt.Size.X / 2.0f);
 
 		yearAndGold.Text = "Turn 0  10 Gold (+0 per turn)";
 		yearAndGold.HorizontalAlignment = HorizontalAlignment.Center;
@@ -89,7 +87,7 @@ public partial class LowerRightInfoBox : TextureRect
 		yearAndGold.AnchorLeft = 0.5f;
 		yearAndGold.AnchorRight = 0.5f;
 		boxRightRectangle.AddChild(yearAndGold);
-		yearAndGold.OffsetLeft = -1 * (yearAndGold.Size.X/2.0f);
+		yearAndGold.OffsetLeft = -1 * (yearAndGold.Size.X / 2.0f);
 
 		//Setup up, but do not start, the timer.
 		blinkingTimer.OneShot = false;
@@ -113,13 +111,11 @@ public partial class LowerRightInfoBox : TextureRect
 		}
 	}
 
-	private void toggleEndTurnButton()
-	{
+	private void toggleEndTurnButton() {
 		if (nextTurnButton.TextureNormal == nextTurnOnTexture) {
 			nextTurnButton.TextureNormal = nextTurnBlinkTexture;
 			lblUnitSelected.Visible = true;
-		}
-		else {
+		} else {
 			nextTurnButton.TextureNormal = nextTurnOnTexture;
 			lblUnitSelected.Visible = false;
 		}
@@ -138,16 +134,14 @@ public partial class LowerRightInfoBox : TextureRect
 		GetParent().EmitSignal(GameStatus.SignalName.BlinkyEndTurnButtonPressed);
 	}
 
-	public void UpdateUnitInfo(MapUnit NewUnit, TerrainType terrain)
-	{
+	public void UpdateUnitInfo(MapUnit NewUnit, TerrainType terrain) {
 		terrainType.Text = terrain.DisplayName;
 		terrainType.Visible = true;
 		lblUnitSelected.Text = NewUnit.unitType.name;
 		lblUnitSelected.Visible = true;
 		string movementPointsRemaining = NewUnit.movementPoints.canMove ? "" + $"{(NewUnit.movementPoints.getMixedNumber())}" : "0";
 		string bombardText = "";
-		if (NewUnit.unitType.bombard > 0)
-		{
+		if (NewUnit.unitType.bombard > 0) {
 			bombardText = $"({NewUnit.unitType.bombard})";
 		}
 		attackDefenseMovement.Text = $"{NewUnit.unitType.attack}{bombardText}.{NewUnit.unitType.defense} {movementPointsRemaining}/{NewUnit.unitType.movement}";
@@ -156,8 +150,7 @@ public partial class LowerRightInfoBox : TextureRect
 
 	///This is going to evolve a lot over time.  Probably this info box will need to keep some local state.
 	///But for now it'll show the changing turn number, providing some interactivity
-	public void SetTurn(int turnNumber)
-	{
+	public void SetTurn(int turnNumber) {
 		yearAndGold.Text = $"Turn {turnNumber}  10 Gold (+0 per turn)";
 	}
 }

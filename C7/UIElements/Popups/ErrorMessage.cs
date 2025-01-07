@@ -1,7 +1,6 @@
 using Godot;
 
-public partial class ErrorMessage : Popup
-{
+public partial class ErrorMessage : Popup {
 	private string message = "";
 
 	public ErrorMessage(string message) {
@@ -10,8 +9,7 @@ public partial class ErrorMessage : Popup
 		margins = new Margins(top: 100);
 	}
 
-	public override void _Ready()
-	{
+	public override void _Ready() {
 		base._Ready();
 
 		AddTexture(615, 325);
@@ -31,8 +29,7 @@ public partial class ErrorMessage : Popup
 		AddButton("Return to Menu", 290, quit);
 	}
 
-	private void quit()
-	{
+	private void quit() {
 		GetTree().ChangeSceneToFile("res://MainMenu.tscn");
 	}
 }
