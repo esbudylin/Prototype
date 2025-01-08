@@ -44,7 +44,7 @@ namespace C7GameData.Save {
 			};
 		}
 
-		public SaveGame() {}
+		public SaveGame() { }
 
 		public static SaveGame FromGameData(GameData data) {
 			SaveGame save = new SaveGame{
@@ -105,7 +105,7 @@ namespace C7GameData.Save {
 
 			// once unit owners are known, players can reference units
 			data.players.ForEach(player => {
-				player.units = data.mapUnits.Where(unit => unit.owner.id == player.id).ToList();;
+				player.units = data.mapUnits.Where(unit => unit.owner.id == player.id).ToList(); ;
 			});
 
 			// cities require game map for location and players for city owner
@@ -135,21 +135,21 @@ namespace C7GameData.Save {
 
 			foreach (StrengthBonus sb in StrengthBonuses) {
 				switch (sb.description) {
-				case "Fortified":
-					data.fortificationBonus = sb;
-					break;
-				case "Behind river":
-					data.riverCrossingBonus = sb;
-					break;
-				case "Town":
-					data.cityLevel1DefenseBonus = sb;
-					break;
-				case "City":
-					data.cityLevel2DefenseBonus = sb;
-					break;
-				case "Metropolis":
-					data.cityLevel3DefenseBonus = sb;
-					break;
+					case "Fortified":
+						data.fortificationBonus = sb;
+						break;
+					case "Behind river":
+						data.riverCrossingBonus = sb;
+						break;
+					case "Town":
+						data.cityLevel1DefenseBonus = sb;
+						break;
+					case "City":
+						data.cityLevel2DefenseBonus = sb;
+						break;
+					case "Metropolis":
+						data.cityLevel3DefenseBonus = sb;
+						break;
 				}
 			}
 

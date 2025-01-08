@@ -18,7 +18,7 @@ namespace C7GameData.Save {
 		public int foodNeededToGrow;
 		public List<SaveCityResident> residents = new List<SaveCityResident>();
 
-		public SaveCity() {}
+		public SaveCity() { }
 
 		public SaveCity(City city) {
 			id = city.id;
@@ -31,7 +31,7 @@ namespace C7GameData.Save {
 			foodStored = city.foodStored;
 			foodNeededToGrow = city.foodNeededToGrow;
 			residents = city.residents.ConvertAll(resident => {
-				return new SaveCityResident{
+				return new SaveCityResident {
 					nationality = resident.nationality?.name,
 					tileWorked = new TileLocation(resident.tileWorked),
 				};

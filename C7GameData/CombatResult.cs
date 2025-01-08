@@ -1,5 +1,4 @@
-namespace C7GameData
-{
+namespace C7GameData {
 	public enum CombatResult {
 		AttackerKilled,
 		DefenderKilled,
@@ -9,13 +8,11 @@ namespace C7GameData
 	}
 
 	public static class CombatResultExtensions {
-		public static bool AttackerWon(this CombatResult cR)
-		{
+		public static bool AttackerWon(this CombatResult cR) {
 			return (cR == CombatResult.DefenderKilled) || (cR == CombatResult.DefenderRetreated);
 		}
 
-		public static bool DefenderWon(this CombatResult cR)
-		{
+		public static bool DefenderWon(this CombatResult cR) {
 			return (cR == CombatResult.AttackerKilled) || (cR == CombatResult.AttackerRetreated);
 		}
 	}

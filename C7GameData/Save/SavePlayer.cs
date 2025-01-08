@@ -33,7 +33,7 @@ namespace C7GameData.Save {
 			return player;
 		}
 
-		public SavePlayer() {}
+		public SavePlayer() { }
 
 		public SavePlayer(Player player) {
 			id = player.id;

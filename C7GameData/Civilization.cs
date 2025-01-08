@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace C7GameData
-{
+namespace C7GameData {
 	/**
 	 * Represents a civilization, such as the French, which can be
 	 * assigned to a player.
@@ -12,9 +11,8 @@ namespace C7GameData
 		Female,
 	}
 
-	public class Civilization
-	{
-		public Civilization() {}
+	public class Civilization {
+		public Civilization() { }
 
 		public Civilization(string name) {
 			this.name = name;

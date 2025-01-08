@@ -12,7 +12,7 @@ namespace C7GameData.AIData
 			ON_A_BOAT
 		}
 		public ExplorationType type;
-        public TilePath path;
+		public TilePath path;
 
 		public override string ToString()
 		{

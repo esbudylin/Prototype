@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Serilog;
 
-namespace C7GameData
-{
+namespace C7GameData {
 	public class GameData {
 		private static ILogger log = Log.ForContext<GameData>();
 
-		public int seed = -1;	//change here to set a hard-coded seed
-		public int turn {get; set;}
+		public int seed = -1;   //change here to set a hard-coded seed
+		public int turn { get; set; }
 		public static Random rng; // TODO: Is GameData really the place for this?
-		public IDFactory ids {get; private set;} = new IDFactory();
-		public GameMap map {get; set;}
+		public IDFactory ids { get; private set; } = new IDFactory();
+		public GameMap map { get; set; }
 		public List<Player> players = new List<Player>();
 		public List<TerrainType> terrainTypes = new List<TerrainType>();
 		public List<Resource> Resources = new List<Resource>();
-		public List<MapUnit> mapUnits {get; set;} = new List<MapUnit>();
+		public List<MapUnit> mapUnits { get; set; } = new List<MapUnit>();
 		public Dictionary<string, UnitPrototype> unitPrototypes = new Dictionary<string, UnitPrototype>();
 		public List<City> cities = new List<City>();
 
@@ -41,10 +40,9 @@ namespace C7GameData
 
 		public bool observerMode = false;
 
-		public string scenarioSearchPath;	//legacy from Civ3, we'll probably have a more modern format someday but this keeps legacy compatibility
+		public string scenarioSearchPath;   //legacy from Civ3, we'll probably have a more modern format someday but this keeps legacy compatibility
 
-		public GameData()
-		{
+		public GameData() {
 			map = new GameMap();
 			if (seed == -1) {
 				rng = new Random();
@@ -58,8 +56,7 @@ namespace C7GameData
 			return players.FindAll(p => p.isHuman);
 		}
 
-		public MapUnit GetUnit(ID id)
-		{
+		public MapUnit GetUnit(ID id) {
 			return mapUnits.Find(u => u.id == id);
 		}
 
@@ -67,8 +64,7 @@ namespace C7GameData
 			return players.Find(p => p.id == id);
 		}
 
-		public ExperienceLevel GetExperienceLevelAfter(ExperienceLevel experienceLevel)
-		{
+		public ExperienceLevel GetExperienceLevelAfter(ExperienceLevel experienceLevel) {
 			int n = experienceLevels.IndexOf(experienceLevel);
 			if (n + 1 < experienceLevels.Count)
 				return experienceLevels[n + 1];
@@ -82,8 +78,7 @@ namespace C7GameData
 		 * This likely is any sort of calculation which is useful to have in the game state, but
 		 * can be re-generated from save data and does not make sense to serialize.
 		 **/
-		public void PerformPostLoadActions()
-		{
+		public void PerformPostLoadActions() {
 			//Let each tile know who its neighbors are.  It needs to know this so its graphics can be selected appropriately.
 			map.computeNeighbors();
 		}

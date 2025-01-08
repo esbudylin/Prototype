@@ -12,8 +12,7 @@ using C7GameData.Save;
 
 namespace C7GameData {
 
-	public class Civ3ExtraInfo
-	{
+	public class Civ3ExtraInfo {
 		public int BaseTerrainFileID;
 		public int BaseTerrainImageID;
 	}
@@ -173,7 +172,7 @@ namespace C7GameData {
 			int i = 0;
 			foreach (QueryCiv3.Biq.TILE civ3Tile in biq.Tile) {
 				(int x, int y) = GetMapCoordinates(i, biq.Wmap[0].Width);
-								Civ3ExtraInfo extra = new Civ3ExtraInfo
+				Civ3ExtraInfo extra = new Civ3ExtraInfo
 				{
 					BaseTerrainFileID = civ3Tile.TextureFile,
 					BaseTerrainImageID = civ3Tile.TextureLocation,

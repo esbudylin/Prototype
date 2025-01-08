@@ -8,11 +8,11 @@ namespace C7GameData.AIData
 		{
 			DEFEND_CITY,
 			DEFEND_RESOURCE,
-			ESCORT_UNITS,			//including settlers and offensive armies
+			ESCORT_UNITS,           //including settlers and offensive armies
 			DEFEND_CHOKEPOINT,
 			DEFEND_BORDER,
-			DEFEND_TILE,			//e.g. mountains so the enemy can't take them
-			ESTABLISH_BEACHHEAD,	//e.g. on a new continent
+			DEFEND_TILE,            //e.g. mountains so the enemy can't take them
+			ESTABLISH_BEACHHEAD,    //e.g. on a new continent
 			PILLAGE_ENEMY_LANDS
 		}
 

@@ -113,7 +113,7 @@ namespace QueryCiv3 {
 				int dataLength = 0;
 
 				while (offset < biqBytes.Length) { // Don't read past the end
-					// We don't know what orders the headers come in or which headers will be set, so get the next header and switch off it:
+												   // We don't know what orders the headers come in or which headers will be set, so get the next header and switch off it:
 					header = FileData.GetString(offset, 4);
 					count = FileData.ReadInt32(offset + 4);
 					offset += 8;

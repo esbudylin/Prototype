@@ -47,7 +47,7 @@ namespace C7GameData {
 			this.id = id;
 		}
 
-		internal MapUnit() {}
+		internal MapUnit() { }
 
 		public bool IsBusy() {
 			return isFortified || (path != null && path.PathLength() > 0);
