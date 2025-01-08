@@ -7,7 +7,7 @@ namespace C7GameData.Save {
 		public int tilesWide, tilesTall;
 		public bool wrapHorizontally, wrapVertically;
 		public List<SaveTile> tiles = new List<SaveTile>();
-		public SaveMap() {}
+		public SaveMap() { }
 
 		public SaveMap(GameMap map) {
 			tilesWide = map.numTilesWide;

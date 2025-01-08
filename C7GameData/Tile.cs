@@ -1,12 +1,10 @@
-namespace C7GameData
-{
+namespace C7GameData {
 	using System;
 	using System.Text.Json.Serialization;
 	using System.Collections.Generic;
 	using System.Linq;
-	public class Tile
-	{
-		public ID Id {get; internal set;}
+	public class Tile {
+		public ID Id { get; internal set; }
 		public Civ3ExtraInfo ExtraInfo;
 		public int xCoordinate;
 		public int yCoordinate;
@@ -19,7 +17,7 @@ namespace C7GameData
 		public City cityAtTile;
 		[JsonIgnore]
 		public bool HasCity => cityAtTile != null && cityAtTile != City.NONE;
-		public CityResident personWorkingTile = null;	//allows us to see if another city is working this tile
+		public CityResident personWorkingTile = null;   //allows us to see if another city is working this tile
 		public bool hasBarbarianCamp = false;
 		//One thing to decide is do we want to have a tile have a list of units on it,
 		//or a unit have reference to the tile it is on, or both?
@@ -51,14 +49,13 @@ namespace C7GameData
 
 		public TileOverlays overlays = new TileOverlays();
 
-		public Tile(ID id)
-		{
+		public Tile(ID id) {
 			this.Id = id;
 			unitsOnTile = new List<MapUnit>();
 			Resource = Resource.NONE;
 		}
 
-		internal Tile() {}
+		internal Tile() { }
 
 		// TODO: this should be either an extension in C7Engine, or otherwise
 		// calculated somewhere else, but it's not obvious to someone unfamiliar
@@ -96,8 +93,7 @@ namespace C7GameData
 			return edgeNeighbors;
 		}
 
-		public override string ToString()
-		{
+		public override string ToString() {
 			return "[" + xCoordinate + ", " + yCoordinate + "] (" + overlayTerrainType.DisplayName + " on " + baseTerrainType.DisplayName + ")";
 		}
 
@@ -110,28 +106,25 @@ namespace C7GameData
 		 * Eventually, this should be refactored into a more general "get valid neighbors to move to" type of method,
 		 * which could work e.g. for units that can move anywhere except desert.
 		 **/
-		public List<Tile> GetCoastNeighbors()
-		{
+		public List<Tile> GetCoastNeighbors() {
 			return neighbors.Values.Where(tile => tile.baseTerrainType.Key == "coast").ToList();
 		}
 
-		public bool HasRiverCrossing(TileDirection dir)
-		{
+		public bool HasRiverCrossing(TileDirection dir) {
 			switch (dir) {
-			case TileDirection.NORTH:     return riverNorth;
-			case TileDirection.NORTHEAST: return riverNortheast;
-			case TileDirection.EAST:      return riverEast;
-			case TileDirection.SOUTHEAST: return riverSoutheast;
-			case TileDirection.SOUTH:     return riverSouth;
-			case TileDirection.SOUTHWEST: return riverSouthwest;
-			case TileDirection.WEST:      return riverWest;
-			case TileDirection.NORTHWEST: return riverNorthwest;
-			default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
+				case TileDirection.NORTH: return riverNorth;
+				case TileDirection.NORTHEAST: return riverNortheast;
+				case TileDirection.EAST: return riverEast;
+				case TileDirection.SOUTHEAST: return riverSoutheast;
+				case TileDirection.SOUTH: return riverSouth;
+				case TileDirection.SOUTHWEST: return riverSouthwest;
+				case TileDirection.WEST: return riverWest;
+				case TileDirection.NORTHWEST: return riverNorthwest;
+				default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
 			}
 		}
 
-		public bool IsLand()
-		{
+		public bool IsLand() {
 			return !baseTerrainType.isWater();
 		}
 
@@ -143,8 +136,7 @@ namespace C7GameData
 			return overlayTerrainType.allowCities;
 		}
 
-		public TileDirection directionTo(Tile other)
-		{
+		public TileDirection directionTo(Tile other) {
 			// TODO: Consider edge wrapping, the direction should point along the shortest path as the crow flies.
 
 			if ((this == NONE) || (other == NONE))
@@ -155,28 +147,26 @@ namespace C7GameData
 			int dy = this.yCoordinate - other.yCoordinate;
 			double angle = Math.Atan2(dy, dx); // angle is in interval [-pi, pi]
 
-			if      (angle >  7.0/8.0 * Math.PI) return TileDirection.WEST;
-			else if (angle >  5.0/8.0 * Math.PI) return TileDirection.NORTHWEST;
-			else if (angle >  3.0/8.0 * Math.PI) return TileDirection.NORTH;
-			else if (angle >  1.0/8.0 * Math.PI) return TileDirection.NORTHEAST;
-			else if (angle > -1.0/8.0 * Math.PI) return TileDirection.EAST;
-			else if (angle > -3.0/8.0 * Math.PI) return TileDirection.SOUTHEAST;
-			else if (angle > -5.0/8.0 * Math.PI) return TileDirection.SOUTH;
-			else if (angle > -7.0/8.0 * Math.PI) return TileDirection.SOUTHWEST;
-			else                                 return TileDirection.WEST;
+			if (angle > 7.0 / 8.0 * Math.PI) return TileDirection.WEST;
+			else if (angle > 5.0 / 8.0 * Math.PI) return TileDirection.NORTHWEST;
+			else if (angle > 3.0 / 8.0 * Math.PI) return TileDirection.NORTH;
+			else if (angle > 1.0 / 8.0 * Math.PI) return TileDirection.NORTHEAST;
+			else if (angle > -1.0 / 8.0 * Math.PI) return TileDirection.EAST;
+			else if (angle > -3.0 / 8.0 * Math.PI) return TileDirection.SOUTHEAST;
+			else if (angle > -5.0 / 8.0 * Math.PI) return TileDirection.SOUTH;
+			else if (angle > -7.0 / 8.0 * Math.PI) return TileDirection.SOUTHWEST;
+			else return TileDirection.WEST;
 		}
 
 		/**
 		 * Distance as the raven flies to another tile.
 		 * This is a rough metric only.
 		 */
-		public int distanceTo(Tile other)
-		{
+		public int distanceTo(Tile other) {
 			return (Math.Abs(other.xCoordinate - this.xCoordinate) + Math.Abs(other.yCoordinate - this.yCoordinate)) / 2;
 		}
 
-		public int foodYield(Player player)
-		{
+		public int foodYield(Player player) {
 			int yield = overlayTerrainType.baseFoodProduction;
 			if (this.Resource != Resource.NONE && player.KnowsAboutResource(Resource)) {
 				yield += this.Resource.FoodBonus;
@@ -184,8 +174,7 @@ namespace C7GameData
 			return yield;
 		}
 
-		public int productionYield(Player player)
-		{
+		public int productionYield(Player player) {
 			int yield = overlayTerrainType.baseShieldProduction;
 			if (overlayTerrainType.Key == "grassland" && this.isBonusShield) {
 				yield++;
@@ -196,8 +185,7 @@ namespace C7GameData
 			return yield;
 		}
 
-		public int commerceYield(Player player)
-		{
+		public int commerceYield(Player player) {
 			int yield = overlayTerrainType.baseCommerceProduction;
 			if (this.Resource != Resource.NONE && player.KnowsAboutResource(Resource)) {
 				yield += this.Resource.CommerceBonus;
@@ -221,28 +209,28 @@ namespace C7GameData
 		public static Tuple<int, int> NeighborCoordinate(int x, int y, TileDirection direction) {
 			switch (direction) {
 				case TileDirection.NORTH:
-					y-=2;
+					y -= 2;
 					break;
 				case TileDirection.NORTHEAST:
 					y--;
 					x++;
 					break;
 				case TileDirection.EAST:
-					x+=2;
+					x += 2;
 					break;
 				case TileDirection.SOUTHEAST:
 					y++;
 					x++;
 					break;
 				case TileDirection.SOUTH:
-					y+=2;
+					y += 2;
 					break;
 				case TileDirection.SOUTHWEST:
 					y++;
 					x--;
 					break;
 				case TileDirection.WEST:
-					x-=2;
+					x -= 2;
 					break;
 				case TileDirection.NORTHWEST:
 					x--;
@@ -265,33 +253,31 @@ namespace C7GameData
 	}
 
 	public static class TileDirectionExtensions {
-		public static TileDirection reversed(this TileDirection dir)
-		{
+		public static TileDirection reversed(this TileDirection dir) {
 			switch (dir) {
-			case TileDirection.NORTH:     return TileDirection.SOUTH;
-			case TileDirection.NORTHEAST: return TileDirection.SOUTHWEST;
-			case TileDirection.EAST:      return TileDirection.WEST;
-			case TileDirection.SOUTHEAST: return TileDirection.NORTHWEST;
-			case TileDirection.SOUTH:     return TileDirection.NORTH;
-			case TileDirection.SOUTHWEST: return TileDirection.NORTHEAST;
-			case TileDirection.WEST:      return TileDirection.EAST;
-			case TileDirection.NORTHWEST: return TileDirection.SOUTHEAST;
-			default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
+				case TileDirection.NORTH: return TileDirection.SOUTH;
+				case TileDirection.NORTHEAST: return TileDirection.SOUTHWEST;
+				case TileDirection.EAST: return TileDirection.WEST;
+				case TileDirection.SOUTHEAST: return TileDirection.NORTHWEST;
+				case TileDirection.SOUTH: return TileDirection.NORTH;
+				case TileDirection.SOUTHWEST: return TileDirection.NORTHEAST;
+				case TileDirection.WEST: return TileDirection.EAST;
+				case TileDirection.NORTHWEST: return TileDirection.SOUTHEAST;
+				default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
 			}
 		}
 
-		public static (int, int) toCoordDiff(this TileDirection dir)
-		{
+		public static (int, int) toCoordDiff(this TileDirection dir) {
 			switch (dir) {
-			case TileDirection.NORTH:     return ( 0, -2);
-			case TileDirection.NORTHEAST: return ( 1, -1);
-			case TileDirection.EAST:      return ( 2,  0);
-			case TileDirection.SOUTHEAST: return ( 1,  1);
-			case TileDirection.SOUTH:     return ( 0,  2);
-			case TileDirection.SOUTHWEST: return (-1,  1);
-			case TileDirection.WEST:      return (-2,  0);
-			case TileDirection.NORTHWEST: return (-1, -1);
-			default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
+				case TileDirection.NORTH: return (0, -2);
+				case TileDirection.NORTHEAST: return (1, -1);
+				case TileDirection.EAST: return (2, 0);
+				case TileDirection.SOUTHEAST: return (1, 1);
+				case TileDirection.SOUTH: return (0, 2);
+				case TileDirection.SOUTHWEST: return (-1, 1);
+				case TileDirection.WEST: return (-2, 0);
+				case TileDirection.NORTHWEST: return (-1, -1);
+				default: throw new ArgumentOutOfRangeException("Invalid TileDirection");
 			}
 		}
 

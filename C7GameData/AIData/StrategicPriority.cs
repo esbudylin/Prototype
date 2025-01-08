@@ -4,7 +4,8 @@ using System.Text.Json.Serialization;
 using C7GameData;
 using C7GameData.AIData;
 
-namespace C7Engine.AI.StrategicAI {
+namespace C7Engine.AI.StrategicAI
+{
 	/**
 	 * This is a prototype interface.  The idea is that there may be many strategic priorities, and the AI should decide on a few.
 	 * I could see this going a lot of different ways.  Some general thoughts/ideas:
@@ -37,7 +38,8 @@ namespace C7Engine.AI.StrategicAI {
 	 *    least one of these as a priority, even if the chosen one is "generic score, we'll decide later" or "we aren't going to win, but we want to play spoiler and
 	 *    capture the 20K city before it reaches 20K".
 	 */
-	public abstract class StrategicPriority {
+	public abstract class StrategicPriority
+	{
 		[JsonIgnore]
 		protected float calculatedWeight;
 
@@ -59,7 +61,8 @@ namespace C7Engine.AI.StrategicAI {
 		 */
 		public abstract void CalculateWeightAndMetadata(Player player);
 
-		public float GetCalculatedWeight() {
+		public float GetCalculatedWeight()
+		{
 			return calculatedWeight;
 		}
 
@@ -69,7 +72,8 @@ namespace C7Engine.AI.StrategicAI {
 		/// </summary>
 		/// <param name="producible"></param>
 		/// <returns></returns>
-		public virtual float GetProductionItemFlatAdjuster(IProducible producible) {
+		public virtual float GetProductionItemFlatAdjuster(IProducible producible)
+		{
 			return 0.0f;
 		}
 
@@ -82,8 +86,10 @@ namespace C7Engine.AI.StrategicAI {
 		/// </summary>
 		/// <param name="producible"></param>
 		/// <returns></returns>
-		public virtual float GetProductionItemPreferenceWeight(IProducible producible) {
-			if (producible is UnitPrototype prototype) {
+		public virtual float GetProductionItemPreferenceWeight(IProducible producible)
+		{
+			if (producible is UnitPrototype prototype)
+			{
 				return 0.0f;
 			}
 			return 0.0f;

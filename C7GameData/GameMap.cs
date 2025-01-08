@@ -1,12 +1,10 @@
-namespace C7GameData
-{
+namespace C7GameData {
 	using System;
 	using System.Collections.Generic;
 	/**
 	 * The game map, at the top level.
 	 */
-	public class GameMap
-	{
+	public class GameMap {
 		// This may not belong here, but I'm not sure where it should go just now
 		public string RelativeModPath = "";
 		// TODO : protect setters while still allowing JSON deserialization
@@ -21,28 +19,25 @@ namespace C7GameData
 		public int[,] terrainNoiseMap;
 
 		public List<TerrainType> terrainTypes = new List<TerrainType>();
-		public List<Tile> tiles { get; set;}
+		public List<Tile> tiles { get; set; }
 		public List<Tile> barbarianCamps = new List<Tile>();
 
-		public GameMap()
-		{
+		public GameMap() {
 			this.tiles = new List<Tile>();
 		}
 
-		public int tileCoordsToIndex(int x, int y)
-		{
-			return y * numTilesWide/2 + (y%2 == 0 ? x/2 : (x-1)/2);
+		public int tileCoordsToIndex(int x, int y) {
+			return y * numTilesWide / 2 + (y % 2 == 0 ? x / 2 : (x - 1) / 2);
 		}
 
-		public void tileIndexToCoords(int index, out int x, out int y)
-		{
+		public void tileIndexToCoords(int index, out int x, out int y) {
 			int doubleRow = index / numTilesWide;
 			int doubleRowRem = index % numTilesWide;
-			if (doubleRowRem < numTilesWide/2) {
+			if (doubleRowRem < numTilesWide / 2) {
 				x = 2 * doubleRowRem;
 				y = 2 * doubleRow;
 			} else {
-				x = 1 + 2 * (doubleRowRem - numTilesWide/2);
+				x = 1 + 2 * (doubleRowRem - numTilesWide / 2);
 				y = 2 * doubleRow + 1;
 			}
 		}
@@ -59,10 +54,9 @@ namespace C7GameData
 
 		// This method verifies that the conversion between tile index and coords is consistent for all possible valid inputs. It's not called
 		// anywhere but I'm keeping it around in case we ever need to work on the conversion methods again.
-		public void testTileIndexComputation()
-		{
+		public void testTileIndexComputation() {
 			for (int y = 0; y < numTilesTall; y++)
-				for (int x = y%2; x < numTilesWide; x += 2) {
+				for (int x = y % 2; x < numTilesWide; x += 2) {
 					int rx, ry;
 					int index = tileCoordsToIndex(x, y);
 					tileIndexToCoords(index, out rx, out ry);
@@ -79,15 +73,14 @@ namespace C7GameData
 			}
 		}
 
-		public bool isRowAt(int y)
-		{
+		public bool isRowAt(int y) {
 			return wrapVertically || ((y >= 0) && (y < numTilesTall));
 		}
 
-		public bool isTileAt(int x, int y)
-		{
+		public bool isTileAt(int x, int y) {
 			bool evenRow = y%2 == 0;
-			bool xInBounds; {
+			bool xInBounds;
+			{
 				if (wrapHorizontally)
 					xInBounds = true;
 				else if (evenRow)
@@ -95,11 +88,10 @@ namespace C7GameData
 				else
 					xInBounds = (x >= 1) && (x <= numTilesWide - 1);
 			}
-			return xInBounds && isRowAt(y) && (evenRow ? (x%2 == 0) : (x%2 != 0));
+			return xInBounds && isRowAt(y) && (evenRow ? (x % 2 == 0) : (x % 2 != 0));
 		}
 
-		public int wrapTileX(int x)
-		{
+		public int wrapTileX(int x) {
 			if (wrapHorizontally) {
 				int tr = x % numTilesWide;
 				return (tr >= 0) ? tr : tr + numTilesWide;
@@ -107,8 +99,7 @@ namespace C7GameData
 				return x;
 		}
 
-		public int wrapTileY(int y)
-		{
+		public int wrapTileY(int y) {
 			if (wrapVertically) {
 				int tr = y % numTilesTall;
 				return (tr >= 0) ? tr : tr + numTilesTall;
@@ -116,8 +107,7 @@ namespace C7GameData
 				return y;
 		}
 
-		public Tile tileAt(int x, int y)
-		{
+		public Tile tileAt(int x, int y) {
 			if (isTileAt(x, y))
 				return tiles[tileCoordsToIndex(wrapTileX(x), wrapTileY(y))];
 			else
@@ -136,12 +126,11 @@ namespace C7GameData
 
 		public delegate int[,] TerrainNoiseMapGenerator(int rng, int width, int height);
 
-		public List<Tile> generateStartingLocations(int num, int minDistBetween)
-		{
+		public List<Tile> generateStartingLocations(int num, int minDistBetween) {
 			var tr = new List<Tile>();
 			for (int n = 0; n < num; n++) {
 				bool foundOne = false;
-				for (int numTries = 0; (! foundOne) && (numTries < 100); numTries++) {
+				for (int numTries = 0; (!foundOne) && (numTries < 100); numTries++) {
 					var randTile = tiles[GameData.rng.Next(0, tiles.Count)];
 					if (randTile.baseTerrainType.isWater() || !randTile.IsAllowCities())
 						continue;
@@ -168,8 +157,7 @@ namespace C7GameData
 		 * implement a more sophisticated generator in the engine.
 		 **/
 		// TerrainType declarations here have been copied to ImportCiv3, and all loaded terrain is set with one of them
-		public static GameMap Generate(GameData gameData)
-		{
+		public static GameMap Generate(GameData gameData) {
 			TerrainType grassland = new TerrainType();
 			grassland.DisplayName = "Grassland";
 			grassland.baseFoodProduction = 2;
@@ -204,7 +192,7 @@ namespace C7GameData
 			m.terrainTypes.Add(coast);
 
 			for (int y = 0; y < m.numTilesTall; y++) {
-				for (int x = y%2; x < m.numTilesWide; x += 2) {
+				for (int x = y % 2; x < m.numTilesWide; x += 2) {
 					Tile newTile = new Tile(gameData.ids.CreateID("tile"));
 					newTile.xCoordinate = x;
 					newTile.yCoordinate = y;
@@ -224,8 +212,7 @@ namespace C7GameData
 		//  Might be able to implement them, use https://www.youtube.com/watch?v=MRNFcywkUSA&list=PLFt_AvWsXl0eBW2EiBtl_sxmDtSgZBxB3&index=4 as reference
 		// TODO: Parameterize octaves, persistence, scale/period; compare this generator to Godot's
 		// NOTE: Godot's OpenSimplexNoise returns -1 to 1; this one seems to be from 0 to 1 like most Simplex/Perlin implementations
-		public static double[,] tempMapGenPrototyping(int rng, int width, int height, bool wrapX = true, bool wrapY = false)
-		{
+		public static double[,] tempMapGenPrototyping(int rng, int width, int height, bool wrapX = true, bool wrapY = false) {
 			// TODO: I think my octaves implementation is broken; specifically it needs normalizing I think as additional octaves drive more extreme values
 			int octaves = 1;
 			double persistence = 0.5;
@@ -238,15 +225,13 @@ namespace C7GameData
 			OpenSimplexNoise noise = new OpenSimplexNoise();
 			double[,] noiseField = new double[width, height];
 
-			for (int x=0; x < width; x++)
-			{
+			for (int x = 0; x < width; x++) {
 				double oX = originOffset + (scale * x);
 				// Set up cX,cY to make one circle as a function of x
 				double theta = ((double)x / (double)width) * (System.Math.PI * 2);
 				double cX = originOffset + (scale * xRadius * System.Math.Sin(theta));
 				double cY = originOffset + (scale * xRadius * System.Math.Cos(theta));
-				for (int y=0; y < height; y++)
-				{
+				for (int y = 0; y < height; y++) {
 					double oY = originOffset + (scale * y);
 					// Set up ycX,ycY to make one circle as a function of y
 					double yTheta = ((double)y / (double)height) * (System.Math.PI * 2);
@@ -254,54 +239,46 @@ namespace C7GameData
 					double ycY = originOffset + (scale * yRadius * System.Math.Cos(yTheta));
 
 					// No wrapping, just yoink values at scaled coordinates
-					if (!(wrapX || wrapY))
-					{
+					if (!(wrapX || wrapY)) {
 						// noiseField[x,y] = noise.Evaluate(oX, oY);
-						for (int i=0;i<octaves;i++)
-						{
+						for (int i = 0; i < octaves; i++) {
 							double offset = i * 1.5 * System.Math.Max(width, height) * scale;
-							noiseField[x,y] += (octaves - i) * persistence * noise.Evaluate(oX + offset, oY + offset);
+							noiseField[x, y] += (octaves - i) * persistence * noise.Evaluate(oX + offset, oY + offset);
 						}
 						continue;
 					}
 					// Bi-axis wrapping requires two extra dimensions and circling through each
-					if (wrapX && wrapY)
-					{
-						for (int i=0;i<octaves;i++)
-						{
+					if (wrapX && wrapY) {
+						for (int i = 0; i < octaves; i++) {
 							double offset = i * 1.5 * System.Math.Max(width, height) * scale;
 							double a = cX + offset;
 							double b = cY + offset;
 							double c = ycX + offset;
 							double d = ycY + offset;
-							noiseField[x,y] += (octaves - i) * persistence * noise.Evaluate(a, b, c, d);
+							noiseField[x, y] += (octaves - i) * persistence * noise.Evaluate(a, b, c, d);
 						}
 						// Skip the below tests, go to next loop iteration
 						continue;
 					}
 					// Y wrapping as Y increments it instead traces a circle in a third dimension to match up its ends
-					if (wrapY)
-					{
-						for (int i=0;i<octaves;i++)
-						{
+					if (wrapY) {
+						for (int i = 0; i < octaves; i++) {
 							double offset = i * 1.5 * System.Math.Max(width, height) * scale;
 							double a = ycX + offset;
 							double b = ycY + offset;
 							double c = oX + offset;
-							noiseField[x,y] += (octaves - i) * persistence * noise.Evaluate(a, b, c);
+							noiseField[x, y] += (octaves - i) * persistence * noise.Evaluate(a, b, c);
 						}
 						continue;
 					}
 					// Similar to Y wrapping
-					if (wrapX)
-					{
-						for (int i=0;i<octaves;i++)
-						{
+					if (wrapX) {
+						for (int i = 0; i < octaves; i++) {
 							double offset = i * 1.5 * System.Math.Max(width, height) * scale;
 							double a = cX + offset;
 							double b = cY + offset;
 							double c = oY + offset;
-							noiseField[x,y] += (octaves - i) * persistence * noise.Evaluate(a, b, c);
+							noiseField[x, y] += (octaves - i) * persistence * noise.Evaluate(a, b, c);
 						}
 					}
 				}

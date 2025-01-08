@@ -29,7 +29,7 @@ namespace C7GameData {
 			this.name = name;
 		}
 
-		internal City() {}
+		internal City() { }
 
 		public void SetItemBeingProduced(IProducible producible) {
 			this.itemBeingProduced = producible;

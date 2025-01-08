@@ -1,9 +1,7 @@
-namespace C7GameData
-{
-	public class Resource
-	{
-		public string Key { get; set;}
-		public int Index { get; set; }	//used so we can wire up tiles to resources later
+namespace C7GameData {
+	public class Resource {
+		public string Key { get; set; }
+		public int Index { get; set; }  //used so we can wire up tiles to resources later
 		public int Icon { get; set; }
 		public int FoodBonus { get; set; }
 		public int ShieldsBonus { get; set; }
@@ -27,8 +25,7 @@ namespace C7GameData
 		}
 	}
 
-	public enum ResourceCategory
-	{
+	public enum ResourceCategory {
 		BONUS,
 		LUXURY,
 		STRATEGIC,

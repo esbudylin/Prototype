@@ -1,7 +1,5 @@
-namespace C7GameData
-{
-	public class CityResident
-	{
+namespace C7GameData {
+	public class CityResident {
 		//Specialist type
 		public Tile tileWorked = Tile.NONE;
 		public Civilization nationality;
