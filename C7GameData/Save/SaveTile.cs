@@ -72,6 +72,7 @@ namespace C7GameData.Save {
 				overlays = new TileOverlays{
 					road = overlays.Contains("road"),
 					railroad = overlays.Contains("railroad"),
+					mine = overlays.Contains("mine"),
 				},
 			};
 
