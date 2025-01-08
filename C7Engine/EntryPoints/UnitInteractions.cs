@@ -54,6 +54,10 @@ namespace C7Engine {
 				result.Add(C7Action.UnitBuildRoad);
 			}
 
+			if (unit.canBuildMine()) {
+				result.Add(C7Action.UnitBuildMine);
+			}
+
 			// Eventually we will have advanced actions too, whose availability will rely on their base actions' availability.
 			// unit.availableActions.Add("rename");
 

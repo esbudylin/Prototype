@@ -38,6 +38,7 @@ namespace C7Engine {
 
 	public class MsgStartTurn : MessageToUI { }
 
+	public class MsgUpdateUiAfterMove : MessageToUI { }
 
 	public class MsgCityDestroyed : MessageToUI {
 		public City city;

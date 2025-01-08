@@ -136,6 +136,10 @@ namespace C7GameData {
 			return overlayTerrainType.allowCities;
 		}
 
+		public bool IsVolcano() {
+			return overlayTerrainType.isVolcano();
+		}
+
 		public TileDirection directionTo(Tile other) {
 			// TODO: Consider edge wrapping, the direction should point along the shortest path as the crow flies.
 

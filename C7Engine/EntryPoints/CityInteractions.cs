@@ -19,7 +19,11 @@ namespace C7Engine {
 			gameData.cities.Add(newCity);
 			owner.cities.Add(newCity);
 			tileWithNewCity.cityAtTile = newCity;
+
+			// Cities are treated as though they have a road, but if
+			// a city is build on a mine, the mine should be removed.
 			tileWithNewCity.overlays.road = true;
+			tileWithNewCity.overlays.mine = false;
 		}
 
 		public static void DestroyCity(int x, int y) {
