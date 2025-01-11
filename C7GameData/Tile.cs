@@ -298,7 +298,8 @@ namespace C7GameData {
 
 	public class TileOverlays {
 		public bool road = false;
-		public bool railroad = false;
 		// assume that railroad contains road too
+		public bool railroad = false;
+		public bool mine = false;
 	}
 }

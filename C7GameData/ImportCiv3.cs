@@ -129,6 +129,9 @@ namespace C7GameData {
 				if (civ3Tile.Railroad) {
 					tile.overlays.Add("railroad");
 				}
+				if (civ3Tile.Mine) {
+					tile.overlays.Add("mine");
+				}
 				Resource tileResource = resourcesByIndex[civ3Tile.ResourceID];
 				if (tileResource != Resource.NONE) {
 					tile.resource = tileResource.Key;
@@ -223,6 +226,9 @@ namespace C7GameData {
 				}
 				if (civ3Tile.Railroad) {
 					tile.overlays.Add("railroad");
+				}
+				if (civ3Tile.Mine) {
+					tile.overlays.Add("mine");
 				}
 				Resource tileResource = resourcesByIndex[civ3Tile.Resource];
 				if (tileResource != Resource.NONE) {
