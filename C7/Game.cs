@@ -267,7 +267,7 @@ public partial class Game : Node2D {
 	 * want to change it event driven.
 	 **/
 	public void setSelectedUnit(MapUnit unit) {
-		unit = UnitInteractions.UnitWithAvailableActions(unit);
+		unit.availableActions = UnitInteractions.GetAvailableActions(unit);
 
 		if ((unit.path?.PathLength() ?? -1) > 0) {
 			log.Debug("cancelling path for " + unit);
