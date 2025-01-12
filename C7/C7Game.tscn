@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cldl5nk4n61m2"]
+[gd_scene load_steps=14 format=3 uid="uid://cldl5nk4n61m2"]
 
 [ext_resource type="Script" path="res://Game.cs" id="1"]
 [ext_resource type="Script" path="res://UIElements/Advisors/Advisors.cs" id="3"]
@@ -9,7 +9,6 @@
 [ext_resource type="Script" path="res://UIElements/UnitButtons/RenameButton.cs" id="8"]
 [ext_resource type="Script" path="res://UIElements/Popups/PopupOverlay.cs" id="9"]
 [ext_resource type="Theme" uid="uid://c1jpmssnhvodi" path="res://C7Theme.tres" id="10"]
-[ext_resource type="Script" path="res://UIElements/Civ3FileDialog.cs" id="11_fd8cs"]
 [ext_resource type="Script" path="res://UIElements/UnitButtons/UnitButtons.cs" id="12"]
 
 [sub_resource type="Animation" id="2"]
@@ -182,8 +181,8 @@ anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 80.0
-offset_right = 11960.0
-offset_bottom = 2342.0
+offset_right = -108.0
+offset_bottom = -170.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 1
@@ -252,9 +251,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("10")
 script = ExtResource("3")
-
-[node name="Civ3FileDialog" type="FileDialog" parent="CanvasLayer"]
-script = ExtResource("11_fd8cs")
 
 [connection signal="NewAutoselectedUnit" from="." to="CanvasLayer/Control/GameStatus" method="OnNewUnitSelected"]
 [connection signal="NewAutoselectedUnit" from="." to="CanvasLayer/Control/UnitButtons" method="OnNewUnitSelected"]
