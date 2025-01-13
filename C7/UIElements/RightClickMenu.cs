@@ -70,7 +70,9 @@ public partial class RightClickMenu : VBoxContainer {
 			button.Icon = icon;
 		}
 		button.Alignment = HorizontalAlignment.Left;
-		button.Pressed += action;
+		if (action != null) {
+			button.Pressed += action;
+		}
 		this.AddChild(button);
 	}
 
@@ -126,15 +128,16 @@ public partial class RightClickTileMenu : RightClickMenu {
 		RemoveAll();
 
 		int fortifiedCount = 0;
-		List<MapUnit> units = tile.unitsOnTile.FindAll(unit => unit.owner.id == game.controller.id);
+		List<MapUnit> playerUnits = tile.unitsOnTile.FindAll(unit => unit.owner.id == game.controller.id);
+		List<MapUnit> nonPlayerUnits = tile.unitsOnTile.FindAll(unit => unit.owner.id != game.controller.id);
 
-		foreach (MapUnit unit in units) {
+		foreach (MapUnit unit in playerUnits) {
 			bool isFortified = isUnitFortified(unit, uiUpdatedUnitStates);
 			fortifiedCount += isFortified ? 1 : 0;
 			string actionName = getUnitAction(unit, isFortified);
 			AddItem($"{actionName} {unit.Describe()}", () => SelectUnit(unit.id));
 		}
-		int unfortifiedCount = units.Count - fortifiedCount;
+		int unfortifiedCount = playerUnits.Count - fortifiedCount;
 
 		if (fortifiedCount > 1) {
 			AddItem($"Wake All ({fortifiedCount} units)", () => ForAll(tile.xCoordinate, tile.yCoordinate, false));
@@ -148,6 +151,24 @@ public partial class RightClickTileMenu : RightClickMenu {
 				this.CloseAndDelete();
 				new RightClickChooseProductionMenu(game, tile.cityAtTile).Open(this.position);
 			});
+		}
+
+		// If we're looking at an enemy tile, then the behavior depends on whether the units
+		// are in a city. We can see the full list of units outside of a city, but in a city
+		// we can only see the top defender.
+		if (nonPlayerUnits.Count > 0) {
+			if (tile.cityAtTile == null) {
+				foreach (MapUnit unit in nonPlayerUnits) {
+					AddItem($"{unit.owner.civilization.noun} {unit.Describe()}", null);
+				}
+				AddItem($"Contact {nonPlayerUnits[0].owner.civilization.name}", null);
+			} else {
+				// TODO: This isn't necessarily the top unit, get that code to an accessible
+				// location and then use it here.
+				MapUnit unit = nonPlayerUnits[0];
+				AddItem($"{unit.owner.civilization.noun} {unit.Describe()}", null);
+				AddItem($"Contact {unit.owner.civilization.name}", null);
+			}
 		}
 	}
 
