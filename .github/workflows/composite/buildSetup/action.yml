@@ -7,7 +7,7 @@ runs:
   - name: Optionally set BUILD_SUFFIX
     shell: bash
     run: |
-      if [[ ${{ github.event.inputs.debug-build }} == 'true' ]]; then
+      if [[ ${{ github.event.inputs.debug-build || 'true' }} == 'true' ]]; then
         echo "BUILD_SUFFIX=-debug" >> $GITHUB_ENV
       else
         echo "BUILD_SUFFIX=-release" >> $GITHUB_ENV
@@ -35,7 +35,7 @@ runs:
   - name: Set FOLDER_NAME
     shell: bash
     run: |
-      echo "FOLDER_NAME=${EXPORT_NAME}${{ github.event.inputs.folder-suffix }}${GH_USERNAME}${BUILD_TIME}" >> $GITHUB_ENV
+      echo "FOLDER_NAME=${EXPORT_NAME}${{ github.event.inputs.folder-suffix || 'automated_build' }}${GH_USERNAME}${BUILD_TIME}" >> $GITHUB_ENV
   - name: Setup
     shell: bash
     run: |
