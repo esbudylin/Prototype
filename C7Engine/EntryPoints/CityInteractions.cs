@@ -20,7 +20,8 @@ namespace C7Engine {
 			owner.cities.Add(newCity);
 			tileWithNewCity.cityAtTile = newCity;
 			tileWithNewCity.overlays.road = true;
-		}
+                        gameData.UpdateTileOwners();
+        }
 
 		public static void DestroyCity(int x, int y) {
 			Tile tile = EngineStorage.gameData.map.tileAt(x, y);

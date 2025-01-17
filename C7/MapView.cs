@@ -729,6 +729,7 @@ public partial class MapView : Node2D
 		this.cityLayer = new();
 		looseView.layers.Add(this.cityLayer);
 		looseView.layers.Add(new FogOfWarLayer());
+		looseView.layers.Add(new BorderLayer());
 
 		(civColorWhitePalette, _) = Util.loadPalettizedPCX("Art/Units/Palettes/ntp00.pcx");
 
