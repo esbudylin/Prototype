@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvncm1bgcii5e"]
+
+[ext_resource type="Script" path="res://UIElements/Civ3FileDialog.cs" id="1_mb1lm"]
+
+[node name="LoadDialog" type="FileDialog"]
+initial_position = 1
+size = Vector2i(312, 450)
+visible = true
+script = ExtResource("1_mb1lm")

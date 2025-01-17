@@ -11,12 +11,14 @@ public partial class MainMenu : Node2D {
 	ImageTexture InactiveButton;
 	ImageTexture HoverButton;
 	TextureRect MainMenuBackground;
-	Util.Civ3FileDialog LoadDialog;
+	[Export]
+	Civ3FileDialog LoadDialog;
 	[Export]
 	Button SetCiv3Home;
 	[Export]
 	FileDialog SetCiv3HomeDialog;
-	Util.Civ3FileDialog LoadScenarioDialog;
+	[Export]
+	Civ3FileDialog LoadScenarioDialog;
 	GlobalSingleton Global;
 
 	readonly int MENU_OFFSET_FROM_TOP = 180;
@@ -32,14 +34,13 @@ public partial class MainMenu : Node2D {
 		// To pass data between scenes, putting path string in a global singleton and reading it later in createGame
 		Global = GetNode<GlobalSingleton>("/root/GlobalSingleton");
 		Global.ResetLoadGamePath();
-		LoadDialog = new Util.Civ3FileDialog();
-		LoadDialog.RelPath = @"Conquests/Saves";
+
+		LoadDialog.SetDirectory(@"Conquests/Saves");
 		LoadDialog.FileSelected += _on_FileDialog_file_selected;
-		LoadScenarioDialog = new Util.Civ3FileDialog();
-		LoadScenarioDialog.RelPath = @"Conquests/Scenarios";
+
+		LoadScenarioDialog.SetDirectory(@"Conquests/Scenarios");
 		LoadScenarioDialog.FileSelected += _on_FileDialog_file_selected;
-		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadDialog);
-		GetNode<CanvasLayer>("CanvasLayer").AddChild(LoadScenarioDialog);
+
 		DisplayTitleScreen();
 	}
 

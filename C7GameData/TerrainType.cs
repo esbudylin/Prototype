@@ -27,6 +27,10 @@ namespace C7GameData {
 			return false;
 		}
 
+		public bool isVolcano() {
+			return Key.Equals("volcano");
+		}
+
 		//TODO: Once we have IDs, this should *not* rely on the display name.
 		//That will be after issue 58, which will be after PR 70.
 		public bool isWater() {

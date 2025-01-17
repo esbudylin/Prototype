@@ -452,5 +452,27 @@ namespace C7Engine {
 			unit.movementPoints.onConsumeAll();
 		}
 
+		public static bool canBuildMine(this MapUnit unit) {
+			// Mines can only be built on land, if there is no mine already there,
+			// and if there isn't a city.
+			//
+			// Volcanos also cannot be mined.
+			return unit.unitType.actions.Contains(C7Action.UnitBuildMine) &&
+				unit.location.IsLand() &&
+				!unit.location.IsVolcano() &&
+				!unit.location.overlays.mine &&
+				unit.location.cityAtTile == null;
+		}
+
+		public static void buildMine(this MapUnit unit) {
+			if (!unit.canBuildMine()) {
+				log.Warning($"can't build mine by {unit}");
+				return;
+			}
+
+			// TODO add animation and long process of building
+			unit.location.overlays.mine = true;
+			unit.movementPoints.onConsumeAll();
+		}
 	}
 }
