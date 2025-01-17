@@ -1,4 +1,5 @@
 namespace C7GameData {
+	// The strings for each action correspond to values in project.godot for keyboard shortcuts
 	public static class C7Action {
 		public const string EndTurn = "end_turn";
 		public const string Escape = "escape";
@@ -16,6 +17,7 @@ namespace C7GameData {
 		public const string UnitBombard = "unit_bombard";
 		public const string UnitBuildCity = "unit_build_city";
 		public const string UnitBuildRoad = "unit_build_road";
+		public const string UnitBuildMine = "unit_build_mine";
 		public const string UnitDisband = "unit_disband";
 		public const string UnitExplore = "unit_explore";
 		public const string UnitFortify = "unit_fortify";

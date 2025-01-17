@@ -56,6 +56,12 @@ namespace C7Engine {
 		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.move(dir);
+
+			// The unit moved to a new tile - if it still has movement points,
+			// update the UI to reflect this new position and movement points.
+			if (unit?.movementPoints.canMove == true) {
+				new MsgUpdateUiAfterMove().send();
+			}
 		}
 	}
 
@@ -73,6 +79,12 @@ namespace C7Engine {
 		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.setUnitPath(EngineStorage.gameData.map.tileAt(destX, destY));
+
+			// The unit moved to a new tile - if it still has movement points,
+			// update the UI to reflect this new position and movement points.
+			if (unit?.movementPoints.canMove == true) {
+				new MsgUpdateUiAfterMove().send();
+			}
 		}
 	}
 
@@ -127,6 +139,19 @@ namespace C7Engine {
 		public override void process() {
 			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
 			unit?.buildRoad();
+		}
+	}
+
+	public class MsgBuildMine : MessageToEngine {
+		private ID unitID;
+
+		public MsgBuildMine(ID unitID) {
+			this.unitID = unitID;
+		}
+
+		public override void process() {
+			MapUnit unit = EngineStorage.gameData.GetUnit(unitID);
+			unit?.buildMine();
 		}
 	}
 

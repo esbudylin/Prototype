@@ -464,6 +464,9 @@ namespace C7GameData {
 				if (prto.BuildRoad) {
 					prototype.actions.Add(C7Action.UnitBuildRoad);
 				}
+				if (prto.BuildMine) {
+					prototype.actions.Add(C7Action.UnitBuildMine);
+				}
 				if (prto.Bombard) {
 					prototype.actions.Add(C7Action.UnitBombard);
 				}

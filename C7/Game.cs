@@ -183,6 +183,16 @@ public partial class Game : Node2D {
 						}
 					}
 					break;
+				case MsgUpdateUiAfterMove mUUAM:
+					// The unit finished moving and still has moves left, so we need to
+					// mark it as the selected unit again.
+					//
+					// Among other things, this will refresh the UI and ensure that the
+					// unit action buttons are correct.
+					if (CurrentlySelectedUnit != MapUnit.NONE) {
+						setSelectedUnit(CurrentlySelectedUnit);
+					}
+					break;
 			}
 		}
 	}
@@ -526,7 +536,6 @@ public partial class Game : Node2D {
 
 			if (dir.HasValue) {
 				new MsgMoveUnit(CurrentlySelectedUnit.id, dir.Value).send();
-				setSelectedUnit(CurrentlySelectedUnit); //also triggers updating the lower-left info box
 			}
 		}
 
@@ -606,6 +615,10 @@ public partial class Game : Node2D {
 
 		if (currentAction == C7Action.UnitBuildRoad && CurrentlySelectedUnit.canBuildRoad()) {
 			new MsgBuildRoad(CurrentlySelectedUnit.id).send();
+		}
+
+		if (currentAction == C7Action.UnitBuildMine && CurrentlySelectedUnit.canBuildMine()) {
+			new MsgBuildMine(CurrentlySelectedUnit.id).send();
 		}
 
 	}
