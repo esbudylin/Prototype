@@ -30,17 +30,11 @@ namespace C7Engine {
 		/**
 		 * Helper function to add the available actions to a unit
 		 * based on what terrain it is on.
-		 *
-		 * TODO: It's kind of janky that the actions are being added to the unit.  They live on the unit prototype, and can be made available
-		 * or unavailable based on game circumstances, e.g. technology or unit location.
-		 * We probably *should* be returning just a list of the actions.  However, we're passing the result around via Godot signals, so
-		 * I'm going to save that for a separate commit.
 		 **/
-		public static MapUnit UnitWithAvailableActions(MapUnit unit) {
-			unit.availableActions.Clear();
-
+		public static List<string> GetAvailableActions(MapUnit unit) {
+			List<string> result = new();
 			if (unit == MapUnit.NONE) {
-				return unit;
+				return result;
 			}
 
 			// Eventually, we should look this up somewhere to see what all actions we have (and mods might add more)
@@ -48,22 +42,22 @@ namespace C7Engine {
 			string[] implementedActions = { C7Action.UnitHold, C7Action.UnitWait, C7Action.UnitFortify, C7Action.UnitDisband, C7Action.UnitGoto, C7Action.UnitBombard };
 			foreach (string action in implementedActions) {
 				if (unit.unitType.actions.Contains(action)) {
-					unit.availableActions.Add(action);
+					result.Add(action);
 				}
 			}
 
 			if (unit.canBuildCity()) {
-				unit.availableActions.Add(C7Action.UnitBuildCity);
+				result.Add(C7Action.UnitBuildCity);
 			}
 
 			if (unit.canBuildRoad()) {
-				unit.availableActions.Add(C7Action.UnitBuildRoad);
+				result.Add(C7Action.UnitBuildRoad);
 			}
 
 			// Eventually we will have advanced actions too, whose availability will rely on their base actions' availability.
 			// unit.availableActions.Add("rename");
 
-			return unit;
+			return result;
 		}
 
 		public static void ClearWaitQueue() {
