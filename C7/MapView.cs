@@ -590,12 +590,12 @@ public partial class MapView : Node2D {
 		this.gridLayer = new GridLayer();
 		looseView.layers.Add(this.gridLayer);
 		looseView.layers.Add(new BuildingLayer());
+		looseView.layers.Add(new BorderLayer());
 		looseView.layers.Add(new UnitLayer());
 		looseView.layers.Add(new GotoLayer());
 		this.cityLayer = new();
 		looseView.layers.Add(this.cityLayer);
 		looseView.layers.Add(new FogOfWarLayer());
-		looseView.layers.Add(new BorderLayer());
 
 		(civColorWhitePalette, _) = Util.loadPalettizedPCX("Art/Units/Palettes/ntp00.pcx");
 
