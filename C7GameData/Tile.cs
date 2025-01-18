@@ -186,6 +186,9 @@ namespace C7GameData {
 			if (Resource != Resource.NONE && player.KnowsAboutResource(Resource)) {
 				yield += this.Resource.ShieldsBonus;
 			}
+			if (this.overlays.mine) {
+				yield += this.overlayTerrainType.miningBonus;
+			}
 			return yield;
 		}
 
