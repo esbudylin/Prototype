@@ -4,7 +4,8 @@ using ConvertCiv3Media;
 using System.Collections.Generic;
 
 public partial class PCXToGodot : GodotObject {
-	private static readonly HashSet<int> transparents = new() { 1, 254, 255 };
+	// The set of color indexes considered transparent when loading a Civ2 PCX
+	private static readonly HashSet<int> transparentColorIndexes = new() { 1, 254, 255 };
 
 	public static ImageTexture getImageTextureFromPCX(Pcx pcx) {
 		Image ImgTxtr = ByteArrayToImage(pcx.ColorIndices, pcx.Palette, pcx.Width, pcx.Height);
@@ -45,7 +46,7 @@ public partial class PCXToGodot : GodotObject {
 		for (int y = 0; y < alphaPcx.Height; y++) {
 			for (int x = 0; x < alphaPcx.Width; x++, dataIndex++) {
 				int index = alphaPcx.ColorIndexAt(x, y);
-				if (transparents.Contains(index)) {
+				if (transparentColorIndexes.Contains(index)) {
 					bufferData[dataIndex] = 0;
 				} else {
 					bufferData[dataIndex] = alphaData[index] << 24;
@@ -156,7 +157,7 @@ public partial class PCXToGodot : GodotObject {
 			Green = palette[i, 1] << 8;
 			Blue = palette[i, 2] << 16;
 
-			int Alpha = transparents.Contains(i) ? 0 : 255 << 24;
+			int Alpha = transparentColorIndexes.Contains(i) ? 0 : 255 << 24;
 
 			ColorData[i] = Red + Green + Blue + Alpha;
 		}

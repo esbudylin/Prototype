@@ -9,7 +9,7 @@ namespace C7GameData {
 		public Civ3ExtraInfo ExtraInfo;
 		public int xCoordinate;
 		public int yCoordinate;
-		public Player owner;
+		public Player owner; // Represents a civilization within which border the tile is located
 		public string baseTerrainTypeKey { get; set; }
 		[JsonIgnore]
 		public TerrainType baseTerrainType = TerrainType.NONE;
