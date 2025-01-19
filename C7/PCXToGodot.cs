@@ -4,7 +4,7 @@ using ConvertCiv3Media;
 using System.Collections.Generic;
 
 public partial class PCXToGodot : GodotObject {
-	// The set of color indexes considered transparent when loading a Civ2 PCX
+	// The set of color indexes considered transparent when loading a Civ3 PCX
 	private static readonly HashSet<int> transparentColorIndexes = new() { 1, 254, 255 };
 
 	public static ImageTexture getImageTextureFromPCX(Pcx pcx) {
